@@ -1,0 +1,40 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  margin: 0;
+}
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.grid > div {
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+.grid dt {
+  font-size: clamp(48px, 5.4vw, 72px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.grid dd {
+  margin: 14px 0 0;
+  font-size: 15px;
+  color: var(--fg-2);
+  max-width: 20em;
+  text-wrap: pretty;
+}
+.note {
+  margin-top: 48px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--fg-2);
+}

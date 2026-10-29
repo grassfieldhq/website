@@ -144,3 +144,29 @@ test("Download links reach the download page", async ({ page }) => {
   await page.locator("nav").getByRole("link", { name: "Install" }).click();
   await expect(page).toHaveURL(/\/en\/download\/$/);
 });
+
+test("minimise demo tucks the window into the Dock and brings it back", async ({ page }) => {
+  await page.goto("/en/");
+  await page.waitForLoadState("networkidle");
+  const proof = page.locator("#proof");
+  await proof.getByRole("button", { name: "Minimise the window" }).click();
+  await expect(proof.locator("[data-min]")).toHaveCount(1);
+  await expect(proof.getByText("Click the window in the Dock.")).toBeVisible();
+  await proof.getByRole("button", { name: "Reopen the Notes window" }).click();
+  await expect(proof.locator("[data-min]")).toHaveCount(0);
+});
+
+test("the site loads nothing from other origins and sets no cookies", async ({ page, context }) => {
+  const foreign: string[] = [];
+  page.on("request", (r) => {
+    const u = new URL(r.url());
+    if (!["localhost", "127.0.0.1"].includes(u.hostname) && !u.protocol.startsWith("data")) foreign.push(r.url());
+  });
+  for (const path of ["/fr/", "/en/download/"]) {
+    await page.goto(path);
+    await scrollThrough(page);
+    await page.waitForLoadState("networkidle");
+  }
+  expect(foreign).toEqual([]);
+  expect(await context.cookies()).toEqual([]);
+});

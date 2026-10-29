@@ -1,0 +1,74 @@
+.lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+@media (max-width: 800px) {
+  .lists {
+    grid-template-columns: 1fr;
+  }
+}
+.lists > div {
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--r-tile);
+  background: var(--bg-2);
+}
+.lists ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 18px;
+  display: grid;
+  gap: 14px;
+}
+.lists li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: start;
+  font-size: 16px;
+  color: var(--fg-2);
+}
+.plus,
+.lock {
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+}
+.plus {
+  color: var(--accent);
+}
+.lock {
+  color: var(--fg-2);
+}
+.backTitle {
+  margin-top: clamp(48px, 6vw, 80px);
+  margin-bottom: 24px;
+}
+.ways {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+@media (max-width: 800px) {
+  .ways {
+    grid-template-columns: 1fr;
+  }
+}
+.ways article {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  padding: clamp(24px, 3vw, 32px);
+  border-radius: var(--r-tile);
+  box-shadow: 0 0 0 1px var(--line) inset;
+}
+.ways b {
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.ways p {
+  font-size: 15px;
+  color: var(--fg-2);
+}

@@ -177,7 +177,7 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           </a>
         </p>
       </main>
-      <Footer t={all.footer} nav={all.nav} lang={lang} path="download/" />
+      <Footer t={all.footer} nav={all.nav} lang={lang} path="download/" privacy={all.privacy.statement} />
     </>
   );
 }

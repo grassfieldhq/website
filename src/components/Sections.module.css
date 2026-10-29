@@ -219,3 +219,19 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+.privacy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--fg);
+  font-weight: 550;
+}
+.privacy::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+}

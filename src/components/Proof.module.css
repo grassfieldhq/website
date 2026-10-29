@@ -1,0 +1,197 @@
+.demoWrap {
+  max-width: 1040px;
+  margin-inline: auto;
+}
+.demoWrap :global(.mini) {
+  border-radius: var(--r-tile);
+  box-shadow: var(--shadow);
+}
+
+/* the Notes window, laid out in 1440 × 900 units; minimised it shrinks into the thumbnail slot of the Dock */
+.win {
+  position: absolute;
+  left: calc(var(--u) * 300);
+  top: calc(var(--u) * 110);
+  width: calc(var(--u) * 840);
+  height: calc(var(--u) * 560);
+  display: flex;
+  flex-direction: column;
+  border-radius: calc(var(--u) * 18);
+  overflow: hidden;
+  background: #fbfbf8;
+  color: #1b1b1f;
+  box-shadow:
+    0 0 0 calc(var(--u) * 1) rgb(0 0 0 / 0.12),
+    0 calc(var(--u) * 30) calc(var(--u) * 80) rgb(0 0 0 / 0.45);
+  transform-origin: 50% 100%;
+  transition:
+    transform 0.6s cubic-bezier(0.55, 0, 0.25, 1),
+    opacity 0.6s cubic-bezier(0.7, 0, 0.9, 0.4),
+    filter 0.6s ease;
+}
+[data-min] .win {
+  transform: translate(calc(var(--u) * 186), calc(var(--u) * 205)) scale(0.075, 0.07) skewX(-6deg);
+  opacity: 0;
+  filter: blur(calc(var(--u) * 2));
+}
+.bar {
+  flex: none;
+  height: calc(var(--u) * 52);
+  display: flex;
+  align-items: center;
+  padding: 0 calc(var(--u) * 18);
+  background: #ececee;
+  border-bottom: calc(var(--u) * 1) solid rgb(0 0 0 / 0.08);
+  font-size: calc(var(--u) * 16);
+}
+.bar b {
+  flex: 1;
+  text-align: center;
+  margin-right: calc(var(--u) * 70);
+  font-weight: 650;
+}
+.lights {
+  display: flex;
+  gap: calc(var(--u) * 9);
+}
+.lights i,
+.yellow {
+  width: calc(var(--u) * 14);
+  height: calc(var(--u) * 14);
+  border-radius: 50%;
+  background: var(--gf-close);
+  box-shadow: 0 0 0 calc(var(--u) * 0.7) rgb(0 0 0 / 0.18) inset;
+}
+.lights i:last-child {
+  background: var(--gf-zoom);
+}
+.yellow {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: var(--gf-min);
+  cursor: pointer;
+}
+/* a generous hit area around the 14-unit light, and a pulse that invites the click */
+.yellow::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yellow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgb(217 169 59 / 0.7);
+    animation: invite 2s ease-out infinite;
+  }
+}
+@keyframes invite {
+  to {
+    box-shadow: 0 0 0 calc(var(--u) * 14) rgb(217 169 59 / 0);
+  }
+}
+.yellow:focus-visible {
+  outline: 2px solid #1b1b1f;
+  outline-offset: 2px;
+}
+.body {
+  padding: calc(var(--u) * 40) calc(var(--u) * 56);
+  display: grid;
+  gap: calc(var(--u) * 18);
+  font-size: calc(var(--u) * 24);
+}
+.body h4 {
+  font-size: calc(var(--u) * 34);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.body p {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 16);
+}
+.box {
+  flex: none;
+  width: calc(var(--u) * 22);
+  height: calc(var(--u) * 22);
+  border-radius: 50%;
+  box-shadow: 0 0 0 calc(var(--u) * 2) #b9bec4 inset;
+}
+
+/* the minimised window's slot in the Dock */
+.thumb.thumb {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  width: 0;
+  opacity: 0;
+  transition:
+    width 0.4s var(--ease-out) 0.25s,
+    opacity 0.3s ease 0.35s;
+}
+[data-min] .thumb.thumb {
+  width: calc(var(--u) * 54);
+  opacity: 1;
+}
+.thumb span {
+  display: block;
+  width: 100%;
+  height: 76%;
+  margin-top: 12%;
+  border-radius: calc(var(--u) * 4);
+  background:
+    linear-gradient(#ececee 0 18%, #fbfbf8 18%) padding-box;
+  box-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 6) rgb(0 0 0 / 0.35);
+}
+.hint {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--fg-2);
+}
+
+.items {
+  list-style: none;
+  padding: 0;
+  margin-top: clamp(48px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+@media (max-width: 1000px) {
+  .items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .items {
+    grid-template-columns: 1fr;
+  }
+}
+.items li {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 26px;
+  border-radius: var(--r-tile);
+  background: var(--bg);
+}
+.items b {
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.items p {
+  font-size: 15px;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.items code {
+  font: 500 12px/1.5 var(--mono);
+  color: var(--accent-strong);
+}
