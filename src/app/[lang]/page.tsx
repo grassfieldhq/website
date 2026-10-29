@@ -1,50 +1,26 @@
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/i18n";
-import { Nav } from "@/components/Nav";
+import { PageShell } from "@/components/PageShell";
 import { Hero } from "@/components/Hero";
 import { Statement } from "@/components/Statement";
-import { Overview } from "@/components/Overview";
-import { Everyday } from "@/components/Everyday";
-import { Glass } from "@/components/Glass";
-import { Security } from "@/components/Security";
-import { Apps } from "@/components/Apps";
-import { Omarchy } from "@/components/Omarchy";
-import { Install } from "@/components/Install";
-import { Faq } from "@/components/Faq";
-import { Proof } from "@/components/Proof";
-import { Reversible } from "@/components/Reversible";
-import { Numbers } from "@/components/Numbers";
+import { Teasers } from "@/components/Teasers";
 import { Roadmap } from "@/components/Roadmap";
-import { Footer } from "@/components/Footer";
+import { Faq } from "@/components/Faq";
+import { Install } from "@/components/Install";
 
+// Home: the showcase. Each subject has its own page; this one gives the vision and an index.
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
-  const locale = t.dates.locale;
   return (
-    <>
-      <a className="skip" href="#main">
-        {t.nav.skip}
-      </a>
-      <Nav t={t.nav} theme={t.theme} lang={lang} />
-      <main id="main">
-        <Hero t={t.hero} scene={t.scene} locale={locale} lang={lang} />
-        <Statement t={t.statement} />
-        <Roadmap t={t.roadmap} />
-        <Overview t={t.overview} scene={t.scene} locale={locale} />
-        <Proof t={t.proof} />
-        <Everyday t={t.everyday} scene={t.scene} locale={locale} />
-        <Glass t={t.glass} />
-        <Security t={t.security} locale={locale} />
-        <Apps t={t.apps} captureNote={t.overview.captureNote} />
-        <Numbers t={t.numbers} />
-        <Reversible t={t.reversible} copy={t.download.copy} copied={t.download.copied} />
-        <Omarchy t={t.omarchy} />
-        <Faq t={t.faq} />
-        <Install t={t.install} lang={lang} />
-      </main>
-      <Footer t={t.footer} nav={t.nav} lang={lang} privacy={t.privacy.statement} />
-    </>
+    <PageShell t={t} lang={lang} path="">
+      <Hero t={t.hero} scene={t.scene} locale={t.dates.locale} lang={lang} />
+      <Statement t={t.statement} />
+      <Teasers t={t.teasers} more={t.more} lang={lang} />
+      <Roadmap t={t.roadmap} />
+      <Faq t={t.faq} limit={4} all={{ href: `/${lang}/faq/`, label: t.faqShort.all }} />
+      <Install t={t.install} lang={lang} />
+    </PageShell>
   );
 }

@@ -38,11 +38,11 @@ function hillPath(b: number, a: number, ph: number) {
   return `M0 1400 L0 ${y(Math.sin(ph))} C${w * 0.18} ${y(2)} ${w * 0.34} ${y(-1)} ${w * 0.5} ${y(Math.sin(ph + 2))} C${w * 0.68} ${y(1.8)} ${w * 0.84} ${y(-0.8)} ${w} ${y(Math.sin(ph + 4))} L${w} 1400 Z`;
 }
 
-export function Landscape({ variant = "dawn", className = "" }: { variant?: "dawn" | "dusk"; className?: string }) {
+export function Landscape({ variant = "dawn", className = "", p }: { variant?: "dawn" | "dusk"; className?: string; p?: number }) {
   const pal = palettes[variant];
   const sky = (c: string[]) => `linear-gradient(180deg, ${c[0]} 0%, ${c[1]} 55%, ${c[2]} 78%)`;
   return (
-    <div className={`${s.land} ${className}`} data-variant={variant} aria-hidden="true">
+    <div className={`${s.land} ${className}`} data-variant={variant} aria-hidden="true" style={p === undefined ? undefined : ({ "--p": p } as CSSProperties)}>
       <div className={s.sky} style={{ background: sky(pal.skyEarly) }} />
       <div className={`${s.sky} ${s.skyDay}`} style={{ background: sky(pal.sky) }} />
       <div className={s.sun} style={{ ["--sun" as string]: pal.sun } as CSSProperties} />

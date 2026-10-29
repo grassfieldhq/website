@@ -6,6 +6,8 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Command } from "@/components/Command";
 import { Mask } from "@/components/Mask";
+import { Numbers } from "@/components/Numbers";
+import { Reversible } from "@/components/Reversible";
 import s from "@/components/Download.module.css";
 
 const pkgIcons: Record<string, string> = {
@@ -171,6 +173,8 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           </article>
         </section>
 
+        <Reversible t={all.reversible} copy={t.copy} copied={t.copied} />
+        <Numbers t={all.numbers} />
         <p className={`wrap ${s.back}`}>
           <a className="btn btn-link" href={`/${lang}/`}>
             {t.back}

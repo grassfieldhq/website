@@ -1,0 +1,33 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: -66px var(--panel-x) 0;
+  border-radius: 0 0 var(--panel-r) var(--panel-r);
+  min-height: clamp(460px, 68vh, 640px);
+  display: grid;
+  align-items: start;
+  color: #f5f5f7;
+  background: #0f2a3f;
+}
+.land {
+  z-index: -1;
+}
+.copy {
+  padding-top: clamp(150px, 22vh, 220px);
+  padding-bottom: 64px;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+.eyebrow {
+  color: #e8c98b;
+}
+.copy h1 {
+  color: #fff;
+  text-shadow: 0 2px 40px rgb(0 0 0 / 0.25);
+}
+.lead {
+  color: rgb(245 245 247 / 0.82);
+}

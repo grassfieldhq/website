@@ -53,8 +53,12 @@
 .links a {
   transition: color 0.2s ease;
 }
-.links a:hover {
+.links a:hover,
+.links a[aria-current="page"] {
   color: var(--fg);
+}
+.links a[aria-current="page"] {
+  font-weight: 600;
 }
 .lang {
   padding-left: 24px;

@@ -21,8 +21,13 @@ async function scrollThrough(page: Page) {
 }
 
 const pages = [
-  { path: "", h1: "Grassfield." },
-  { path: "download/", h1: "Grassfield Desktop" },
+  { path: "", h1: { fr: "Grassfield", en: "Grassfield" } },
+  { path: "desktop/", h1: { fr: "Le bureau", en: "The desktop" } },
+  { path: "apps/", h1: { fr: "Des apps qui se sentent chez elles", en: "Apps that feel at home" } },
+  { path: "security/", h1: { fr: "Sûr, par conception", en: "Secure by design" } },
+  { path: "os/", h1: { fr: "Grassfield OS", en: "Grassfield OS" } },
+  { path: "download/", h1: { fr: "Grassfield Desktop", en: "Grassfield Desktop" } },
+  { path: "faq/", h1: { fr: "Bon à savoir", en: "Good to know" } },
 ];
 
 for (const lang of langs) {
@@ -32,7 +37,7 @@ for (const lang of langs) {
       const errors = collectErrors(page);
       await page.goto(`/${lang}/${path}`);
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(h1.replace(/\.$/, ""));
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(h1[lang]);
       await scrollThrough(page);
       await page.waitForFunction(() => [...document.images].every((i) => i.complete));
       const broken = await page.$$eval("img", (imgs) => imgs.filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src));
@@ -71,7 +76,7 @@ test("root picks the visitor's language", async ({ browser }) => {
 });
 
 test("Overview scrubs from the desktop to the arranged windows", async ({ page }) => {
-  await page.goto("/fr/");
+  await page.goto("/fr/desktop/");
   const stage = page.locator("#overview [data-step]");
   await expect(stage).toHaveAttribute("data-step", "0");
   const track = page.locator("#overview [data-step] >> xpath=..");
@@ -81,7 +86,7 @@ test("Overview scrubs from the desktop to the arranged windows", async ({ page }
 });
 
 test("glass demo changes the accent", async ({ page }) => {
-  await page.goto("/en/");
+  await page.goto("/en/desktop/");
   const blue = page.getByRole("button", { name: "Blue" });
   await blue.click();
   await expect(blue).toHaveAttribute("aria-pressed", "true");
@@ -129,7 +134,7 @@ test("download page states the version, requirements and an uninstall command to
   for (const pkg of ["grassfield-desktop", "grassfield-compositor", "grassfield-icons", "grassfield-store"]) {
     await expect(page.locator("code", { hasText: pkg }).first()).toBeVisible();
   }
-  const copy = page.locator("main button", { hasText: /^Copi/ });
+  const copy = page.locator("main button", { hasText: /^Copi/ }).first();
   await expect(copy).toHaveText("Copier");
   await page.waitForLoadState("networkidle"); // hydrated
   await copy.click();
@@ -139,14 +144,28 @@ test("download page states the version, requirements and an uninstall command to
   );
 });
 
-test("Download links reach the download page", async ({ page }) => {
+test("the navigation reaches every page and marks the current one", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/en/");
-  await page.locator("nav").getByRole("link", { name: "Install" }).click();
-  await expect(page).toHaveURL(/\/en\/download\/$/);
+  const nav = page.getByRole("navigation", { name: "Main navigation" });
+  for (const [name, path] of [["Desktop", "desktop/"], ["Apps", "apps/"], ["Security", "security/"], ["Grassfield OS", "os/"], ["FAQ", "faq/"], ["Install", "download/"]]) {
+    await nav.getByRole("link", { name, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/en/${path}$`));
+    if (path !== "download/") await expect(nav.getByRole("link", { name, exact: true })).toHaveAttribute("aria-current", "page");
+  }
+});
+
+test("home is an index: four teasers and a short FAQ that links to the full one", async ({ page }) => {
+  await page.goto("/fr/");
+  for (const href of ["desktop/", "apps/", "security/", "os/"]) await expect(page.locator(`main a[href="/fr/${href}"]`).first()).toBeVisible();
+  await expect(page.locator("#faq details")).toHaveCount(4);
+  await page.getByRole("link", { name: "Toutes les questions" }).click();
+  await expect(page).toHaveURL(/\/fr\/faq\/$/);
+  expect(await page.locator("#faq details").count()).toBeGreaterThan(4);
 });
 
 test("minimise demo tucks the window into the Dock and brings it back", async ({ page }) => {
-  await page.goto("/en/");
+  await page.goto("/en/desktop/");
   await page.waitForLoadState("networkidle");
   const proof = page.locator("#proof");
   await proof.getByRole("button", { name: "Minimise the window" }).click();
@@ -162,7 +181,7 @@ test("the site loads nothing from other origins and sets no cookies", async ({ p
     const u = new URL(r.url());
     if (!["localhost", "127.0.0.1"].includes(u.hostname) && !u.protocol.startsWith("data")) foreign.push(r.url());
   });
-  for (const path of ["/fr/", "/en/download/"]) {
+  for (const path of ["/fr/", "/fr/desktop/", "/en/download/"]) {
     await page.goto(path);
     await scrollThrough(page);
     await page.waitForLoadState("networkidle");
@@ -172,7 +191,7 @@ test("the site loads nothing from other origins and sets no cookies", async ({ p
 });
 
 test("presents Grassfield OS with the desktop as its first step", async ({ page }) => {
-  await page.goto("/fr/");
+  await page.goto("/fr/os/");
   await expect(page).toHaveTitle(/Grassfield OS/);
   const road = page.locator("#roadmap");
   await expect(road.getByRole("heading", { level: 3, name: "Grassfield Desktop" })).toBeVisible();

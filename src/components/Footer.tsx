@@ -13,24 +13,16 @@ export function Footer({ t, nav, lang, path = "", privacy }: { t: Dict["footer"]
         <div className={s.cols}>
           <nav aria-label={t.cols.discover}>
             <h2>{t.cols.discover}</h2>
-            <a href={`${home}#roadmap`}>{nav.roadmap}</a>
-            <a href={`${home}#desktop`}>{nav.desktop}</a>
-            <a href={`${home}#overview`}>{nav.overview}</a>
-            <a href={`${home}#glass`}>{nav.glass}</a>
-          </nav>
-          <nav aria-label={t.cols.system}>
-            <h2>{t.cols.system}</h2>
-            <a href={`${home}#security`}>{nav.security}</a>
-            <a href={`${home}#apps`}>{nav.apps}</a>
-            <a href={`${home}#menus`}>{t.cols.menus}</a>
-            <a href={`${home}#proof`}>{t.cols.proof}</a>
+            <a href={`${home}desktop/`}>{nav.desktop}</a>
+            <a href={`${home}apps/`}>{nav.apps}</a>
+            <a href={`${home}security/`}>{nav.security}</a>
+            <a href={`${home}os/`}>{nav.os}</a>
           </nav>
           <nav aria-label={t.cols.install}>
             <h2>{t.cols.install}</h2>
-            <a href={`${home}#omarchy`}>{t.cols.requirements}</a>
-            <a href={`${home}#reversible`}>{t.cols.reversible}</a>
             <a href={`${home}download/`}>{nav.download}</a>
-            <a href={`${home}#faq`}>{nav.faq}</a>
+            <a href={`${home}download/#reversible`}>{t.cols.reversible}</a>
+            <a href={`${home}faq/`}>{nav.faq}</a>
           </nav>
           <div>
             <h2>{t.cols.licences}</h2>

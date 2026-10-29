@@ -3,23 +3,33 @@ import { Dot } from "./Dot";
 import s from "./Faq.module.css";
 
 // Native <details>: keyboard and screen-reader support without script. FAQPage structured data for search engines.
-export function Faq({ t }: { t: Dict["faq"] }) {
+export function Faq({ t, limit, all, head = true }: { t: Dict["faq"]; limit?: number; all?: { href: string; label: string }; head?: boolean }) {
+  const items = limit ? t.items.slice(0, limit) : t.items;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: t.items.map((it) => ({ "@type": "Question", name: it.q, acceptedAnswer: { "@type": "Answer", text: it.a } })),
+    mainEntity: items.map((it) => ({ "@type": "Question", name: it.q, acceptedAnswer: { "@type": "Answer", text: it.a } })),
   };
   return (
-    <section className="chapter" id="faq" aria-labelledby="faq-title">
+    <section className="chapter" id="faq" aria-labelledby={head ? "faq-title" : undefined}>
       <div className={`wrap ${s.grid}`}>
         <div className="chapter-head">
-          <p className="eyebrow">{t.eyebrow}</p>
-          <h2 className="h-1" id="faq-title">
-            <Dot>{t.title}</Dot>
-          </h2>
+          {head && (
+            <>
+              <p className="eyebrow">{t.eyebrow}</p>
+              <h2 className="h-1" id="faq-title">
+                <Dot>{t.title}</Dot>
+              </h2>
+            </>
+          )}
+          {all && (
+            <a className="btn btn-link" href={all.href}>
+              {all.label}
+            </a>
+          )}
         </div>
         <div className={s.list}>
-          {t.items.map((it) => (
+          {items.map((it) => (
             <details key={it.q} className={s.item}>
               <summary>
                 <span>{it.q}</span>

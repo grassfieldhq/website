@@ -26,13 +26,12 @@ export function Nav({ t, theme, lang, path = "" }: { t: Dict["nav"]; theme: Dict
   }, [open]);
 
   const home = `/${lang}/`;
-  const links: [string, string][] = [
-    [`${home}#desktop`, t.desktop],
-    [`${home}#overview`, t.overview],
-    [`${home}#roadmap`, t.roadmap],
-    [`${home}#security`, t.security],
-    [`${home}#apps`, t.apps],
-    [`${home}#faq`, t.faq],
+  const links: [string, string, string][] = [
+    [`${home}desktop/`, t.desktop, "desktop/"],
+    [`${home}apps/`, t.apps, "apps/"],
+    [`${home}security/`, t.security, "security/"],
+    [`${home}os/`, t.os, "os/"],
+    [`${home}faq/`, t.faq, "faq/"],
   ];
   const other = otherLocale(lang);
 
@@ -44,8 +43,8 @@ export function Nav({ t, theme, lang, path = "" }: { t: Dict["nav"]; theme: Dict
           <span>Grassfield</span>
         </a>
         <div className={s.links} id="nav-links">
-          {links.map(([href, label]) => (
-            <a key={href} href={href} onClick={() => setOpen(false)}>
+          {links.map(([href, label, p]) => (
+            <a key={href} href={href} onClick={() => setOpen(false)} aria-current={p === path ? "page" : undefined}>
               {label}
             </a>
           ))}

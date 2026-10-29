@@ -23,6 +23,8 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 
 ## Layout
 
+- Pages (`src/app/[lang]/`): home (showcase and index), `desktop/`, `apps/`, `security/`, `os/` (roadmap),
+  `download/`, `faq/`; same paths in both languages. Each inner page opens on `PageHero` inside `PageShell`.
 - `src/i18n/fr.ts` is the source text; `en.ts` must match its shape (`Dict` type). Routes: `/fr/`, `/en/`; `/` picks the
   visitor's language in the browser.
 - `src/components/`: one component per chapter. Product renders (`DesktopScene`, `OverviewScrub`, the bento minis)
