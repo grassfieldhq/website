@@ -76,8 +76,9 @@ It needs ImageMagick 7 (`magick`) and libavif (`avifenc`); `ffprobe` is optional
   file in `public/shots/` the manifest did not produce is deleted (the directory belongs to the script).
 - **Weight**: printed per kind and format. Screens have a budget (`--budget-screens=30`, MB): over it, the script
   steps down to lower qualities, then smaller top widths (`--tier=0|1|2` forces a tier); close-ups have
-  `--budget-details=8`; each clip file should stay under `--clip-max=1.5`. Measured on 8 cores: one 2880 px screen
-  encodes in about 15 s of work, about 3.5 s of wall time with the four parallel jobs (so ~12 minutes for 200 screens).
+  `--budget-details=8`; each clip file should stay under `--clip-max=1.5`. Time, measured on 8 cores: 17 screens at
+  1920 px plus 3 close-ups and a clip encode in 100 to 170 s; one 2880 px AVIF takes about 7 s. Estimate, not measured:
+  10 to 20 minutes for 200 screens at 2880 px. A rerun on unchanged captures takes seconds.
 - **Data**: `src/lib/shots.generated.ts` (do not edit), read through `src/lib/shots.ts`: scenes per language, `slot()`
   for the captures a chapter shows, `byFeature()` for galleries.
 - **Components**: `Shot` (a `<picture>` with AVIF then WebP, `srcset`/`sizes`, intrinsic size, lazy unless `eager`,
