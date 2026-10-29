@@ -1,0 +1,48 @@
+/* light and dark captures of one scene: the one not matching the site's appearance is hidden (same conditions as
+   the tokens in globals.css: the system's appearance unless the visitor picked one) */
+@media not (prefers-color-scheme: dark) {
+  :root:not([data-theme="dark"]) .variant[data-v="dark"] {
+    display: none;
+  }
+}
+:root[data-theme="light"] .variant[data-v="dark"] {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .variant[data-v="light"] {
+    display: none;
+  }
+}
+:root[data-theme="dark"] .variant[data-v="light"] {
+  display: none;
+}
+
+/* a region of a screen, zoomed: the point (--fx, --fy) stays in place, the rest is cropped */
+.focus {
+  position: relative;
+  overflow: hidden;
+}
+.focus img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--fx) var(--fy);
+  transform: scale(var(--z));
+  transform-origin: var(--fx) var(--fy);
+}
+
+.link {
+  display: block;
+  cursor: zoom-in;
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out);
+}
+.link:hover {
+  transform: translateY(-3px);
+}
+.link:focus-visible {
+  outline-offset: 4px;
+}
