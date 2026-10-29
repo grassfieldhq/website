@@ -84,8 +84,6 @@ const fr = {
     lead: "Coin actif, raccourci ou geste au pavé tactile : vos fenêtres s'écartent, ",
     leadStrong: "bien vivantes",
     leadAfter: ", et le bureau suivant est déjà là, en haut de l'écran.",
-    captureAlt:
-      "Capture de la Vue d'ensemble : quatre fenêtres de terminal disposées sur le fond d'écran, la barre des bureaux en haut et le Dock en bas.",
     captureNote: "Capture réelle, instance Grassfield de développement.",
     stats: [
       { value: "0,4 %", label: "de processeur pour le compositeur, avec six fenêtres ouvertes dans la Vue d'ensemble." },
@@ -99,7 +97,6 @@ const fr = {
     search: {
       title: "Rechercher.",
       body: "Une touche, quelques lettres, et l'app, le fichier ou le réglage est là. La meilleure réponse en premier.",
-      alt: "Capture de la recherche : le mot « files » tapé, l'app Fichiers en meilleur résultat.",
     },
     corners: { title: "Coins actifs.", body: "Une action par coin d'écran. Poussez le pointeur, c'est fait." },
     cc: {
@@ -144,6 +141,10 @@ const fr = {
       tag: "En préparation",
       title: "Stages.",
       body: "Regroupez vos fenêtres par tâche. La tâche en cours occupe le centre, les autres attendent sur le côté, à un clic.",
+    },
+    tiling: {
+      title: ["Des fenêtres bien rangées.", "D'un clic."],
+      body: "Le menu du bouton vert place une fenêtre sur une moitié de l'écran, remplit l'écran avec plusieurs fenêtres ou applique une disposition en grille.",
     },
   },
   glass: {
@@ -190,7 +191,6 @@ const fr = {
     settingsTitle2: "Simples, enfin.",
     settingsBody:
       "Une barre latérale, des groupes clairs, et des réglages qui s'appliquent tout de suite. L'accentuation choisie colore les boutons, les sélections et les curseurs, dans le shell comme dans les apps.",
-    settingsAlt: "Capture des Réglages Grassfield, section Apparence : mode Sombre, couleurs d'accentuation et apparence des icônes.",
   },
   omarchy: {
     eyebrow: "Sous le capot",

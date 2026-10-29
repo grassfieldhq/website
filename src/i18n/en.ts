@@ -84,7 +84,6 @@ const en: Dict = {
     lead: "Hot corner, shortcut or trackpad gesture: your windows spread out, ",
     leadStrong: "still live",
     leadAfter: ", and your next desktop is waiting at the top of the screen.",
-    captureAlt: "Overview capture: four terminal windows laid out over the wallpaper, the desktops bar at the top and the Dock at the bottom.",
     captureNote: "Real capture from the Grassfield development instance.",
     stats: [
       { value: "0.4%", label: "compositor CPU with six windows open in Overview." },
@@ -98,7 +97,6 @@ const en: Dict = {
     search: {
       title: "Search.",
       body: "One key, a few letters, and the app, file or setting is right there. Best match first.",
-      alt: "Search capture: “files” typed, the Files app as the top hit.",
     },
     corners: { title: "Hot corners.", body: "One action per screen corner. Push the pointer, done." },
     cc: {
@@ -143,6 +141,10 @@ const en: Dict = {
       tag: "In the works",
       title: "Stages.",
       body: "Group your windows by task. The current task takes the centre, the others wait at the side, one click away.",
+    },
+    tiling: {
+      title: ["Windows in order.", "In one click."],
+      body: "The green button's menu puts a window on half of the screen, fills the screen with several windows or applies a grid layout.",
     },
   },
   glass: {
@@ -189,7 +191,6 @@ const en: Dict = {
     settingsTitle2: "Simple, at last.",
     settingsBody:
       "A sidebar, clear groups, and settings that apply right away. Your accent colour tints buttons, selections and sliders, in the shell and in the apps.",
-    settingsAlt: "Grassfield Settings capture, Appearance section: Dark mode, accent colours and icon appearance.",
   },
   omarchy: {
     eyebrow: "Under the hood",

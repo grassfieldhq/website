@@ -6,6 +6,9 @@ import { PageShell } from "@/components/PageShell";
 import { PageHero } from "@/components/PageHero";
 import { Security } from "@/components/Security";
 import { SecurityMore } from "@/components/SecurityMore";
+import { Gallery } from "@/components/Gallery";
+import { Lightbox } from "@/components/Lightbox";
+import { pageFeatures, used } from "@/lib/shots";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/security">): Promise<Metadata> {
   const { lang } = await params;
@@ -21,8 +24,10 @@ export default async function SecurityPage({ params }: PageProps<"/[lang]/securi
   return (
     <PageShell t={t} lang={lang} path="security/">
       <PageHero {...t.pages.security} />
-      <Security t={t.security} locale={t.dates.locale} />
+      <Security t={t.security} locale={t.dates.locale} lang={lang} />
       <SecurityMore t={t.securityMore} />
+      <Gallery lang={lang} t={t.shots} features={pageFeatures.security} exclude={used(lang, ["lock"])} alt />
+      <Lightbox t={{ close: t.shots.close, prev: t.shots.prev, next: t.shots.next, of: t.shots.of }} />
     </PageShell>
   );
 }

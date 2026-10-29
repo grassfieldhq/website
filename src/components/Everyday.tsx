@@ -1,13 +1,26 @@
-import type { Dict } from "@/i18n";
+import type { Dict, Locale } from "@/i18n";
 import { Dot } from "./Dot";
 import { appIcon } from "@/lib/site";
+import { slot } from "@/lib/shots";
 import { Calendar } from "./Calendar";
 import { Mask } from "./Mask";
+import { Shot } from "./Shot";
 import { Wallpaper } from "./Wallpaper";
 import s from "./Everyday.module.css";
 
-export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dict["scene"]; locale: string }) {
+// Tile widths for `sizes` (bento of 6 columns in the 1120px wrap; one column under 900px).
+const TILE = { span4: "(max-width: 900px) calc(100vw - 92px), 660px", span3: "(max-width: 900px) calc(100vw - 92px), 470px", split: "(max-width: 900px) calc(100vw - 92px), 580px" };
+
+// Each tile shows a real capture when the set has one (see slots in lib/shots.ts), else its code-drawn render.
+export function Everyday({ t, scene, locale, lang }: { t: Dict["everyday"]; scene: Dict["scene"]; locale: string; lang: Locale }) {
   const cc = t.cc;
+  const shot = {
+    search: slot(lang, "search"),
+    cc: slot(lang, "controlcenter"),
+    notifications: slot(lang, "notifications"),
+    menus: slot(lang, "menus"),
+    tiling: slot(lang, "tiling"),
+  };
   return (
     <section className="chapter" aria-labelledby="everyday-title">
       <div className="wrap">
@@ -26,11 +39,11 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
               <h3 className="h-3">{t.search.title}</h3>
               <p>{t.search.body}</p>
             </div>
-            <div className={s.art}>
-              <div className="capture">
-                <img src="/shots/search.webp" width={800} height={400} alt={t.search.alt} loading="lazy" decoding="async" />
+            {shot.search && (
+              <div className={s.art}>
+                <Shot scene={shot.search.scene} focus={shot.search.focus} sizes={TILE.span4} />
               </div>
-            </div>
+            )}
           </article>
 
           <article className={`${s.tile} ${s.span2} reveal`}>
@@ -57,6 +70,9 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
               <p>{cc.body}</p>
             </div>
             <div className={s.art}>
+              {shot.cc ? (
+                <Shot scene={shot.cc.scene} focus={shot.cc.focus} sizes={TILE.span3} />
+              ) : (
               <div className="mini" style={{ ["--ar" as string]: "1 / 1", ["--base" as string]: 1000 }} role="img" aria-label={cc.title}>
                 <Wallpaper ratio={1} />
                 <div className={s.cc}>
@@ -75,6 +91,7 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
                   </div>
                 </div>
               </div>
+              )}
             </div>
           </article>
 
@@ -84,6 +101,9 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
               <p>{t.widgets.body}</p>
             </div>
             <div className={s.art}>
+              {shot.notifications ? (
+                <Shot scene={shot.notifications.scene} focus={shot.notifications.focus} sizes={TILE.span3} />
+              ) : (
               <div className="mini" style={{ ["--ar" as string]: "1 / 1", ["--base" as string]: 1000 }} role="img" aria-label={t.widgets.title}>
                 <Wallpaper ratio={1} />
                 <div className={s.wd}>
@@ -100,8 +120,25 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
                   </div>
                 </div>
               </div>
+              )}
             </div>
           </article>
+
+          {shot.tiling && (
+            <article className={`${s.tile} ${s.span6} ${s.split} ${s.splitRev} reveal`}>
+              <div>
+                <Shot scene={shot.tiling.scene} focus={shot.tiling.focus} sizes={TILE.split} />
+              </div>
+              <div className={s.head}>
+                <h3 className="h-2">
+                  {t.tiling.title[0]}
+                  <br />
+                  {t.tiling.title[1]}
+                </h3>
+                <p>{t.tiling.body}</p>
+              </div>
+            </article>
+          )}
 
           <article className={`${s.tile} ${s.span6} ${s.split} reveal`} id="menus">
             <div className={s.head}>
@@ -112,6 +149,11 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
               </h3>
               <p>{t.menus.body}</p>
             </div>
+            {shot.menus ? (
+              <div>
+                <Shot scene={shot.menus.scene} focus={shot.menus.focus} sizes={TILE.split} />
+              </div>
+            ) : (
             <div className="mini" style={{ ["--ar" as string]: "16 / 10", ["--base" as string]: 1440 }} role="img" aria-label={t.menus.title.join(" ")}>
               <Wallpaper />
               <div className={s.gmBar}>
@@ -138,6 +180,7 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
                 )}
               </div>
             </div>
+            )}
           </article>
 
           <article className={`${s.tile} ${s.span6} ${s.split} ${s.splitRev} reveal`}>
