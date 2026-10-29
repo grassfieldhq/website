@@ -1,0 +1,128 @@
+/* two steps on a horizon line: the first lit by the sun, the second still a ring */
+.road {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  position: relative;
+}
+.road::before {
+  content: "";
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 14px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--sun) 0%, var(--accent) 45%, var(--line) 55%, var(--line) 100%);
+}
+.step {
+  position: relative;
+  padding-top: 48px;
+  min-width: 0;
+}
+.node {
+  position: absolute;
+  top: 3px;
+  left: 18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: 0 0 0 2px var(--line) inset;
+}
+.step[data-now] .node {
+  background: radial-gradient(circle at 40% 35%, var(--sun-core) 0%, var(--sun) 55%, #c98a2e 100%);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--sun) 22%, transparent), 0 0 28px color-mix(in srgb, var(--sun) 60%, transparent);
+}
+.card {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  height: 100%;
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--r-tile);
+  background: var(--bg-2);
+}
+.step[data-now] .card {
+  background: var(--bg-2);
+  box-shadow: 0 0 0 2px var(--accent), 0 24px 60px -28px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.step:not([data-now]) .card {
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--line) inset;
+}
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.n {
+  color: var(--fg-2);
+}
+.status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg-3);
+  color: var(--fg-2);
+}
+.step[data-now] .status {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+.body {
+  color: var(--fg-2);
+  font-size: 16px;
+  text-wrap: pretty;
+}
+.points {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.points li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 15px;
+}
+.points i {
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  color: var(--accent);
+}
+.step:not([data-now]) .points i {
+  color: var(--fg-2);
+}
+.note {
+  margin-top: 28px;
+  font-size: 15px;
+  color: var(--fg-2);
+}
+@media (max-width: 800px) {
+  .road {
+    grid-template-columns: 1fr;
+  }
+  .road::before {
+    left: 29px;
+    right: auto;
+    top: 14px;
+    bottom: 40px;
+    width: 2px;
+    height: auto;
+    background: linear-gradient(180deg, var(--sun) 0%, var(--accent) 45%, var(--line) 55%);
+  }
+  .step {
+    padding-top: 0;
+    padding-left: 56px;
+  }
+}

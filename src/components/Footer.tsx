@@ -13,6 +13,7 @@ export function Footer({ t, nav, lang, path = "", privacy }: { t: Dict["footer"]
         <div className={s.cols}>
           <nav aria-label={t.cols.discover}>
             <h2>{t.cols.discover}</h2>
+            <a href={`${home}#roadmap`}>{nav.roadmap}</a>
             <a href={`${home}#desktop`}>{nav.desktop}</a>
             <a href={`${home}#overview`}>{nav.overview}</a>
             <a href={`${home}#glass`}>{nav.glass}</a>

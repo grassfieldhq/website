@@ -170,3 +170,13 @@ test("the site loads nothing from other origins and sets no cookies", async ({ p
   expect(foreign).toEqual([]);
   expect(await context.cookies()).toEqual([]);
 });
+
+test("presents Grassfield OS with the desktop as its first step", async ({ page }) => {
+  await page.goto("/fr/");
+  await expect(page).toHaveTitle(/Grassfield OS/);
+  const road = page.locator("#roadmap");
+  await expect(road.getByRole("heading", { level: 3, name: "Grassfield Desktop" })).toBeVisible();
+  await expect(road.getByRole("heading", { level: 3, name: "Grassfield OS" })).toBeVisible();
+  await expect(road.getByText("En test")).toBeVisible();
+  await expect(road.getByText("Prévu")).toBeVisible();
+});

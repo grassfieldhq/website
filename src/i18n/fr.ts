@@ -1,9 +1,9 @@
 // French is the source language of the site; en.ts must provide the same keys (checked by the Dict type).
 const fr = {
   meta: {
-    title: "Grassfield Desktop",
+    title: "Grassfield OS",
     description:
-      "Un bureau Linux pensé jusqu'au moindre pixel : barre de menus, Dock, Vue d'ensemble et recherche, conçus ensemble pour Omarchy 4 et Hyprland.",
+      "Grassfield OS, un système d'exploitation basé sur Arch Linux, pensé jusqu'au moindre pixel. Première étape : Grassfield Desktop, en test sur Omarchy 4.",
     ogAlt: "Le bureau Grassfield sur son fond d'écran de collines vertes.",
   },
   nav: {
@@ -11,6 +11,7 @@ const fr = {
     label: "Navigation principale",
     home: "Grassfield, accueil",
     desktop: "Bureau",
+    roadmap: "Feuille de route",
     overview: "Vue d'ensemble",
     glass: "Verre",
     security: "Sécurité",
@@ -49,13 +50,13 @@ const fr = {
     },
   },
   hero: {
-    eyebrow: "Grassfield Desktop · pour Omarchy 4",
+    eyebrow: "Grassfield OS",
     title: "Grassfield.",
     leadStrong: "pensé jusqu'au moindre pixel.",
-    leadBefore: "Votre bureau Linux, ",
-    leadAfter: " Une barre de menus, un Dock, la Vue d'ensemble et la recherche, conçus ensemble sur Hyprland.",
+    leadBefore: "Un système d'exploitation ",
+    leadAfter: " Il commence par ce que vous voyez toute la journée : le bureau, en test sur Omarchy 4.",
     cta: "Bientôt disponible",
-    more: "Découvrir le bureau",
+    more: "Le chemin vers Grassfield OS",
   },
   statement: {
     parts: [
@@ -192,8 +193,8 @@ const fr = {
   },
   omarchy: {
     eyebrow: "Sous le capot",
-    title: "Construit pour Omarchy.",
-    lead: "Grassfield ne remplace pas votre système, il s'installe dessus. ",
+    title: "Aujourd'hui, sur Omarchy.",
+    lead: "L'étape 1 ne remplace pas votre système, elle s'installe dessus. ",
     leadStrong: "Mises à jour, instantanés, chiffrement et pilotes restent ceux d'Omarchy.",
     specs: [
       { k: "Compositeur", v: "Hyprland 0.56", p: "Plus un plugin Grassfield pour les barres de titre, la réduction animée et la Vue d'ensemble en direct." },
@@ -205,8 +206,8 @@ const fr = {
     ],
   },
   install: {
-    title: "Grassfield arrive bientôt.",
-    lead: "La version candidate est en test sur Omarchy 4. La version 1.0 sera publiée une fois la dernière revue terminée.",
+    title: "L'étape 1 arrive bientôt.",
+    lead: "Grassfield Desktop 1.0 est en version candidate, en test sur Omarchy 4. Elle sera publiée une fois la dernière revue terminée.",
     status: "en test",
     cta: "Configuration requise et installation",
     steps: [
@@ -216,7 +217,7 @@ const fr = {
     ],
   },
   footer: {
-    note: "Grassfield est un projet indépendant. Les captures proviennent de l'instance de développement ; l'interface peut évoluer d'ici la version 1.0.",
+    note: "Grassfield est un projet indépendant. Grassfield OS est en préparation ; Grassfield Desktop, sa première étape, est en test. Les captures proviennent de l'instance de développement ; l'interface peut évoluer d'ici la version 1.0.",
     cols: {
       discover: "Découvrir",
       system: "Système",
@@ -229,7 +230,7 @@ const fr = {
       proof: "Pas un thème",
     },
     licences: ["Code : MIT", "Illustrations : CC-BY-SA-4.0", "Logo : tous droits réservés"],
-    copyright: "Construit pour Omarchy, basé sur Arch Linux.",
+    copyright: "Grassfield OS, basé sur Arch Linux. Grassfield Desktop, construit pour Omarchy.",
     marks: "Omarchy, Hyprland, Arch Linux, Qt et Quickshell sont cités à titre descriptif ; ces noms appartiennent à leurs détenteurs.",
     locale: "Français (France)",
   },
@@ -242,9 +243,9 @@ const fr = {
   download: {
     metaTitle: "Télécharger Grassfield Desktop",
     metaDescription: "Version, configuration requise, paquets, installation et désinstallation de Grassfield Desktop pour Omarchy 4.",
-    eyebrow: "Télécharger",
+    eyebrow: "Télécharger · Étape 1",
     title: "Grassfield Desktop",
-    lead: "Des paquets signés, installés sur votre Omarchy. Votre système reste le vôtre : vous pouvez tout retirer à tout moment.",
+    lead: "La première étape de Grassfield OS : des paquets signés, installés sur votre Omarchy. Votre système reste le vôtre : vous pouvez tout retirer à tout moment.",
     version: "Version",
     channelBeta: "Préversion",
     channelStable: "Stable",
@@ -290,14 +291,15 @@ const fr = {
     eyebrow: "Questions fréquentes",
     title: "Bon à savoir.",
     items: [
-      { q: "Grassfield remplace-t-il Omarchy ?", a: "Non. Grassfield s'installe sur Omarchy sous forme de paquets, et la connexion mène ensuite à Grassfield. La commande grassfield-login set omarchy vous ramène à la session Omarchy, sans rien désinstaller. Mises à jour, instantanés, chiffrement, pilotes et votre session Omarchy restent en place." },
+      { q: "Grassfield est-il un système d'exploitation ?", a: "C'est le cap. Grassfield OS sera un système complet, basé sur Arch Linux, installé depuis sa propre image d'installation. Sa première étape, Grassfield Desktop, est en test sur Omarchy 4 : vous pourrez l'installer sur votre système actuel, et le retirer." },
+      { q: "Grassfield Desktop remplace-t-il Omarchy ?", a: "Non. Grassfield s'installe sur Omarchy sous forme de paquets, et la connexion mène ensuite à Grassfield. La commande grassfield-login set omarchy vous ramène à la session Omarchy, sans rien désinstaller. Mises à jour, instantanés, chiffrement, pilotes et votre session Omarchy restent en place." },
       { q: "Est-ce un thème ?", a: "Non. Grassfield a son propre shell (barre de menus, Dock, recherche, notifications), son plugin pour Hyprland, son écran de verrouillage, son agent d'autorisation et ses apps : Fichiers, Réglages, Visionneuse et Store." },
       { q: "Comment le désinstaller ?", a: "Retirez les paquets avec pacman, puis redémarrez : la connexion mène de nouveau à Omarchy. La commande exacte est sur la page Télécharger." },
       { q: "Que se passe-t-il si Hyprland est mis à jour ?", a: "Si la nouvelle version n'est pas compatible avec le plugin Grassfield, celui-ci ne se charge pas. Le bureau reste utilisable, la Vue d'ensemble passe aux miniatures, et une notification indique comment reconstruire le plugin." },
       { q: "Quelles apps affichent leurs menus dans la barre de menus ?", a: "Les apps Qt et KDE, Chromium et les apps Grassfield. Firefox aussi, une fois son option de menu global activée. Les autres apps reçoivent un menu standard, avec leurs actions et celles de la fenêtre." },
       { q: "Comment arrivent les mises à jour ?", a: "Par un dépôt de paquets signé, en canal stable ou bêta. La mise à jour passe par celle d'Omarchy, dans un terminal, et rien ne s'installe sans votre accord." },
       { q: "Grassfield est-il libre ?", a: "Oui. Le code de Grassfield est sous licence MIT, et ses illustrations sous licence CC-BY-SA-4.0." },
-      { q: "Fonctionne-t-il sur une autre distribution ?", a: "Grassfield est conçu pour Omarchy 4, sur processeur x86_64. Les autres distributions ne sont pas prises en charge." },
+      { q: "Fonctionne-t-il sur une autre distribution ?", a: "Grassfield Desktop est conçu pour Omarchy 4, sur processeur x86_64. Les autres distributions ne sont pas prises en charge. Grassfield OS, lui, s'installera depuis sa propre image." },
       { q: "Ce site utilise-t-il des cookies ?", a: "Non. Pas de cookies, pas de publicité, pas de mesure d'audience. Votre choix d'apparence est gardé dans votre navigateur, et nulle part ailleurs." },
     ],
   },
@@ -357,6 +359,29 @@ const fr = {
   },
   privacy: {
     statement: "Ce site n'utilise ni cookie, ni publicité, ni mesure d'audience. Toutes ses ressources viennent de lui-même.",
+  },
+  roadmap: {
+    eyebrow: "Feuille de route",
+    title: ["Un système complet.", "Une étape à la fois."],
+    lead: "Grassfield OS sera un système d'exploitation complet, basé sur Arch Linux. Nous le construisons dans l'ordre : ",
+    leadStrong: "d'abord le bureau, là où vous passez vos journées.",
+    steps: [
+      {
+        n: "Étape 1",
+        name: "Grassfield Desktop",
+        status: "En test",
+        body: "La session complète et ses apps, installée en paquets sur Omarchy 4. Vous gardez votre système, et vous pouvez tout retirer.",
+        points: ["Barre de menus, Dock, Vue d'ensemble, recherche", "Verrouillage, autorisations, notifications", "Fichiers, Réglages, Visionneuse, Store", "Mises à jour par un dépôt signé"],
+      },
+      {
+        n: "Étape 2",
+        name: "Grassfield OS",
+        status: "Prévu",
+        body: "Le système entier, installé depuis sa propre image, avec Grassfield dès le premier démarrage. Construit à partir de l'installeur libre d'Omarchy.",
+        points: ["Image d'installation basée sur Arch Linux", "Grassfield par défaut, dès l'installation", "Installation et mises à jour testées à chaque version", "Guide de récupération"],
+      },
+    ],
+    note: "Grassfield OS commence après la bêta du bureau. Nous n'annonçons pas de date que nous ne savons pas tenir.",
   },
   dates: { locale: "fr-FR" },
 };

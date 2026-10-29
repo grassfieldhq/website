@@ -1,6 +1,8 @@
 # Grassfield website
 
-The presentation site of Grassfield Desktop, in French and English. Next.js 16 (App Router), React 19, TypeScript,
+The presentation site of Grassfield OS, in French and English. Positioning: Grassfield OS is the product (an
+operating system based on Arch Linux, planned as M6 of the master plan); Grassfield Desktop, in testing on Omarchy 4, is
+its first step. The roadmap chapter states what exists and what is planned, with no date. Next.js 16 (App Router), React 19, TypeScript,
 CSS Modules, exported as static files (`out/`): no server, any static host works.
 
 **Private until the public launch.** The Grassfield brief keeps everything private until the legal review (master

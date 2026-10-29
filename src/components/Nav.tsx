@@ -29,7 +29,7 @@ export function Nav({ t, theme, lang, path = "" }: { t: Dict["nav"]; theme: Dict
   const links: [string, string][] = [
     [`${home}#desktop`, t.desktop],
     [`${home}#overview`, t.overview],
-    [`${home}#glass`, t.glass],
+    [`${home}#roadmap`, t.roadmap],
     [`${home}#security`, t.security],
     [`${home}#apps`, t.apps],
     [`${home}#faq`, t.faq],

@@ -14,6 +14,7 @@ import { Faq } from "@/components/Faq";
 import { Proof } from "@/components/Proof";
 import { Reversible } from "@/components/Reversible";
 import { Numbers } from "@/components/Numbers";
+import { Roadmap } from "@/components/Roadmap";
 import { Footer } from "@/components/Footer";
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
@@ -30,6 +31,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <main id="main">
         <Hero t={t.hero} scene={t.scene} locale={locale} lang={lang} />
         <Statement t={t.statement} />
+        <Roadmap t={t.roadmap} />
         <Overview t={t.overview} scene={t.scene} locale={locale} />
         <Proof t={t.proof} />
         <Everyday t={t.everyday} scene={t.scene} locale={locale} />

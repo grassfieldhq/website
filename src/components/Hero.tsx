@@ -23,7 +23,7 @@ export function Hero({ t, scene, locale, lang }: { t: Dict["hero"]; scene: Dict[
               <a className="btn btn-primary" href={`/${lang}/download/`}>
                 {t.cta}
               </a>
-              <a className={`btn btn-link ${s.more}`} href="#desktop">
+              <a className={`btn btn-link ${s.more}`} href="#roadmap">
                 {t.more}
               </a>
             </div>
