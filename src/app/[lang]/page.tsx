@@ -10,6 +10,7 @@ import { Security } from "@/components/Security";
 import { Apps } from "@/components/Apps";
 import { Omarchy } from "@/components/Omarchy";
 import { Install } from "@/components/Install";
+import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
@@ -22,7 +23,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <a className="skip" href="#main">
         {t.nav.skip}
       </a>
-      <Nav t={t.nav} lang={lang} />
+      <Nav t={t.nav} theme={t.theme} lang={lang} />
       <main id="main">
         <Hero t={t.hero} scene={t.scene} locale={locale} />
         <Statement t={t.statement} />
@@ -32,7 +33,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         <Security t={t.security} locale={locale} />
         <Apps t={t.apps} captureNote={t.overview.captureNote} />
         <Omarchy t={t.omarchy} />
-        <Install t={t.install} />
+        <Faq t={t.faq} />
+        <Install t={t.install} lang={lang} />
       </main>
       <Footer t={t.footer} nav={t.nav} lang={lang} />
     </>

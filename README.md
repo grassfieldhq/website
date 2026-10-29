@@ -15,7 +15,7 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 | `npm run lint` · `npm run typecheck` | ESLint (next/core-web-vitals + TS) · `tsc` |
 | `npm run build` | static export to `out/` |
 | `node scripts/serve.mjs` | serve `out/` on http://localhost:4321 |
-| `npm test` | Playwright on the built site: desktop and phone, fr and en, axe accessibility, overflow, images, language routing, the Overview scrub and the glass demo |
+| `npm test` | Playwright on the built site, desktop and phone, fr and en, home and Download: axe accessibility, overflow, images, language routing, the Overview scrub, the glass demo, the theme toggle (no flash), the FAQ and its structured data, the copy button |
 | `npm run check` | all of the above, in order |
 | `node scripts/og.mjs` | re-render `public/og.png` from the built hero |
 
@@ -27,6 +27,11 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
   are drawn in a virtual screen measured in `--u` (1/1440 of its width), so they scale like images and stay sharp.
 - Product colours, radii, dock and window geometry come from `grassfield/ui/tokens/tokens.json`; the wallpaper is the
   same procedure as `GrassfieldArtwork.qml`.
+- `src/lib/release.ts`: the Download page's facts (version, packages, uninstall command). Fill `publish` (date,
+  repository setup and install commands) when the `[grassfield]` repository is published; the page then shows them
+  with copy buttons instead of "not released yet".
+- Site appearance: automatic, light or dark (`ThemeToggle`), kept in `localStorage` and applied before first paint by
+  the inline script in `src/lib/theme.ts`.
 - `public/shots/`: real captures from the development instance. Replace them with dedicated `just shot` captures
   before launch.
 
@@ -35,7 +40,8 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 - [ ] Legal review done (owner), then set `robots` to allow and remove `noindex` in `src/app/[lang]/layout.tsx`.
 - [ ] Domain chosen: set `NEXT_PUBLIC_SITE_URL` at build time (placeholder `https://grassfield.invalid`).
 - [ ] Hosting chosen (static: GitHub Pages, Cloudflare Pages, Netlify…), with security headers (CSP, HSTS).
-- [ ] Fresh, dedicated captures; real install instructions once packages are published.
+- [ ] Fresh, dedicated captures.
+- [ ] Fill `publish` in `src/lib/release.ts` with the published repository's setup and install commands.
 - [ ] Licence of this repository's code (owner).
 
 Assets and their licences: `NOTICE.md`.

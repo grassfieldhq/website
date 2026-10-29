@@ -4,6 +4,7 @@ import "../globals.css";
 import { inter } from "@/lib/fonts";
 import { getDict, isLocale, locales } from "@/i18n";
 import { siteUrl } from "@/lib/site";
+import { themeScript } from "@/lib/theme";
 
 export const dynamicParams = false;
 
@@ -51,7 +52,10 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   return (
-    <html lang={lang} className={inter.variable}>
+    <html lang={lang} className={inter.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

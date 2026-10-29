@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import type { Dict, Locale } from "@/i18n";
 import { otherLocale } from "@/i18n";
 import { Mask } from "./Mask";
+import { ThemeToggle } from "./ThemeToggle";
 import s from "./Nav.module.css";
 
-export function Nav({ t, lang }: { t: Dict["nav"]; lang: Locale }) {
+export function Nav({ t, theme, lang, path = "" }: { t: Dict["nav"]; theme: Dict["theme"]; lang: Locale; path?: string }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -24,20 +25,21 @@ export function Nav({ t, lang }: { t: Dict["nav"]; lang: Locale }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const home = `/${lang}/`;
   const links: [string, string][] = [
-    ["#desktop", t.desktop],
-    ["#overview", t.overview],
-    ["#glass", t.glass],
-    ["#security", t.security],
-    ["#apps", t.apps],
-    ["#omarchy", t.omarchy],
+    [`${home}#desktop`, t.desktop],
+    [`${home}#overview`, t.overview],
+    [`${home}#glass`, t.glass],
+    [`${home}#security`, t.security],
+    [`${home}#apps`, t.apps],
+    [`${home}#faq`, t.faq],
   ];
   const other = otherLocale(lang);
 
   return (
     <nav className={s.nav} data-scrolled={scrolled} data-open={open} aria-label={t.label}>
       <div className={`wrap ${s.row}`}>
-        <a className={s.brand} href="#top" aria-label={t.home}>
+        <a className={s.brand} href={home} aria-label={t.home}>
           <Mask name="grassfield-logo" className={s.logo} />
           <span>Grassfield</span>
         </a>
@@ -47,11 +49,12 @@ export function Nav({ t, lang }: { t: Dict["nav"]; lang: Locale }) {
               {label}
             </a>
           ))}
-          <a className={s.lang} href={`/${other}/`} hrefLang={other} lang={other} title={t.switchLangLabel}>
+          <a className={s.lang} href={`/${other}/${path}`} hrefLang={other} lang={other} title={t.switchLangLabel}>
             {t.switchLang}
           </a>
         </div>
-        <a className={`btn btn-primary ${s.cta}`} href="#install">
+        <ThemeToggle t={theme} />
+        <a className={`btn btn-primary ${s.cta}`} href={`${home}download/`}>
           {t.cta}
         </a>
         <button

@@ -5,10 +5,12 @@ import { siteUrl } from "@/lib/site";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return locales.map((lang) => ({
-    url: `${siteUrl}/${lang}/`,
-    changeFrequency: "monthly",
-    priority: lang === "fr" ? 1 : 0.9,
-    alternates: { languages: Object.fromEntries(locales.map((l) => [l, `${siteUrl}/${l}/`])) },
-  }));
+  return ["", "download/"].flatMap((path) =>
+    locales.map((lang) => ({
+      url: `${siteUrl}/${lang}/${path}`,
+      changeFrequency: "monthly" as const,
+      priority: path ? 0.8 : 1,
+      alternates: { languages: Object.fromEntries(locales.map((l) => [l, `${siteUrl}/${l}/${path}`])) },
+    })),
+  );
 }
