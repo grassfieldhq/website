@@ -14,6 +14,7 @@ const en: Dict = {
     desktop: "Desktop",
     roadmap: "Roadmap",
     os: "Grassfield OS",
+    tour: "Tour",
     overview: "Overview",
     glass: "Glass",
     security: "Security",
@@ -390,6 +391,7 @@ const en: Dict = {
     security: { title: "Security and privacy · Grassfield OS", description: "Wayland session lock, polkit permissions, signed packages, opt-in sources: the security of Grassfield OS.", eyebrow: "Security and privacy", heading: "Secure by design.", lead: "Grassfield builds on the system's own mechanisms instead of inventing its own: Wayland's session lock, Omarchy's passwords, polkit, pacman signatures." },
     os: { title: "Grassfield OS · Roadmap", description: "Grassfield OS, an operating system based on Arch Linux, built one step at a time. Step 1: the desktop, in testing.", eyebrow: "Roadmap", heading: "Grassfield OS.", lead: "Grassfield OS will be a complete operating system, based on Arch Linux. Here's where we are, and what comes next." },
     faq: { title: "Questions · Grassfield OS", description: "Answers to frequently asked questions about Grassfield OS and Grassfield Desktop.", eyebrow: "Frequently asked questions", heading: "Good to know.", lead: "What to know before installing the first step, and after." },
+    tour: { title: "Guided tour · Grassfield OS", description: "The Grassfield desktop, apps and system in real captures, feature by feature.", eyebrow: "Guided tour", heading: "Grassfield, for real.", lead: "Every surface of the system, captured on the development instance, feature by feature." },
   },
   more: "Learn more",
   teasers: {
@@ -481,6 +483,18 @@ const en: Dict = {
       polkit: { title: "Permissions", body: "Administration requests, in the desktop's own style." },
     },
     other: { title: "And more", body: "More details of the system." },
+  },
+  tour: {
+    index: "Features",
+    count: (n: number) => (n === 1 ? "1 capture" : `${n} captures`),
+    empty: "Captures are coming soon.",
+    top: "Back to the index",
+    strip: {
+      eyebrow: "Guided tour",
+      title: ["The system, for real.", "Capture by capture."],
+      lead: "No mock-ups: every image comes from Grassfield's development instance.",
+      cta: "Take the tour",
+    },
   },
   dates: { locale: "en-GB" },
 };

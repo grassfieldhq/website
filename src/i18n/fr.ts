@@ -13,6 +13,7 @@ const fr = {
     desktop: "Bureau",
     roadmap: "Feuille de route",
     os: "Grassfield OS",
+    tour: "Visite",
     overview: "Vue d'ensemble",
     glass: "Verre",
     security: "Sécurité",
@@ -390,6 +391,7 @@ const fr = {
     security: { title: "Sécurité et confidentialité · Grassfield OS", description: "Verrouillage de session Wayland, autorisations polkit, paquets signés, sources en option : la sécurité de Grassfield OS.", eyebrow: "Sécurité et confidentialité", heading: "Sûr, par conception.", lead: "Grassfield s'appuie sur les mécanismes du système plutôt que d'en inventer : verrouillage Wayland, mots de passe d'Omarchy, polkit, signatures pacman." },
     os: { title: "Grassfield OS · Feuille de route", description: "Grassfield OS, un système d'exploitation basé sur Arch Linux, construit une étape à la fois. Étape 1 : le bureau, en test.", eyebrow: "Feuille de route", heading: "Grassfield OS.", lead: "Grassfield OS sera un système d'exploitation complet, basé sur Arch Linux. Voici où nous en sommes, et ce qui vient ensuite." },
     faq: { title: "Questions · Grassfield OS", description: "Les réponses aux questions fréquentes sur Grassfield OS et Grassfield Desktop.", eyebrow: "Questions fréquentes", heading: "Bon à savoir.", lead: "Ce qu'il faut savoir avant d'installer la première étape, et après." },
+    tour: { title: "Visite guidée · Grassfield OS", description: "Le bureau, les apps et le système Grassfield en captures réelles, fonction par fonction.", eyebrow: "Visite guidée", heading: "Grassfield, en vrai.", lead: "Chaque surface du système, capturée sur l'instance de développement, fonction par fonction." },
   },
   more: "En savoir plus",
   teasers: {
@@ -481,6 +483,18 @@ const fr = {
       polkit: { title: "Autorisations", body: "Les demandes d'administration, dans le style du bureau." },
     },
     other: { title: "Et aussi", body: "D'autres détails du système." },
+  },
+  tour: {
+    index: "Fonctionnalités",
+    count: (n: number) => (n > 1 ? `${n} captures` : `${n} capture`),
+    empty: "Les captures arrivent bientôt.",
+    top: "Revenir à l'index",
+    strip: {
+      eyebrow: "Visite guidée",
+      title: ["Le système, en vrai.", "Capture par capture."],
+      lead: "Pas de maquette : chaque image vient de l'instance de développement de Grassfield.",
+      cta: "Faire la visite",
+    },
   },
   dates: { locale: "fr-FR" },
 };

@@ -31,6 +31,7 @@ export function Nav({ t, theme, lang, path = "" }: { t: Dict["nav"]; theme: Dict
     [`${home}apps/`, t.apps, "apps/"],
     [`${home}security/`, t.security, "security/"],
     [`${home}os/`, t.os, "os/"],
+    [`${home}tour/`, t.tour, "tour/"],
     [`${home}faq/`, t.faq, "faq/"],
   ];
   const other = otherLocale(lang);

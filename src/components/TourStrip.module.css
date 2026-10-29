@@ -1,0 +1,40 @@
+.grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 20px;
+}
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.card {
+  display: grid;
+  gap: 12px;
+}
+.card :global(.capture) {
+  transition: transform 0.35s var(--ease-out);
+}
+.card:hover :global(.capture) {
+  transform: translateY(-4px);
+}
+.title {
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+.title::after {
+  content: " ›" / "";
+  color: var(--accent);
+}
+.cta {
+  margin-top: clamp(36px, 5vw, 56px);
+  text-align: center;
+}
