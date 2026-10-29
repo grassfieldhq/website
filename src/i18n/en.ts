@@ -496,6 +496,19 @@ const en: Dict = {
       cta: "Take the tour",
     },
   },
+  shell: {
+    menubarLabel: "Menu bar",
+    dockLabel: "Dock",
+    search: "Search",
+    searchOpen: "Search the site (⌘K)",
+    searchPlaceholder: "Page, question, capture…",
+    searchHint: "Arrows to choose, Enter to open, Escape to close",
+    groups: { pages: "Pages", faq: "Questions", tour: "Guided tour" },
+    noResults: "No results for",
+    home: "Home",
+    lang: "FR",
+    langLabel: "Lire cette page en français",
+  },
   dates: { locale: "en-GB" },
 };
 

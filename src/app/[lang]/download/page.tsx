@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/i18n";
 import { release } from "@/lib/release";
-import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
+import { PageShell } from "@/components/PageShell";
 import { Command } from "@/components/Command";
 import { Mask } from "@/components/Mask";
 import { Numbers } from "@/components/Numbers";
@@ -38,12 +37,8 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
   const fmtDate = (iso: string) => new Intl.DateTimeFormat(all.dates.locale, { dateStyle: "long" }).format(new Date(iso));
 
   return (
-    <>
-      <a className="skip" href="#main">
-        {all.nav.skip}
-      </a>
-      <Nav t={all.nav} theme={all.theme} lang={lang} path="download/" />
-      <main id="main">
+    <PageShell t={all} lang={lang} path="download/">
+      <div>
         <header className={`wrap ${s.hero}`}>
           <div className={s.heroText}>
             <p className="eyebrow">{t.eyebrow}</p>
@@ -180,8 +175,7 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
             {t.back}
           </a>
         </p>
-      </main>
-      <Footer t={all.footer} nav={all.nav} lang={lang} path="download/" privacy={all.privacy.statement} />
-    </>
+      </div>
+    </PageShell>
   );
 }

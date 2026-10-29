@@ -496,6 +496,19 @@ const fr = {
       cta: "Faire la visite",
     },
   },
+  shell: {
+    menubarLabel: "Barre des menus",
+    dockLabel: "Dock",
+    search: "Rechercher",
+    searchOpen: "Rechercher sur le site (⌘K)",
+    searchPlaceholder: "Page, question, capture…",
+    searchHint: "Flèches pour choisir, Entrée pour ouvrir, Échap pour fermer",
+    groups: { pages: "Pages", faq: "Questions", tour: "Visite guidée" },
+    noResults: "Aucun résultat pour",
+    home: "Accueil",
+    lang: "EN",
+    langLabel: "Read this page in English",
+  },
   dates: { locale: "fr-FR" },
 };
 

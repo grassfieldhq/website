@@ -45,7 +45,7 @@ async function loadRendered(page: Page) {
 // machine even with no request pending (seen on origin/main too, ten pages in parallel).
 async function hydrated(page: Page) {
   await page.waitForFunction(() => {
-    const el = document.querySelector("nav button");
+    const el = document.querySelector("header button");
     return !!el && Object.keys(el).some((k) => k.startsWith("__react"));
   });
 }
@@ -175,15 +175,53 @@ test("download page states the version, requirements and an uninstall command to
   );
 });
 
-test("the navigation reaches every page and marks the current one", async ({ page }) => {
+test("the Dock reaches every page and marks the current one", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/en/");
-  const nav = page.getByRole("navigation", { name: "Main navigation" });
-  for (const [name, path] of [["Desktop", "desktop/"], ["Apps", "apps/"], ["Security", "security/"], ["Grassfield OS", "os/"], ["FAQ", "faq/"], ["Install", "download/"]]) {
-    await nav.getByRole("link", { name, exact: true }).click();
+  const dock = page.getByRole("navigation", { name: "Dock" });
+  for (const [name, path] of [["Desktop", "desktop/"], ["Apps", "apps/"], ["Security", "security/"], ["Grassfield OS", "os/"], ["Tour", "tour/"], ["Download", "download/"], ["FAQ", "faq/"], ["Home", ""]]) {
+    await dock.getByRole("link", { name, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/en/${path}$`));
-    if (path !== "download/") await expect(nav.getByRole("link", { name, exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(dock.getByRole("link", { name, exact: true })).toHaveAttribute("aria-current", "page");
   }
+});
+
+test("the menu bar names the page and keeps the language link on the same page", async ({ page }) => {
+  await page.goto("/fr/security/");
+  const bar = page.getByRole("banner");
+  await expect(bar.locator("b")).toHaveText("Sécurité");
+  await bar.getByRole("link", { name: "EN" }).click();
+  await expect(page).toHaveURL(/\/en\/security\/$/);
+  await expect(page.getByRole("banner").locator("b")).toHaveText("Security");
+});
+
+test("⌘K search reaches a page, a FAQ answer and a captured scene", async ({ page }) => {
+  await page.goto("/fr/");
+  await hydrated(page);
+  await page.keyboard.press("Control+k");
+  const dialog = page.getByRole("dialog", { name: "Rechercher" });
+  await expect(dialog).toBeVisible();
+  const input = dialog.getByRole("combobox");
+  await expect(input).toBeFocused();
+  await input.fill("sécu");
+  await expect(dialog.getByRole("option").first()).toContainText("Sécurité");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/fr\/security\/$/);
+  await hydrated(page);
+
+  await page.getByRole("button", { name: /Rechercher sur le site/ }).click();
+  await page.getByRole("combobox").fill("désinstaller");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/fr\/faq\/#faq-\d+$/);
+  await expect(page.locator(":target")).toHaveCount(1);
+  await hydrated(page);
+
+  await page.keyboard.press("Control+k");
+  await page.getByRole("combobox").fill("verrouillage");
+  const option = page.getByRole("option").filter({ hasText: /verrouill/i }).first();
+  await expect(option).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toBeHidden();
 });
 
 test("home is an index: four teasers and a short FAQ that links to the full one", async ({ page }) => {

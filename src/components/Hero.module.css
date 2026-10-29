@@ -1,7 +1,7 @@
 .hero {
   --hero-fg: #f5f5f7;
   color: var(--hero-fg);
-  margin-top: -66px; /* the floating nav sits over the landscape */
+  margin-top: calc(-1 * var(--bar-h)); /* the landscape runs under the menu bar */
 }
 .track {
   position: relative;

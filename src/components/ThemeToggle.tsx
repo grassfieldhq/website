@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import type { Dict } from "@/i18n";
 import { THEME_KEY, type ThemePref } from "@/lib/theme";
 import { Mask } from "./Mask";
-import s from "./Nav.module.css";
+import s from "./Shell.module.css";
 
 const EVENT = "gf-theme-change";
 const order: ThemePref[] = ["system", "light", "dark"];

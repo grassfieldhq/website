@@ -2,7 +2,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  margin: -66px var(--panel-x) 0;
+  margin: calc(-1 * var(--bar-h)) var(--panel-x) 0;
   border-radius: 0 0 var(--panel-r) var(--panel-r);
   min-height: clamp(460px, 68vh, 640px);
   display: grid;

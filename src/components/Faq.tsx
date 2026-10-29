@@ -29,8 +29,8 @@ export function Faq({ t, limit, all, head = true }: { t: Dict["faq"]; limit?: nu
           )}
         </div>
         <div className={s.list}>
-          {items.map((it) => (
-            <details key={it.q} className={s.item}>
+          {items.map((it, i) => (
+            <details key={it.q} className={s.item} id={`faq-${i}`}>
               <summary>
                 <span>{it.q}</span>
                 <i aria-hidden="true" />
