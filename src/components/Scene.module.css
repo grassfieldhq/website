@@ -80,7 +80,7 @@
   margin: calc(var(--u) * 10) 0 calc(var(--u) * 4) calc(var(--u) * 10);
   font-size: calc(var(--u) * 11);
   font-weight: 650;
-  color: rgb(245 245 247 / 0.45);
+  color: rgb(245 245 247 / 0.62);
 }
 .side span {
   display: flex;
@@ -131,7 +131,7 @@
   padding: 0 calc(var(--u) * 10);
   border-radius: calc(var(--u) * 8);
   background: rgb(255 255 255 / 0.08);
-  color: rgb(245 245 247 / 0.5);
+  color: rgb(245 245 247 / 0.72);
 }
 .field i {
   width: calc(var(--u) * 13);

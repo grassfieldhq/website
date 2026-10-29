@@ -15,6 +15,10 @@
   --nav: rgb(255 255 255 / 0.72);
   --shadow: 0 30px 80px -30px rgb(15 42 63 / 0.45);
   --grad: linear-gradient(100deg, #1f4f2c 0%, #26763f 40%, #2f6f7e 75%, #8a6400 100%);
+  --sun: #e8b45a;
+  --sun-core: #fff1c2;
+  --panel-r: clamp(24px, 3vw, 44px);
+  --panel-x: clamp(8px, 1.2vw, 20px);
 
   --gf-text: #f5f5f7;
   --gf-text-2: #dcdce4;
@@ -73,6 +77,17 @@
 }
 
 /* chapters that are always dark, whatever the theme */
+/* chapters as rounded panels inset from the page edge */
+.stage,
+.alt,
+.finale {
+  margin-inline: var(--panel-x);
+  border-radius: var(--panel-r);
+}
+.stage + .stage,
+.alt + .alt {
+  margin-top: var(--panel-x);
+}
 .stage {
   --bg: #000000;
   --bg-2: #111412;
@@ -184,20 +199,23 @@ button {
   color: var(--accent);
 }
 .h-hero {
-  font-size: clamp(56px, 11vw, 136px);
-  font-weight: 700;
-  letter-spacing: -0.05em;
+  font-variation-settings: "opsz" 32;
+  font-size: clamp(64px, 13vw, 168px);
+  font-weight: 760;
+  letter-spacing: -0.055em;
   line-height: 0.98;
   text-wrap: balance;
 }
 .h-1 {
-  font-size: clamp(38px, 6.4vw, 80px);
-  font-weight: 700;
-  letter-spacing: -0.042em;
+  font-variation-settings: "opsz" 32;
+  font-size: clamp(40px, 6.6vw, 84px);
+  font-weight: 740;
+  letter-spacing: -0.046em;
   line-height: 1.03;
   text-wrap: balance;
 }
 .h-2 {
+  font-variation-settings: "opsz" 32;
   font-size: clamp(30px, 4vw, 48px);
   font-weight: 700;
   letter-spacing: -0.034em;
@@ -455,4 +473,46 @@ button {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* the signature: a headline's full stop is a small rising sun */
+.sun-dot {
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: 0.05em;
+  border-radius: 50%;
+  vertical-align: baseline;
+  background: radial-gradient(circle at 40% 35%, var(--sun-core) 0%, var(--sun) 55%, #c98a2e 100%);
+  box-shadow: 0 0 0.35em color-mix(in srgb, var(--sun) 60%, transparent);
+  -webkit-text-fill-color: initial;
+}
+
+/* film grain over the whole page, very light */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* dawn light: a warm glow that rises behind a chapter's head */
+.glow {
+  position: relative;
+  isolation: isolate;
+}
+.glow::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 0;
+  width: min(900px, 90vw);
+  height: 520px;
+  translate: -50% -30%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--sun) 22%, transparent), transparent);
+  pointer-events: none;
 }

@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import { Clock } from "./Clock";
 import { Mask } from "./Mask";
 import { Wallpaper } from "./Wallpaper";
@@ -29,7 +30,7 @@ export function Security({ t, locale }: { t: Dict["security"]; locale: string })
           <h2 className="h-1" id="security-title" style={{ marginTop: 14 }}>
             {t.title[0]}
             <br />
-            {t.title[1]}
+            <Dot>{t.title[1]}</Dot>
           </h2>
           <ul className={s.facts}>
             {t.facts.map((f) => (

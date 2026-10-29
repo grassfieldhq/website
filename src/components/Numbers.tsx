@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import s from "./Numbers.module.css";
 
 export function Numbers({ t }: { t: Dict["numbers"] }) {
@@ -8,7 +9,7 @@ export function Numbers({ t }: { t: Dict["numbers"] }) {
         <div className="chapter-head center">
           <p className="eyebrow">{t.eyebrow}</p>
           <h2 className="h-1" id="numbers-title">
-            {t.title}
+            <Dot>{t.title}</Dot>
           </h2>
         </div>
         <dl className={s.grid}>

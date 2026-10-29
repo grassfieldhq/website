@@ -1,13 +1,11 @@
 import type { Dict } from "@/i18n";
-import s from "./Statement.module.css";
+import { WordReveal } from "./WordReveal";
 
 export function Statement({ t }: { t: Dict["statement"] }) {
   return (
-    <section className="chapter" id="desktop" aria-label={t.parts[0]?.text}>
+    <section className="chapter glow" id="desktop" aria-label={t.parts[0]?.text}>
       <div className="wrap">
-        <p className={`${s.statement} reveal`}>
-          {t.parts.map((p, i) => (p.em ? <em key={i}>{p.text}</em> : <span key={i}>{p.text}</span>))}
-        </p>
+        <WordReveal parts={t.parts} />
         <div className="stats">
           {t.stats.map((st) => (
             <div className="stat reveal" key={st.value}>

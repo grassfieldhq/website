@@ -1,15 +1,19 @@
 import type { Dict, Locale } from "@/i18n";
 import { release } from "@/lib/release";
+import { Dot } from "./Dot";
+import { Landscape } from "./Landscape";
 import { Mask } from "./Mask";
 import s from "./Sections.module.css";
 
+// The finale: the same field at dusk, closing the page.
 export function Install({ t, lang }: { t: Dict["install"]; lang: Locale }) {
   return (
-    <section className={`chapter ${s.install}`} id="install" aria-labelledby="install-title">
-      <div className="wrap">
+    <section className={`chapter finale ${s.install}`} id="install" aria-labelledby="install-title">
+      <Landscape variant="dusk" className={s.finaleLand} />
+      <div className={`wrap ${s.finaleInner}`}>
         <Mask name="grassfield-logo" className={s.bigLogo} />
         <h2 className="h-1" id="install-title">
-          {t.title}
+          <Dot>{t.title}</Dot>
         </h2>
         <p className="lead" style={{ margin: "18px auto 0" }}>
           {t.lead}

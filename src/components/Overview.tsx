@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import { OverviewScrub } from "./OverviewScrub";
 
 export function Overview({ t, scene, locale }: { t: Dict["overview"]; scene: Dict["scene"]; locale: string }) {
@@ -10,7 +11,7 @@ export function Overview({ t, scene, locale }: { t: Dict["overview"]; scene: Dic
           <h2 className="h-1" id="overview-title">
             {t.title[0]}
             <br />
-            {t.title[1]}
+            <Dot>{t.title[1]}</Dot>
           </h2>
         </div>
       </div>

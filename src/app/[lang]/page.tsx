@@ -28,17 +28,17 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       </a>
       <Nav t={t.nav} theme={t.theme} lang={lang} />
       <main id="main">
-        <Hero t={t.hero} scene={t.scene} locale={locale} />
+        <Hero t={t.hero} scene={t.scene} locale={locale} lang={lang} />
         <Statement t={t.statement} />
-        <Proof t={t.proof} />
         <Overview t={t.overview} scene={t.scene} locale={locale} />
+        <Proof t={t.proof} />
         <Everyday t={t.everyday} scene={t.scene} locale={locale} />
         <Glass t={t.glass} />
         <Security t={t.security} locale={locale} />
         <Apps t={t.apps} captureNote={t.overview.captureNote} />
         <Numbers t={t.numbers} />
-        <Omarchy t={t.omarchy} />
         <Reversible t={t.reversible} copy={t.download.copy} copied={t.download.copied} />
+        <Omarchy t={t.omarchy} />
         <Faq t={t.faq} />
         <Install t={t.install} lang={lang} />
       </main>

@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import { appIcon } from "@/lib/site";
 import s from "./Sections.module.css";
 
@@ -11,7 +12,7 @@ export function Apps({ t, captureNote }: { t: Dict["apps"]; captureNote: string 
           <h2 className="h-1" id="apps-title">
             {t.title[0]}
             <br />
-            {t.title[1]}
+            <Dot>{t.title[1]}</Dot>
           </h2>
         </div>
         <ul className={s.apps}>

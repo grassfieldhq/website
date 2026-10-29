@@ -102,16 +102,40 @@
   }
 }
 
-/* install */
+/* install: the dusk finale, always dark */
 .install {
+  --fg: #f5f5f7;
+  --fg-2: rgb(245 245 247 / 0.78);
+  --bg-2: rgb(20 18 42 / 0.55);
+  --line: rgb(255 255 255 / 0.14);
+  --accent: #4fb36b;
+  --accent-ink: #06240f;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   text-align: center;
+  color: var(--fg);
+  background: #14122a;
+  color-scheme: dark;
+  margin-bottom: var(--panel-x);
+}
+.finaleLand {
+  z-index: -1;
+}
+.finaleInner {
+  position: relative;
+}
+.install .steps li {
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 0 0 1px var(--line) inset;
 }
 .bigLogo {
   display: block;
   width: 60px;
   height: 60px;
   margin: 0 auto 24px;
-  color: var(--accent);
+  color: #ffd9a0;
 }
 .status {
   display: inline-flex;

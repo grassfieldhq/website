@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import { appIcon } from "@/lib/site";
 import { Calendar } from "./Calendar";
 import { Mask } from "./Mask";
@@ -15,7 +16,7 @@ export function Everyday({ t, scene, locale }: { t: Dict["everyday"]; scene: Dic
           <h2 className="h-1" id="everyday-title">
             {t.title[0]}
             <br />
-            {t.title[1]}
+            <Dot>{t.title[1]}</Dot>
           </h2>
         </div>
 

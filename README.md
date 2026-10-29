@@ -25,6 +25,10 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
   visitor's language in the browser.
 - `src/components/`: one component per chapter. Product renders (`DesktopScene`, `OverviewScrub`, the bento minis)
   are drawn in a virtual screen measured in `--u` (1/1440 of its width), so they scale like images and stay sharp.
+- Visual direction "Aube" (dawn): the hero is the Grassfield wallpaper split into layers (`Landscape`) that move
+  at their own pace on scroll (`ParallaxHero`, `useScrollProgress`); the page closes on the same field at dusk.
+  Signature: a headline's full stop becomes a small sun (`Dot`). Chapters are rounded panels; the nav is a floating
+  glass pill; the statement lights up word by word (`WordReveal`); a light film grain covers the page.
 - Product colours, radii, dock and window geometry come from `grassfield/ui/tokens/tokens.json`; the wallpaper is the
   same procedure as `GrassfieldArtwork.qml`.
 - `src/lib/release.ts`: the Download page's facts (version, packages, uninstall command). Fill `publish` (date,

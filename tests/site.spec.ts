@@ -32,7 +32,7 @@ for (const lang of langs) {
       const errors = collectErrors(page);
       await page.goto(`/${lang}/${path}`);
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(h1);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(h1.replace(/\.$/, ""));
       await scrollThrough(page);
       await page.waitForFunction(() => [...document.images].every((i) => i.complete));
       const broken = await page.$$eval("img", (imgs) => imgs.filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src));

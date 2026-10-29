@@ -38,7 +38,7 @@ export function Nav({ t, theme, lang, path = "" }: { t: Dict["nav"]; theme: Dict
 
   return (
     <nav className={s.nav} data-scrolled={scrolled} data-open={open} aria-label={t.label}>
-      <div className={`wrap ${s.row}`}>
+      <div className={s.row}>
         <a className={s.brand} href={home} aria-label={t.home}>
           <Mask name="grassfield-logo" className={s.logo} />
           <span>Grassfield</span>

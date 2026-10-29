@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import s from "./Sections.module.css";
 
 export function Omarchy({ t }: { t: Dict["omarchy"] }) {
@@ -8,7 +9,7 @@ export function Omarchy({ t }: { t: Dict["omarchy"] }) {
         <div className="chapter-head">
           <p className="eyebrow">{t.eyebrow}</p>
           <h2 className="h-1" id="omarchy-title">
-            {t.title}
+            <Dot>{t.title}</Dot>
           </h2>
           <p className="lead">
             {t.lead}

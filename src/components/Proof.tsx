@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import { MinimiseDemo } from "./MinimiseDemo";
 import s from "./Proof.module.css";
 
@@ -11,7 +12,7 @@ export function Proof({ t }: { t: Dict["proof"] }) {
           <h2 className="h-1" id="proof-title">
             {t.title[0]}
             <br />
-            <span className="grad">{t.title[1]}</span>
+            <span className="grad"><Dot>{t.title[1]}</Dot></span>
           </h2>
           <p className="lead">
             {t.lead}

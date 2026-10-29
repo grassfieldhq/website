@@ -1,13 +1,25 @@
+/* the track is the statement's own height plus one screen: progress runs while it crosses the viewport */
+.track {
+  position: relative;
+}
 .statement {
-  font-size: clamp(30px, 4.6vw, 60px);
-  font-weight: 700;
-  letter-spacing: -0.037em;
+  --n: 999;
+  font-size: clamp(32px, 4.8vw, 64px);
+  font-weight: 720;
+  font-variation-settings: "opsz" 32;
+  letter-spacing: -0.04em;
   line-height: 1.1;
   max-width: 21em;
   text-wrap: balance;
-  color: var(--fg-2);
-}
-.statement em {
-  font-style: normal;
   color: var(--fg);
+}
+.statement span {
+  opacity: clamp(0.16, var(--n) - var(--i), 1);
+  transition: opacity 0.25s linear;
+}
+.em {
+  background-image: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

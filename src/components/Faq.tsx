@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import s from "./Faq.module.css";
 
 // Native <details>: keyboard and screen-reader support without script. FAQPage structured data for search engines.
@@ -14,7 +15,7 @@ export function Faq({ t }: { t: Dict["faq"] }) {
         <div className="chapter-head">
           <p className="eyebrow">{t.eyebrow}</p>
           <h2 className="h-1" id="faq-title">
-            {t.title}
+            <Dot>{t.title}</Dot>
           </h2>
         </div>
         <div className={s.list}>

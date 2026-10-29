@@ -1,4 +1,5 @@
 import type { Dict } from "@/i18n";
+import { Dot } from "./Dot";
 import { release } from "@/lib/release";
 import { Command } from "./Command";
 import { Mask } from "./Mask";
@@ -13,7 +14,7 @@ export function Reversible({ t, copy, copied }: { t: Dict["reversible"]; copy: s
           <h2 className="h-1" id="reversible-title">
             {t.title[0]}
             <br />
-            {t.title[1]}
+            <Dot>{t.title[1]}</Dot>
           </h2>
           <p className="lead">{t.lead}</p>
         </div>
