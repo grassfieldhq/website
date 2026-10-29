@@ -1,0 +1,101 @@
+.stack {
+  display: grid;
+  gap: clamp(56px, 7vw, 96px);
+}
+.feature {
+  min-width: 0;
+  scroll-margin-top: 84px;
+}
+.head {
+  display: grid;
+  gap: 8px;
+  max-width: 40em;
+  margin-bottom: clamp(20px, 2.6vw, 32px);
+}
+.head p {
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.sub {
+  margin: clamp(28px, 3.5vw, 44px) 0 16px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+.screens,
+.details,
+.clips {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: clamp(20px, 2.6vw, 32px) 24px;
+}
+.screens,
+.clips {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.wide {
+  grid-column: 1 / -1;
+}
+.details {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .screens,
+  .clips {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.screens li,
+.details li,
+.clips li {
+  min-width: 0;
+  scroll-margin-top: 84px;
+}
+
+/* a close-up: shown at most at its own size, on the page's soft panel */
+.detail {
+  margin-inline: auto;
+}
+.detail img {
+  width: 100%;
+  height: auto;
+}
+
+.caption {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.caption b {
+  color: var(--fg);
+  font-weight: 650;
+}
+
+/* the same scene in both appearances, side by side */
+.pair {
+  margin-top: clamp(48px, 6vw, 80px);
+}
+.pairRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+@media (max-width: 700px) {
+  .pairRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.pairLabel {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--fg);
+}

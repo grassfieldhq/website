@@ -17,6 +17,7 @@ export function Footer({ t, nav, lang, path = "", privacy }: { t: Dict["footer"]
             <a href={`${home}apps/`}>{nav.apps}</a>
             <a href={`${home}security/`}>{nav.security}</a>
             <a href={`${home}os/`}>{nav.os}</a>
+            <a href={`${home}tour/`}>{nav.tour}</a>
           </nav>
           <nav aria-label={t.cols.install}>
             <h2>{t.cols.install}</h2>

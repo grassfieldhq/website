@@ -1,0 +1,57 @@
+.clip {
+  position: relative;
+  background: #0f2a3f;
+}
+.clip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* the video sits over its poster; until it has a frame it paints nothing, so the poster shows through */
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: transparent;
+}
+.toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background: rgb(20 22 26 / 0.55);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18) inset;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+.toggle:hover,
+.toggle:focus-visible {
+  opacity: 1;
+}
+/* play: a triangle; pause: two bars */
+.toggle span {
+  width: 0;
+  height: 0;
+  margin-left: 3px;
+  border-style: solid;
+  border-width: 7px 0 7px 11px;
+  border-color: transparent transparent transparent currentColor;
+}
+.toggle[data-playing] span {
+  width: 11px;
+  height: 13px;
+  margin-left: 0;
+  border: 0;
+  border-inline: 3.5px solid currentColor;
+}

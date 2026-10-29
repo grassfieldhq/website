@@ -5,6 +5,9 @@ import { pageMeta } from "@/lib/meta";
 import { PageShell } from "@/components/PageShell";
 import { PageHero } from "@/components/PageHero";
 import { AppsDetail } from "@/components/AppsDetail";
+import { Gallery } from "@/components/Gallery";
+import { Lightbox } from "@/components/Lightbox";
+import { pageFeatures } from "@/lib/shots";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/apps">): Promise<Metadata> {
   const { lang } = await params;
@@ -20,7 +23,9 @@ export default async function AppsPage({ params }: PageProps<"/[lang]/apps">) {
   return (
     <PageShell t={t} lang={lang} path="apps/">
       <PageHero {...t.pages.apps} />
-      <AppsDetail apps={t.appsDetail} settingsAlt={t.apps.settingsAlt} captureNote={t.overview.captureNote} />
+      <AppsDetail apps={t.appsDetail} captureNote={t.overview.captureNote} lang={lang} shots={t.shots} />
+      <Gallery lang={lang} t={t.shots} features={pageFeatures.appsMore} />
+      <Lightbox t={{ close: t.shots.close, prev: t.shots.prev, next: t.shots.next, of: t.shots.of }} />
     </PageShell>
   );
 }

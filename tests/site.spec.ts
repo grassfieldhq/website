@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { shotData } from "../src/lib/shots.generated";
 
 const langs = ["fr", "en"] as const;
 
@@ -20,12 +21,42 @@ async function scrollThrough(page: Page) {
   });
 }
 
+// Every rendered image loaded. A fast scroll on a busy machine can step past a lazy image between two intersection
+// checks, so the browser never requests it: bring each image still loading into view. (The capture of the other
+// appearance is display:none, never rendered, never loaded: it is not waited for.)
+async function loadRendered(page: Page) {
+  await expect
+    .poll(
+      () =>
+        page.evaluate(async () => {
+          const pending = [...document.images].filter((i) => i.getClientRects().length > 0 && !i.complete);
+          for (const i of pending) {
+            i.scrollIntoView({ block: "center", behavior: "instant" });
+            await new Promise((r) => setTimeout(r, 60));
+          }
+          return pending.length;
+        }),
+      { timeout: 25_000 },
+    )
+    .toBe(0);
+}
+
+// React has attached its handlers. "networkidle" was the signal before, but it can stall for 20 s and more on a busy
+// machine even with no request pending (seen on origin/main too, ten pages in parallel).
+async function hydrated(page: Page) {
+  await page.waitForFunction(() => {
+    const el = document.querySelector("nav button");
+    return !!el && Object.keys(el).some((k) => k.startsWith("__react"));
+  });
+}
+
 const pages = [
   { path: "", h1: { fr: "Grassfield", en: "Grassfield" } },
   { path: "desktop/", h1: { fr: "Le bureau", en: "The desktop" } },
   { path: "apps/", h1: { fr: "Des apps qui se sentent chez elles", en: "Apps that feel at home" } },
   { path: "security/", h1: { fr: "Sûr, par conception", en: "Secure by design" } },
   { path: "os/", h1: { fr: "Grassfield OS", en: "Grassfield OS" } },
+  { path: "tour/", h1: { fr: "Grassfield, en vrai", en: "Grassfield, for real" } },
   { path: "download/", h1: { fr: "Grassfield Desktop", en: "Grassfield Desktop" } },
   { path: "faq/", h1: { fr: "Bon à savoir", en: "Good to know" } },
 ];
@@ -39,8 +70,8 @@ for (const lang of langs) {
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(h1[lang]);
       await scrollThrough(page);
-      await page.waitForFunction(() => [...document.images].every((i) => i.complete));
-      const broken = await page.$$eval("img", (imgs) => imgs.filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src));
+      await loadRendered(page);
+      const broken = await page.$$eval("img", (imgs) => imgs.filter((i) => i.getClientRects().length > 0 && (!i.complete || i.naturalWidth === 0)).map((i) => i.src));
       expect(broken).toEqual([]);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
@@ -136,7 +167,7 @@ test("download page states the version, requirements and an uninstall command to
   }
   const copy = page.locator("main button", { hasText: /^Copi/ }).first();
   await expect(copy).toHaveText("Copier");
-  await page.waitForLoadState("networkidle"); // hydrated
+  await hydrated(page);
   await copy.click();
   await expect(copy).toHaveText("Copié");
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
@@ -166,7 +197,7 @@ test("home is an index: four teasers and a short FAQ that links to the full one"
 
 test("minimise demo tucks the window into the Dock and brings it back", async ({ page }) => {
   await page.goto("/en/desktop/");
-  await page.waitForLoadState("networkidle");
+  await hydrated(page);
   const proof = page.locator("#proof");
   await proof.getByRole("button", { name: "Minimise the window" }).click();
   await expect(proof.locator("[data-min]")).toHaveCount(1);
@@ -198,4 +229,203 @@ test("presents Grassfield OS with the desktop as its first step", async ({ page 
   await expect(road.getByRole("heading", { level: 3, name: "Grassfield OS" })).toBeVisible();
   await expect(road.getByText("En test")).toBeVisible();
   await expect(road.getByText("Prévu")).toBeVisible();
+});
+
+// ---------------------------------------------------------------- captures (scripts/shots.mjs → src/lib/shots.generated.ts)
+// These hold for any capture set, from none to the full one; checks that need a kind of capture skip without it.
+
+const capturePages = ["", "desktop/", "apps/", "security/", "tour/"];
+const firstOf = (kind: string, lang = "en") => shotData.find((d) => d.kind === kind && d.lang === lang);
+const hasPair = (lang: string) => {
+  const seen = new Map<string, Set<string>>();
+  for (const d of shotData.filter((x) => x.lang === lang)) seen.set(`${d.kind}:${d.base}`, (seen.get(`${d.kind}:${d.base}`) ?? new Set()).add(d.theme));
+  return [...seen.values()].some((t) => t.size === 2);
+};
+
+for (const lang of langs) {
+  test(`${lang}: every capture has an alt in the page's language, and every file it names is served`, async ({ page, request }) => {
+    const alts = [...new Set(shotData.filter((d) => d.lang === lang).map((d) => d.alt))];
+    const urls = new Set<string>();
+    for (const path of capturePages) {
+      await page.goto(`/${lang}/${path}`);
+      const found = await page.evaluate(() => {
+        const pics = [...document.querySelectorAll("main picture")].filter((p) => p.querySelector("source[srcset]"));
+        return {
+          // a clip's poster is decorative: the <video> beside it carries the label
+          images: pics.map((p) => ({ alt: p.querySelector("img")!.alt, poster: !!p.parentElement?.querySelector(":scope > video") })),
+          videos: [...document.querySelectorAll("main video")].map((v) => v.getAttribute("aria-label") ?? ""),
+          urls: [
+            ...pics.flatMap((p) => [...p.querySelectorAll("source")].flatMap((s) => s.srcset.split(",").map((c) => c.trim().split(" ")[0]!))),
+            ...pics.map((p) => p.querySelector("img")!.getAttribute("src")!),
+            ...[...document.querySelectorAll("main a[data-lightbox]")].map((a) => a.getAttribute("href")!),
+            ...[...document.querySelectorAll("main video source")].map((s) => s.getAttribute("src")!),
+          ],
+        };
+      });
+      for (const im of found.images) {
+        if (im.poster) expect(im.alt).toBe("");
+        else expect(alts, `/${lang}/${path}: alt not from the ${lang} captures`).toContain(im.alt);
+      }
+      for (const label of found.videos) expect(alts).toContain(label);
+      found.urls.forEach((u) => urls.add(u));
+    }
+    for (const u of urls) {
+      const r = await request.get(u);
+      expect(r.status(), u).toBe(200);
+      expect(r.headers()["content-type"], u).toMatch(/^(image\/(avif|webp)|video\/(webm|mp4))/);
+    }
+  });
+}
+
+test("captures are never larger than their place needs, and the tour starts light", async ({ page }, info) => {
+  const sizes: number[] = [];
+  page.on("response", async (r) => {
+    if (r.url().includes("/shots/") && r.request().resourceType() === "image") sizes.push((await r.body().catch(() => Buffer.alloc(0))).length);
+  });
+  await page.goto("/fr/tour/");
+  await page.waitForLoadState("load");
+  await page.waitForTimeout(1000); // lazy images near the first screen start loading
+  const first = sizes.reduce((a, b) => a + b, 0);
+  expect(first, "image bytes before any scroll").toBeLessThan(1.5 * 1024 * 1024);
+  for (const path of ["/fr/tour/", "/fr/desktop/", "/fr/"]) {
+    await page.goto(path);
+    await scrollThrough(page);
+    await loadRendered(page);
+    // the image the browser picked is at most the smallest candidate covering the box at this pixel density (+25%
+    // for the approximations in `sizes`): a phone never gets the 2880 px file
+    const over = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLImageElement>("main picture img")]
+        .filter((i) => i.getClientRects().length > 0 && i.currentSrc && i.naturalWidth > 0)
+        .flatMap((img) => {
+          const ext = img.currentSrc.split(".").pop();
+          const source = [...img.parentElement!.querySelectorAll("source")].find((s) => s.type === `image/${ext}`);
+          const widths = (source?.srcset ?? "").split(",").map((c) => parseInt(c.trim().split(" ")[1] ?? "0", 10)).sort((a, b) => a - b);
+          const need = img.clientWidth * Number(img.dataset.zoom ?? 1) * devicePixelRatio * 1.25;
+          const ideal = widths.find((w) => w >= need) ?? widths[widths.length - 1] ?? img.naturalWidth;
+          return img.naturalWidth > ideal ? [`${img.currentSrc} (${img.naturalWidth}px for ${Math.round(need)}px)`] : [];
+        }),
+    );
+    expect(over, `${info.project.name} ${path}`).toEqual([]);
+  }
+  expect(Math.max(0, ...sizes), "largest capture file loaded").toBeLessThan(400 * 1024);
+});
+
+test("the tour does not shift while its captures load", async ({ page }) => {
+  await page.goto("/fr/tour/");
+  await page.evaluate(() => {
+    const w = window as unknown as { cls: number };
+    w.cls = 0;
+    new PerformanceObserver((list) => {
+      for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) if (!e.hadRecentInput) w.cls += e.value;
+    }).observe({ type: "layout-shift", buffered: true });
+  });
+  await scrollThrough(page);
+  await loadRendered(page);
+  expect(await page.evaluate(() => (window as unknown as { cls: number }).cls)).toBeLessThan(0.02);
+});
+
+test("the tour's index leads to each feature, and home's captures to their place in the tour", async ({ page }) => {
+  test.skip(!shotData.length, "no capture in the set");
+  await page.goto("/en/tour/");
+  const links = page.getByRole("navigation", { name: "Features" }).getByRole("link");
+  const n = await links.count();
+  expect(n).toBeGreaterThan(0);
+  expect(await page.locator("main section h2").count()).toBe(n);
+  const href = (await links.last().getAttribute("href"))!;
+  await links.last().click();
+  await expect(page).toHaveURL(new RegExp(`${href}$`));
+  await expect(page.locator(`${href} h2`)).toBeInViewport();
+  await page.goto("/en/");
+  const targets = await page.locator('#tour a[href*="/tour/#shot-"]').evaluateAll((as) => as.map((a) => a.getAttribute("href")!.split("#")[1]!));
+  expect(targets.length).toBeGreaterThan(0);
+  await page.goto("/en/tour/");
+  for (const id of targets) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+});
+
+test("captures follow the site's appearance where both exist", async ({ page }) => {
+  test.skip(!hasPair("en"), "no scene captured in both appearances");
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/en/tour/");
+  const pair = page.locator('li:has(> [data-v="dark"]):has(> [data-v="light"])').first();
+  await expect(pair.locator(':scope > [data-v="light"]')).toBeVisible();
+  await expect(pair.locator(':scope > [data-v="dark"]')).toBeHidden();
+  const toggle = page.getByRole("button", { name: /^Site appearance/ });
+  await toggle.click(); // light
+  await toggle.click(); // dark
+  await expect(pair.locator(':scope > [data-v="dark"]')).toBeVisible();
+  await expect(pair.locator(':scope > [data-v="light"]')).toBeHidden();
+});
+
+test("the lightbox shows a capture large, moves with the arrow keys and closes with Escape", async ({ page }) => {
+  test.skip(!shotData.some((d) => d.kind !== "clip"), "no image in the capture set");
+  await page.goto("/fr/tour/");
+  await hydrated(page);
+  const links = page.locator("main a[data-lightbox]").filter({ visible: true });
+  const total = await links.count();
+  const first = links.first();
+  const alt = (await first.locator("img").getAttribute("alt"))!;
+  await first.click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator("img")).toHaveAttribute("alt", alt);
+  await expect(dialog.getByText(`1 sur ${total}`)).toBeVisible();
+  if (total > 1) {
+    await page.keyboard.press("ArrowRight");
+    await expect(dialog.getByText(`2 sur ${total}`)).toBeVisible();
+  }
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(first).toBeFocused();
+});
+
+test("clips show their poster, stay still when motion is reduced, and play when visible otherwise", async ({ page }) => {
+  const clip = firstOf("clip");
+  test.skip(!clip, "no clip in the capture set");
+  const videoBytes: string[] = [];
+  page.on("request", (r) => /\.(webm|mp4)$/.test(r.url()) && videoBytes.push(r.url()));
+  // scrolled into view instantly: with motion allowed the site scrolls smoothly, which races Playwright's own scrolling
+  const show = (v: typeof video) => v.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
+  const video = page.locator(`[id="shot-${clip!.base}"] video`).first();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/en/tour/");
+  await hydrated(page);
+  await show(video);
+  const poster = video.locator("xpath=..").locator("picture img");
+  await expect(poster).toBeVisible();
+  await expect.poll(() => poster.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
+  await page.waitForTimeout(600);
+  expect(await video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  expect(videoBytes).toEqual([]); // preload="none": nothing fetched until it plays
+  const button = video.locator("xpath=..").getByRole("button", { name: "Play the animation" });
+  await button.click(); // the visitor may still play it
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused), { timeout: 15_000 }).toBe(true);
+  await expect(video.locator("xpath=..").getByRole("button", { name: "Pause the animation" })).toBeVisible();
+
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/en/tour/");
+  await hydrated(page);
+  await show(video);
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.muted && v.loop), { timeout: 15_000 }).toBe(true);
+  expect(await video.getAttribute("preload")).toBe("none");
+});
+
+test.describe("without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+  test("the tour still shows its captures, and clips their poster with native controls", async ({ page }) => {
+    test.skip(!shotData.length, "no capture in the set");
+    await page.goto("/en/tour/");
+    const img = page.locator("main picture img").filter({ visible: true }).first();
+    await img.scrollIntoViewIfNeeded();
+    await expect(img).toBeVisible();
+    await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
+    await expect(page.locator("main a[data-lightbox]").first()).toHaveAttribute("href", /\/shots\/.+\.(webp|avif)$/);
+    const clip = firstOf("clip");
+    if (clip) {
+      const video = page.locator(`[id="shot-${clip.base}"] video`).first();
+      await expect(video).toHaveAttribute("controls", "");
+      const poster = video.locator("xpath=..").locator("picture img");
+      await poster.scrollIntoViewIfNeeded();
+      await expect.poll(() => poster.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
+    }
+  });
 });

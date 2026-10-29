@@ -13,6 +13,7 @@ const fr = {
     desktop: "Bureau",
     roadmap: "Feuille de route",
     os: "Grassfield OS",
+    tour: "Visite",
     overview: "Vue d'ensemble",
     glass: "Verre",
     security: "Sécurité",
@@ -84,8 +85,6 @@ const fr = {
     lead: "Coin actif, raccourci ou geste au pavé tactile : vos fenêtres s'écartent, ",
     leadStrong: "bien vivantes",
     leadAfter: ", et le bureau suivant est déjà là, en haut de l'écran.",
-    captureAlt:
-      "Capture de la Vue d'ensemble : quatre fenêtres de terminal disposées sur le fond d'écran, la barre des bureaux en haut et le Dock en bas.",
     captureNote: "Capture réelle, instance Grassfield de développement.",
     stats: [
       { value: "0,4 %", label: "de processeur pour le compositeur, avec six fenêtres ouvertes dans la Vue d'ensemble." },
@@ -99,7 +98,6 @@ const fr = {
     search: {
       title: "Rechercher.",
       body: "Une touche, quelques lettres, et l'app, le fichier ou le réglage est là. La meilleure réponse en premier.",
-      alt: "Capture de la recherche : le mot « files » tapé, l'app Fichiers en meilleur résultat.",
     },
     corners: { title: "Coins actifs.", body: "Une action par coin d'écran. Poussez le pointeur, c'est fait." },
     cc: {
@@ -144,6 +142,10 @@ const fr = {
       tag: "En préparation",
       title: "Stages.",
       body: "Regroupez vos fenêtres par tâche. La tâche en cours occupe le centre, les autres attendent sur le côté, à un clic.",
+    },
+    tiling: {
+      title: ["Des fenêtres bien rangées.", "D'un clic."],
+      body: "Le menu du bouton vert place une fenêtre sur une moitié de l'écran, remplit l'écran avec plusieurs fenêtres ou applique une disposition en grille.",
     },
   },
   glass: {
@@ -190,7 +192,6 @@ const fr = {
     settingsTitle2: "Simples, enfin.",
     settingsBody:
       "Une barre latérale, des groupes clairs, et des réglages qui s'appliquent tout de suite. L'accentuation choisie colore les boutons, les sélections et les curseurs, dans le shell comme dans les apps.",
-    settingsAlt: "Capture des Réglages Grassfield, section Apparence : mode Sombre, couleurs d'accentuation et apparence des icônes.",
   },
   omarchy: {
     eyebrow: "Sous le capot",
@@ -390,6 +391,7 @@ const fr = {
     security: { title: "Sécurité et confidentialité · Grassfield OS", description: "Verrouillage de session Wayland, autorisations polkit, paquets signés, sources en option : la sécurité de Grassfield OS.", eyebrow: "Sécurité et confidentialité", heading: "Sûr, par conception.", lead: "Grassfield s'appuie sur les mécanismes du système plutôt que d'en inventer : verrouillage Wayland, mots de passe d'Omarchy, polkit, signatures pacman." },
     os: { title: "Grassfield OS · Feuille de route", description: "Grassfield OS, un système d'exploitation basé sur Arch Linux, construit une étape à la fois. Étape 1 : le bureau, en test.", eyebrow: "Feuille de route", heading: "Grassfield OS.", lead: "Grassfield OS sera un système d'exploitation complet, basé sur Arch Linux. Voici où nous en sommes, et ce qui vient ensuite." },
     faq: { title: "Questions · Grassfield OS", description: "Les réponses aux questions fréquentes sur Grassfield OS et Grassfield Desktop.", eyebrow: "Questions fréquentes", heading: "Bon à savoir.", lead: "Ce qu'il faut savoir avant d'installer la première étape, et après." },
+    tour: { title: "Visite guidée · Grassfield OS", description: "Le bureau, les apps et le système Grassfield en captures réelles, fonction par fonction.", eyebrow: "Visite guidée", heading: "Grassfield, en vrai.", lead: "Chaque surface du système, capturée sur l'instance de développement, fonction par fonction." },
   },
   more: "En savoir plus",
   teasers: {
@@ -443,6 +445,56 @@ const fr = {
       { icon: "download", title: "Des sources en option", body: "Dans Grassfield Store, l'AUR reste désactivé tant que vous ne l'activez pas. Les recettes d'Omarchy s'exécutent dans son terminal, sous vos yeux." },
       { icon: "lock", title: "Un vrai trousseau", body: "Le trousseau GNOME garde les secrets des apps : Chromium y range ses mots de passe au lieu de les écrire en clair." },
     ],
+  },
+  shots: {
+    note: "Captures de l'instance Grassfield de développement, avec des données de démonstration.",
+    enlarge: "afficher en grand",
+    close: "Fermer",
+    prev: "Capture précédente",
+    next: "Capture suivante",
+    of: "sur",
+    play: "Lire l'animation",
+    pause: "Mettre l'animation en pause",
+    details: "Gros plans",
+    clips: "En mouvement",
+    dark: "Sombre",
+    light: "Clair",
+    pair: "La même scène, en apparence sombre et en apparence claire.",
+    gallery: { eyebrow: "En captures", title: "Voyez par vous-même." },
+    features: {
+      desktop: { title: "Le bureau", body: "Le fond d'écran, les icônes et les widgets, entre la barre des menus et le Dock." },
+      widgets: { title: "Widgets", body: "Horloge, calendrier et autres widgets, posés sur le bureau." },
+      menubar: { title: "Barre des menus", body: "Les menus de l'app active à gauche, l'état du système à droite. Le texte s'adapte au fond d'écran." },
+      dock: { title: "Dock", body: "Vos apps, les fenêtres réduites et la corbeille, à portée de pointeur." },
+      controlcenter: { title: "Centre de contrôle", body: "Wi-Fi, Bluetooth, Ne pas déranger, écran, son et apparence, réunis dans un seul panneau." },
+      notifications: { title: "Notifications", body: "Les notifications, le calendrier et les widgets glissent depuis le bord droit de l'écran." },
+      search: { title: "Recherche", body: "Apps, fichiers, réglages et commandes : quelques lettres suffisent." },
+      overview: { title: "Vue d'ensemble", body: "Toutes les fenêtres d'un coup d'œil, et les bureaux en haut de l'écran." },
+      tiling: { title: "Disposition des fenêtres", body: "Le bouton vert range les fenêtres côte à côte, en grille ou en plein écran." },
+      apps: { title: "Apps", body: "Toutes les applications installées, rangées par catégories." },
+      files: { title: "Fichiers", body: "Dossiers, emplacements, présentations et corbeille, dans le gestionnaire de fichiers de Grassfield." },
+      dialogs: { title: "Panneaux et feuilles", body: "Ouvrir, enregistrer, remplacer : les mêmes panneaux dans toutes les apps." },
+      settings: { title: "Réglages", body: "Tout le système au même endroit, appliqué tout de suite." },
+      update: { title: "Mises à jour", body: "Les mises à jour du système et des apps au même endroit. Rien ne s'installe sans vous." },
+      preview: { title: "Visionneuse", body: "Images, PDF, texte, audio et vidéo dans une seule app." },
+      store: { title: "Grassfield Store", body: "Trouver, installer et mettre à jour des apps." },
+      activity: { title: "Activité", body: "Les processus en cours et ce qu'ils consomment, en direct." },
+      lock: { title: "Verrouillage", body: "L'écran de verrouillage, tenu fermé par le compositeur." },
+      polkit: { title: "Autorisations", body: "Les demandes d'administration, dans le style du bureau." },
+    },
+    other: { title: "Et aussi", body: "D'autres détails du système." },
+  },
+  tour: {
+    index: "Fonctionnalités",
+    count: (n: number) => (n > 1 ? `${n} captures` : `${n} capture`),
+    empty: "Les captures arrivent bientôt.",
+    top: "Revenir à l'index",
+    strip: {
+      eyebrow: "Visite guidée",
+      title: ["Le système, en vrai.", "Capture par capture."],
+      lead: "Pas de maquette : chaque image vient de l'instance de développement de Grassfield.",
+      cta: "Faire la visite",
+    },
   },
   dates: { locale: "fr-FR" },
 };

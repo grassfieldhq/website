@@ -1,8 +1,11 @@
-import type { Dict } from "@/i18n";
+import type { Dict, Locale } from "@/i18n";
+import { slot } from "@/lib/shots";
 import { Dot } from "./Dot";
 import { OverviewScrub } from "./OverviewScrub";
+import { Shot } from "./Shot";
 
-export function Overview({ t, scene, locale }: { t: Dict["overview"]; scene: Dict["scene"]; locale: string }) {
+export function Overview({ t, scene, locale, lang }: { t: Dict["overview"]; scene: Dict["scene"]; locale: string; lang: Locale }) {
+  const capture = slot(lang, "overview");
   return (
     <section className="chapter stage" id="overview" aria-labelledby="overview-title">
       <div className="wrap">
@@ -22,14 +25,15 @@ export function Overview({ t, scene, locale }: { t: Dict["overview"]; scene: Dic
           <strong>{t.leadStrong}</strong>
           {t.leadAfter}
         </p>
-        <figure className="reveal" style={{ maxWidth: 1240, marginInline: "auto" }}>
-          <div className="capture">
-            <img src="/shots/overview.webp" width={1920} height={1080} alt={t.captureAlt} loading="lazy" decoding="async" />
-          </div>
-          <figcaption className="cap-note" style={{ justifyContent: "center" }}>
-            {t.captureNote}
-          </figcaption>
-        </figure>
+        {capture && (
+          <figure className="reveal" style={{ maxWidth: 1240, marginInline: "auto" }}>
+            {/* an always-dark chapter: the dark capture, whatever the site's appearance */}
+            <Shot scene={capture.scene} mode="dark" sizes="(max-width: 480px) calc(100vw - 32px), (max-width: 1164px) calc(100vw - 44px), 1120px" />
+            <figcaption className="cap-note" style={{ justifyContent: "center" }}>
+              {t.captureNote}
+            </figcaption>
+          </figure>
+        )}
         <div className="stats">
           {t.stats.map((st) => (
             <div className="stat reveal" key={st.value}>

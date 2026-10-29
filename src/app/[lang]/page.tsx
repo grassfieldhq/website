@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { Hero } from "@/components/Hero";
 import { Statement } from "@/components/Statement";
 import { Teasers } from "@/components/Teasers";
+import { TourStrip } from "@/components/TourStrip";
 import { Roadmap } from "@/components/Roadmap";
 import { Faq } from "@/components/Faq";
 import { Install } from "@/components/Install";
@@ -18,6 +19,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <Hero t={t.hero} scene={t.scene} locale={t.dates.locale} lang={lang} />
       <Statement t={t.statement} />
       <Teasers t={t.teasers} more={t.more} lang={lang} />
+      <TourStrip t={t.tour.strip} shots={t.shots} lang={lang} />
       <Roadmap t={t.roadmap} />
       <Faq t={t.faq} limit={4} all={{ href: `/${lang}/faq/`, label: t.faqShort.all }} />
       <Install t={t.install} lang={lang} />
