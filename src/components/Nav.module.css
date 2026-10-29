@@ -1,0 +1,130 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+.nav[data-scrolled="true"],
+.nav[data-open="true"] {
+  background: var(--nav);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom-color: var(--line);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 52px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 650;
+  font-size: 19px;
+  letter-spacing: -0.02em;
+}
+.logo {
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+.links {
+  display: flex;
+  gap: 24px;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--fg-2);
+}
+.links a {
+  transition: color 0.2s ease;
+}
+.links a:hover {
+  color: var(--fg);
+}
+.lang {
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+}
+.cta {
+  height: 30px;
+  padding: 0 15px;
+  font-size: 13px;
+}
+.burger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  position: relative;
+  margin-right: -8px;
+}
+.burger span {
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--fg);
+  transition: transform 0.3s var(--ease-out);
+}
+.burger span:first-child {
+  top: 14px;
+}
+.burger span:last-child {
+  top: 21px;
+}
+.nav[data-open="true"] .burger span:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+.nav[data-open="true"] .burger span:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+@media (max-width: 860px) {
+  .burger {
+    display: block;
+  }
+  .cta {
+    margin-left: auto;
+  }
+  .links {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px max(22px, env(safe-area-inset-left, 0px)) 24px;
+    background: var(--nav);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--line);
+    font-size: 24px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .links a {
+    padding: 10px 0;
+  }
+  .lang {
+    padding-left: 0;
+    border-left: 0;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--fg-2);
+  }
+  .nav[data-open="true"] .links {
+    display: flex;
+  }
+}

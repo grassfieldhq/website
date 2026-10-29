@@ -1,0 +1,13 @@
+.statement {
+  font-size: clamp(30px, 4.6vw, 60px);
+  font-weight: 700;
+  letter-spacing: -0.037em;
+  line-height: 1.1;
+  max-width: 21em;
+  text-wrap: balance;
+  color: var(--fg-2);
+}
+.statement em {
+  font-style: normal;
+  color: var(--fg);
+}

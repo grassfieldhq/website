@@ -1,0 +1,339 @@
+/* The hero desktop render. Every size is in --u (1/1440 of the screen width), so it scales like an image.
+   Geometry from grassfield tokens.json: menu bar 24, traffic lights 14/9, dock icon 48 + padding 10, radii. */
+
+.mbar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--u) * 26);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 20);
+  padding: 0 calc(var(--u) * 18);
+  font-size: calc(var(--u) * 13);
+  font-weight: 500;
+  white-space: nowrap;
+  text-shadow: 0 0 calc(var(--u) * 3) rgb(0 0 0 / 0.35);
+  z-index: 5;
+}
+.mbar b {
+  font-weight: 700;
+}
+.mlogo {
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+  color: #fff;
+}
+.mright {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 17);
+}
+.mright i {
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+  color: #fff;
+}
+
+/* window */
+.win {
+  position: absolute;
+  display: grid;
+  grid-template-columns: calc(var(--u) * 200) 1fr;
+  border-radius: calc(var(--u) * 16);
+  overflow: hidden;
+  background: var(--gf-window);
+  font-size: calc(var(--u) * 13);
+  box-shadow:
+    0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.12) inset,
+    0 calc(var(--u) * 30) calc(var(--u) * 80) rgb(0 0 0 / 0.55),
+    0 0 0 calc(var(--u) * 1) rgb(0 0 0 / 0.6);
+}
+.lights {
+  display: flex;
+  gap: calc(var(--u) * 9);
+}
+.lights i {
+  width: calc(var(--u) * 14);
+  height: calc(var(--u) * 14);
+  border-radius: 50%;
+  background: var(--gf-close);
+  box-shadow: 0 0 0 calc(var(--u) * 0.7) rgb(0 0 0 / 0.18) inset;
+}
+.lights i:nth-child(2) {
+  background: var(--gf-min);
+}
+.lights i:nth-child(3) {
+  background: var(--gf-zoom);
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 3);
+  padding: calc(var(--u) * 19) calc(var(--u) * 10);
+  background: var(--gf-sidebar);
+}
+.side .lights {
+  margin: 0 0 calc(var(--u) * 26) calc(var(--u) * 9);
+}
+.side h6 {
+  margin: calc(var(--u) * 10) 0 calc(var(--u) * 4) calc(var(--u) * 10);
+  font-size: calc(var(--u) * 11);
+  font-weight: 650;
+  color: rgb(245 245 247 / 0.45);
+}
+.side span {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 8);
+  padding: calc(var(--u) * 5) calc(var(--u) * 10);
+  border-radius: calc(var(--u) * 7);
+  color: var(--gf-text-2);
+}
+.side span[data-on] {
+  background: rgb(255 255 255 / 0.1);
+  color: var(--gf-text);
+}
+.side span i {
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+  color: var(--gf-green);
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.bar {
+  height: calc(var(--u) * 52);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 14);
+  padding: 0 calc(var(--u) * 16);
+  border-bottom: calc(var(--u) * 1) solid rgb(255 255 255 / 0.07);
+}
+.bar b {
+  font-size: calc(var(--u) * 15);
+  font-weight: 700;
+}
+.chev {
+  color: rgb(245 245 247 / 0.5);
+  font-size: calc(var(--u) * 18);
+  letter-spacing: calc(var(--u) * 6);
+}
+.field {
+  margin-left: auto;
+  width: calc(var(--u) * 180);
+  height: calc(var(--u) * 28);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 6);
+  padding: 0 calc(var(--u) * 10);
+  border-radius: calc(var(--u) * 8);
+  background: rgb(255 255 255 / 0.08);
+  color: rgb(245 245 247 / 0.5);
+}
+.field i {
+  width: calc(var(--u) * 13);
+  height: calc(var(--u) * 13);
+}
+.files {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: calc(var(--u) * 18) calc(var(--u) * 8);
+  padding: calc(var(--u) * 22) calc(var(--u) * 18);
+}
+.file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--u) * 6);
+  font-size: calc(var(--u) * 12);
+  color: var(--gf-text-2);
+}
+.file img {
+  width: calc(var(--u) * 64);
+  height: calc(var(--u) * 64);
+}
+.file[data-sel] img {
+  background: rgb(255 255 255 / 0.1);
+  border-radius: calc(var(--u) * 8);
+}
+.file[data-sel] span {
+  padding: 0 calc(var(--u) * 6);
+  border-radius: calc(var(--u) * 5);
+  background: var(--gf-green);
+  color: var(--gf-green-ink);
+}
+.doc {
+  position: relative;
+  width: calc(var(--u) * 48);
+  height: calc(var(--u) * 60);
+  margin: calc(var(--u) * 2) 0;
+  border-radius: calc(var(--u) * 4);
+  background: linear-gradient(#fff, #eceef0);
+  box-shadow: 0 calc(var(--u) * 1) calc(var(--u) * 3) rgb(0 0 0 / 0.3);
+}
+.doc::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--u) * 14) calc(var(--u) * 9) auto;
+  height: calc(var(--u) * 26);
+  background: repeating-linear-gradient(#b9bec4 0 calc(var(--u) * 2), transparent calc(var(--u) * 2) calc(var(--u) * 5));
+}
+.doc::after {
+  content: attr(data-x);
+  position: absolute;
+  inset: auto 0 calc(var(--u) * 6);
+  text-align: center;
+  font-size: calc(var(--u) * 8);
+  font-weight: 700;
+  color: #6e6e73;
+}
+
+/* notification banner */
+.banner {
+  position: absolute;
+  right: calc(var(--u) * 14);
+  top: calc(var(--u) * 38);
+  width: calc(var(--u) * 360);
+  z-index: 7;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: calc(var(--u) * 12);
+  align-items: center;
+  padding: calc(var(--u) * 12) calc(var(--u) * 14);
+  border-radius: calc(var(--u) * 18);
+  font-size: calc(var(--u) * 13);
+  background: var(--gf-tint);
+  -webkit-backdrop-filter: blur(calc(var(--u) * 30)) saturate(160%);
+  backdrop-filter: blur(calc(var(--u) * 30)) saturate(160%);
+  box-shadow:
+    0 0 0 calc(var(--u) * 1) var(--gf-rim) inset,
+    0 calc(var(--u) * 12) calc(var(--u) * 30) rgb(0 0 0 / 0.35);
+  animation: bannerIn 0.8s cubic-bezier(0.2, 0.9, 0.2, 1.05) 2.4s both;
+}
+.banner img {
+  width: calc(var(--u) * 36);
+  height: calc(var(--u) * 36);
+}
+.banner b {
+  display: block;
+  font-weight: 650;
+}
+.banner span {
+  color: var(--gf-text-2);
+}
+.banner time {
+  align-self: start;
+  font-size: calc(var(--u) * 12);
+  color: rgb(245 245 247 / 0.55);
+}
+@keyframes bannerIn {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--u) * 400));
+  }
+}
+
+/* dock */
+.dock {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--u) * 8);
+  translate: -50% 0;
+  z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  gap: calc(var(--u) * 7);
+  padding: calc(var(--u) * 10);
+  border-radius: calc(var(--u) * 24);
+  background: rgb(40 44 48 / 0.32);
+  -webkit-backdrop-filter: blur(calc(var(--u) * 24)) saturate(160%);
+  backdrop-filter: blur(calc(var(--u) * 24)) saturate(160%);
+  box-shadow:
+    0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.22) inset,
+    0 calc(var(--u) * 10) calc(var(--u) * 30) rgb(0 0 0 / 0.3);
+}
+.it {
+  --s: 1;
+  position: relative;
+  flex: none;
+  width: calc(var(--u) * 54 * var(--s));
+  height: calc(var(--u) * 54 * var(--s));
+  transition:
+    width 0.14s ease-out,
+    height 0.14s ease-out;
+}
+.it > img,
+.dk {
+  width: 100%;
+  height: 100%;
+}
+.dk {
+  display: grid;
+  place-items: center;
+  border-radius: 23%;
+}
+.dk i {
+  width: 54%;
+  height: 54%;
+  color: #fff;
+}
+.apps {
+  background: linear-gradient(#5bc27a, #26763f);
+  box-shadow: 0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.25) inset;
+}
+.term {
+  place-items: start;
+  padding: 16% 0 0 16%;
+  background: linear-gradient(#2e3236, #121416);
+  box-shadow: 0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.18) inset;
+  font: 700 calc(var(--u) * 18 * var(--s)) / 1 var(--mono);
+  color: #ededed;
+}
+.bin {
+  background: rgb(255 255 255 / 0.14);
+  box-shadow: 0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.2) inset;
+}
+.it[data-run]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--u) * -7);
+  width: calc(var(--u) * 4);
+  height: calc(var(--u) * 4);
+  translate: -50% 0;
+  border-radius: 50%;
+  background: #fff;
+}
+.sep {
+  align-self: center;
+  width: calc(var(--u) * 1);
+  height: calc(var(--u) * 49);
+  margin: 0 calc(var(--u) * 8);
+  background: rgb(255 255 255 / 0.3);
+}
+.tip {
+  position: absolute;
+  bottom: calc(100% + var(--u) * 12);
+  left: 50%;
+  translate: -50% 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  padding: calc(var(--u) * 4) calc(var(--u) * 10);
+  border-radius: calc(var(--u) * 8);
+  font-size: calc(var(--u) * 13);
+  background: var(--gf-tint);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 0 calc(var(--u) * 1) var(--gf-rim) inset;
+  transition:
+    opacity 0.15s ease,
+    translate 0.15s ease;
+}
+.it:hover .tip {
+  opacity: 1;
+  translate: -50% 0;
+}

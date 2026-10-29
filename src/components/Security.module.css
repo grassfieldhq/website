@@ -1,0 +1,105 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.blur {
+  filter: blur(calc(var(--u) * 50)) brightness(0.62);
+  transform: scale(1.12);
+}
+.date,
+.time {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+.date {
+  top: calc(var(--u) * 72);
+  font-size: calc(var(--u) * 26);
+  font-weight: 600;
+  color: rgb(245 245 247 / 0.88);
+  text-transform: capitalize;
+}
+.time {
+  top: calc(var(--u) * 108);
+  font-size: calc(var(--u) * 172);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: rgb(245 245 247 / 0.95);
+}
+.user {
+  position: absolute;
+  bottom: calc(var(--u) * 110);
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--u) * 10);
+  font-size: calc(var(--u) * 17);
+}
+.av {
+  width: calc(var(--u) * 64);
+  height: calc(var(--u) * 64);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.22);
+  font-size: calc(var(--u) * 28);
+  font-weight: 600;
+}
+.pw {
+  width: calc(var(--u) * 220);
+  height: calc(var(--u) * 34);
+  display: flex;
+  align-items: center;
+  padding: 0 calc(var(--u) * 14);
+  border-radius: 99px;
+  background: rgb(255 255 255 / 0.16);
+  box-shadow: 0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.3) inset;
+  color: rgb(245 245 247 / 0.6);
+  font-size: calc(var(--u) * 14);
+}
+.facts {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 28px;
+  margin-top: 32px;
+}
+.facts li {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.ic {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.ic i {
+  width: 20px;
+  height: 20px;
+}
+.facts b {
+  display: block;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+.facts li span:not(.ic) {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  color: var(--fg-2);
+}
