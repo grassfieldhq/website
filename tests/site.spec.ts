@@ -21,6 +21,26 @@ async function scrollThrough(page: Page) {
   });
 }
 
+// Every rendered image loaded. A fast scroll on a busy machine can step past a lazy image between two intersection
+// checks, so the browser never requests it: bring each image still loading into view. (The capture of the other
+// appearance is display:none, never rendered, never loaded: it is not waited for.)
+async function loadRendered(page: Page) {
+  await expect
+    .poll(
+      () =>
+        page.evaluate(async () => {
+          const pending = [...document.images].filter((i) => i.getClientRects().length > 0 && !i.complete);
+          for (const i of pending) {
+            i.scrollIntoView({ block: "center", behavior: "instant" });
+            await new Promise((r) => setTimeout(r, 60));
+          }
+          return pending.length;
+        }),
+      { timeout: 25_000 },
+    )
+    .toBe(0);
+}
+
 // React has attached its handlers. "networkidle" was the signal before, but it can stall for 20 s and more on a busy
 // machine even with no request pending (seen on origin/main too, ten pages in parallel).
 async function hydrated(page: Page) {
@@ -50,8 +70,7 @@ for (const lang of langs) {
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(h1[lang]);
       await scrollThrough(page);
-      // rendered images only: the capture of the other appearance is display:none, so its lazy image never loads
-      await page.waitForFunction(() => [...document.images].filter((i) => i.getClientRects().length > 0).every((i) => i.complete));
+      await loadRendered(page);
       const broken = await page.$$eval("img", (imgs) => imgs.filter((i) => i.getClientRects().length > 0 && (!i.complete || i.naturalWidth === 0)).map((i) => i.src));
       expect(broken).toEqual([]);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -222,7 +241,6 @@ const hasPair = (lang: string) => {
   for (const d of shotData.filter((x) => x.lang === lang)) seen.set(`${d.kind}:${d.base}`, (seen.get(`${d.kind}:${d.base}`) ?? new Set()).add(d.theme));
   return [...seen.values()].some((t) => t.size === 2);
 };
-const renderedComplete = () => [...document.images].filter((i) => i.getClientRects().length > 0).every((i) => i.complete);
 
 for (const lang of langs) {
   test(`${lang}: every capture has an alt in the page's language, and every file it names is served`, async ({ page, request }) => {
@@ -272,7 +290,7 @@ test("captures are never larger than their place needs, and the tour starts ligh
   for (const path of ["/fr/tour/", "/fr/desktop/", "/fr/"]) {
     await page.goto(path);
     await scrollThrough(page);
-    await page.waitForFunction(renderedComplete);
+    await loadRendered(page);
     // the image the browser picked is at most the smallest candidate covering the box at this pixel density (+25%
     // for the approximations in `sizes`): a phone never gets the 2880 px file
     const over = await page.evaluate(() =>
@@ -302,7 +320,7 @@ test("the tour does not shift while its captures load", async ({ page }) => {
     }).observe({ type: "layout-shift", buffered: true });
   });
   await scrollThrough(page);
-  await page.waitForFunction(renderedComplete);
+  await loadRendered(page);
   expect(await page.evaluate(() => (window as unknown as { cls: number }).cls)).toBeLessThan(0.02);
 });
 
