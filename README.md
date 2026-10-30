@@ -25,7 +25,8 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 ## Layout
 
 - Pages (`src/app/[lang]/`): home (showcase and index), `desktop/`, `apps/`, `security/`, `os/` (roadmap),
-  `tour/` (every capture), `download/`, `faq/`; same paths in both languages. Each inner page opens on `PageHero` inside `PageShell`.
+  `tour/` (every capture), `download/`, `faq/`, `legal/` (publisher and host from `publisher` in `src/lib/site.ts`,
+  privacy, licences, marks); same paths in both languages. Each inner page opens on `PageHero` inside `PageShell`.
 - `src/i18n/fr.ts` is the source text; `en.ts` must match its shape (`Dict` type). Routes: `/fr/`, `/en/`; `/` picks the
   visitor's language in the browser.
 - `src/components/`: one component per chapter. Product renders (`DesktopScene`, `OverviewScrub`, the bento minis)
@@ -39,6 +40,9 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 - `src/lib/release.ts`: the Download page's facts (version, packages, uninstall command). Fill `publish` (date,
   repository setup and install commands) when the `[grassfield]` repository is published; the page then shows them
   with copy buttons instead of "not released yet".
+- Long pages carry a table of contents (`SectionNav`, pinned under the menu bar, the chapter on screen
+  highlighted; `sections` per page in the dictionaries). The footer is the site map: pages, the tour's chapters,
+  the install anchors, about this site.
 - The shell (`PageShell`): the site is navigated like Grassfield. A fixed menu bar (`MenuBar`: logo, the page's
   name, Download, search, language, appearance, the visitor's clock), a Dock as the main navigation (`DockNav`:
   one tile per page, the Dock's magnification, a dot under the open page; a tab bar on phones) and Search
@@ -66,6 +70,8 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 - [ ] Fresh, dedicated captures: run `node scripts/shots.mjs` on the final set (see Captures).
 - [ ] Fill `publish` in `src/lib/release.ts` with the published repository's setup and install commands.
 - [ ] Licence of this repository's code (owner).
+- [ ] Fill `publisher` in `src/lib/site.ts` (name, status, address, e-mail, host): /legal/ and the footer's Contact
+  then show them.
 
 ## Captures
 

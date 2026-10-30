@@ -1,8 +1,10 @@
 import type { Dict, Locale } from "@/i18n";
 import { otherLocale } from "@/i18n";
+import { publisher } from "@/lib/site";
 import s from "./Sections.module.css";
 
-export function Footer({ t, nav, lang, path = "", privacy }: { t: Dict["footer"]; nav: Dict["nav"]; lang: Locale; path?: string; privacy: string }) {
+// The footer is the site map: every page, the tour's chapters, the install anchors, about this site.
+export function Footer({ t, nav, lang, path = "", privacy, tour }: { t: Dict["footer"]; nav: Dict["nav"]; lang: Locale; path?: string; privacy: string; tour: [string, string][] }) {
   const other = otherLocale(lang);
   const home = `/${lang}/`;
   return (
@@ -19,18 +21,29 @@ export function Footer({ t, nav, lang, path = "", privacy }: { t: Dict["footer"]
             <a href={`${home}os/`}>{nav.os}</a>
             <a href={`${home}tour/`}>{nav.tour}</a>
           </nav>
+          <nav aria-label={t.cols.tour}>
+            <h2>{t.cols.tour}</h2>
+            {tour.map(([feature, title]) => (
+              <a key={feature} href={`${home}tour/#${feature}`}>
+                {title}
+              </a>
+            ))}
+          </nav>
           <nav aria-label={t.cols.install}>
             <h2>{t.cols.install}</h2>
             <a href={`${home}download/`}>{nav.download}</a>
+            <a href={`${home}download/#requirements`}>{t.cols.requirements}</a>
             <a href={`${home}download/#reversible`}>{t.cols.reversible}</a>
             <a href={`${home}faq/`}>{nav.faq}</a>
           </nav>
-          <div>
-            <h2>{t.cols.licences}</h2>
+          <nav aria-label={t.cols.about}>
+            <h2>{t.cols.about}</h2>
+            <a href={`${home}legal/`}>{t.cols.legal}</a>
+            {publisher && <a href={`${home}legal/#contact`}>{t.cols.contact}</a>}
             {t.licences.map((l) => (
               <span key={l}>{l}</span>
             ))}
-          </div>
+          </nav>
         </div>
         <div className={s.legal}>
           <span>

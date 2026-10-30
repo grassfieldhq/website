@@ -23,9 +23,9 @@ export default async function SecurityPage({ params }: PageProps<"/[lang]/securi
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   return (
-    <PageShell t={t} lang={lang} path="security/">
+    <PageShell t={t} lang={lang} path="security/" sections={t.sections.security}>
       <PageHero {...t.pages.security} time={0.55} />
-      <section className="chapter stage" aria-label={t.scenes.security.label} style={{ paddingBlock: 0 }}>
+      <section className="chapter stage" id="scene" aria-label={t.scenes.security.label} style={{ paddingBlock: 0 }}>
         <SecurityScene t={t.scenes.security} locale={t.dates.locale} lang={lang} />
       </section>
       <Security t={t.security} locale={t.dates.locale} lang={lang} />

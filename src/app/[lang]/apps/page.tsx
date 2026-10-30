@@ -22,9 +22,9 @@ export default async function AppsPage({ params }: PageProps<"/[lang]/apps">) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   return (
-    <PageShell t={t} lang={lang} path="apps/">
+    <PageShell t={t} lang={lang} path="apps/" sections={t.sections.apps}>
       <PageHero {...t.pages.apps} time={0.36} />
-      <section className="chapter stage" aria-label={t.scenes.apps.label} style={{ paddingBlock: 0 }}>
+      <section className="chapter stage" id="scene" aria-label={t.scenes.apps.label} style={{ paddingBlock: 0 }}>
         <AppsScene t={t.scenes.apps} names={t.appsDetail.map((a) => a.name)} lang={lang} />
       </section>
       <AppsDetail apps={t.appsDetail} captureNote={t.overview.captureNote} lang={lang} shots={t.shots} />

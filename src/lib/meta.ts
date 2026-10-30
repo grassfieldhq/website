@@ -11,4 +11,4 @@ export function pageMeta(lang: Locale, path: string, title: string, description:
   };
 }
 
-export const pagePaths = ["", "desktop/", "apps/", "security/", "os/", "tour/", "download/", "faq/"] as const;
+export const pagePaths = ["", "desktop/", "apps/", "security/", "os/", "tour/", "download/", "faq/", "legal/"] as const;

@@ -59,6 +59,7 @@ const pages = [
   { path: "tour/", h1: { fr: "Grassfield, en vrai", en: "Grassfield, for real" } },
   { path: "download/", h1: { fr: "Grassfield Desktop", en: "Grassfield Desktop" } },
   { path: "faq/", h1: { fr: "Bon à savoir", en: "Good to know" } },
+  { path: "legal/", h1: { fr: "Mentions légales et confidentialité", en: "Legal and privacy" } },
 ];
 
 for (const lang of langs) {
@@ -562,4 +563,18 @@ test("keyboard: the Dock is a few tabs away, headings never skip a level, every 
       .map((e) => `${e.getAttribute("aria-label") ?? e.textContent?.trim()} ${Math.round(e.getBoundingClientRect().width)}x${Math.round(e.getBoundingClientRect().height)}`),
   );
   expect(small).toEqual([]);
+});
+
+test("long pages carry a table of contents that follows the scroll, and the Dock names every page", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/fr/desktop/");
+  const toc = page.getByRole("navigation", { name: "Sommaire de la page" });
+  await expect(toc.getByRole("link")).toHaveCount(5);
+  await expect(toc.getByRole("link", { name: "Vue d'ensemble" })).toHaveAttribute("aria-current", "true");
+  await page.locator("#glass").scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, 200));
+  await expect(toc.getByRole("link", { name: "Verre" })).toHaveAttribute("aria-current", "true");
+  const labels = await page.getByRole("navigation", { name: "Dock" }).locator("a").evaluateAll((as) => as.map((a) => { const l = a.querySelector("span:nth-child(2)") as HTMLElement; return getComputedStyle(l).display !== "none" && getComputedStyle(l).opacity === "1"; }));
+  expect(labels.every(Boolean)).toBe(true);
+  await expect(page.locator("footer").getByRole("link", { name: "Mentions légales et confidentialité" })).toBeVisible();
 });

@@ -20,7 +20,7 @@ export default async function OsPage({ params }: PageProps<"/[lang]/os">) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   return (
-    <PageShell t={t} lang={lang} path="os/">
+    <PageShell t={t} lang={lang} path="os/" sections={t.sections.os}>
       <PageHero {...t.pages.os} time={0.7} />
       <Roadmap t={t.roadmap} />
       <Omarchy t={t.omarchy} />

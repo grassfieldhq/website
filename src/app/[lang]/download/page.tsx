@@ -38,9 +38,9 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
   const fmtDate = (iso: string) => new Intl.DateTimeFormat(all.dates.locale, { dateStyle: "long" }).format(new Date(iso));
 
   return (
-    <PageShell t={all} lang={lang} path="download/">
+    <PageShell t={all} lang={lang} path="download/" sections={all.sections.download}>
       <div>
-        <header className={`wrap ${s.hero}`}>
+        <header className={`wrap ${s.hero}`} id="release">
           <div className={s.heroText}>
             <p className="eyebrow">{t.eyebrow}</p>
             <h1 className="h-1">{t.title}</h1>
@@ -85,7 +85,7 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           </section>
         </header>
 
-        <section className={`wrap ${s.block}`} aria-labelledby="req-title">
+        <section className={`wrap ${s.block}`} id="requirements" aria-labelledby="req-title">
           <h2 className="h-2" id="req-title">
             {t.requirementsTitle}
           </h2>
@@ -105,7 +105,7 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           </ul>
         </section>
 
-        <section className={`wrap ${s.block}`} aria-labelledby="pkg-title">
+        <section className={`wrap ${s.block}`} id="packages" aria-labelledby="pkg-title">
           <h2 className="h-2" id="pkg-title">
             {t.packagesTitle}
           </h2>

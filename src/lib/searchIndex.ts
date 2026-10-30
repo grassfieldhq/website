@@ -16,6 +16,7 @@ export function searchIndex(lang: Locale, t: Dict): Hit[] {
     { group: "pages", title: t.nav.tour, sub: t.pages.tour.lead, href: `${home}tour/`, icon: "camera" },
     { group: "pages", title: t.nav.download, sub: t.download.lead, href: `${home}download/`, icon: "download" },
     { group: "pages", title: t.nav.faq, sub: t.pages.faq.lead, href: `${home}faq/`, icon: "info" },
+    { group: "pages", title: t.nav.legal, sub: t.legal.lead, href: `${home}legal/`, icon: "lock" },
   ];
   const faq: Hit[] = t.faq.items.map((it, i) => ({ group: "faq", title: it.q, sub: it.a, href: `${home}faq/#faq-${i}`, icon: "info" }));
   const features = t.shots.features as Record<string, { title: string; body: string }>;

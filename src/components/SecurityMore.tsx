@@ -5,7 +5,7 @@ import s from "./SecurityMore.module.css";
 
 export function SecurityMore({ t }: { t: Dict["securityMore"] }) {
   return (
-    <section className="chapter" aria-labelledby="secmore-title">
+    <section className="chapter" id="protections" aria-labelledby="secmore-title">
       <div className="wrap">
         <h2 className="h-1" id="secmore-title" style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
           <Dot>{t.title}</Dot>
