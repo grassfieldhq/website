@@ -260,6 +260,26 @@ test("the site loads nothing from other origins and sets no cookies", async ({ p
   expect(await context.cookies()).toEqual([]);
 });
 
+test("a content security policy runs each page's own inline scripts and refuses any other", async ({ page }) => {
+  const errors = collectErrors(page);
+  for (const path of ["/fr/", "/en/faq/", "/fr/tour/"]) {
+    await page.goto(path);
+    await expect(page.locator('meta[http-equiv="Content-Security-Policy"]')).toHaveCount(1);
+    await expect(page.locator("html")).toHaveAttribute("data-theme-pref", "system"); // the inline theme script ran
+    await hydrated(page);
+  }
+  await page.goto("/missing/");
+  await expect(page.locator('meta[http-equiv="Content-Security-Policy"]')).toHaveCount(1);
+  expect(errors.filter((e) => !e.includes("404"))).toEqual([]);
+  const injected = await page.evaluate(() => {
+    const s = document.createElement("script");
+    s.textContent = "document.documentElement.dataset.injected = '1'";
+    document.head.append(s);
+    return document.documentElement.dataset.injected ?? null;
+  });
+  expect(injected).toBeNull();
+});
+
 test("presents Grassfield OS with the desktop as its first step", async ({ page }) => {
   await page.goto("/fr/os/");
   await expect(page).toHaveTitle(/Grassfield OS/);

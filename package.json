@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/csp.mjs",
     "start": "npx serve@14.2.4 out",
+    "deploy": "npx wrangler@4.149.0 pages deploy",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "playwright test",

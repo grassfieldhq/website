@@ -15,8 +15,9 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 | `npm ci` | install (Node 22, see `.nvmrc`) |
 | `npm run dev` | local dev server |
 | `npm run lint` · `npm run typecheck` | ESLint (next/core-web-vitals + TS) · `tsc` |
-| `npm run build` | static export to `out/` |
+| `npm run build` | static export to `out/`, then a Content Security Policy in each page (`scripts/csp.mjs`) |
 | `node scripts/serve.mjs` | serve `out/` on http://localhost:4321 |
+| `npm run deploy` | upload `out/` to Cloudflare Pages (see Deployment) |
 | `npm test` | Playwright on the built site, desktop and phone, fr and en, every page: axe accessibility, overflow, images, language routing, the Overview scrub, the glass demo, the theme toggle (no flash), the FAQ and its structured data, the copy button; captures: alt text in the page's language, every file served, no oversized image for the screen, no layout shift, light/dark variants, the lightbox, clips (poster, reduced motion), the tour without JavaScript |
 | `npm run check` | all of the above, in order |
 | `node scripts/og.mjs` | re-render `public/og.png` from the built hero |
@@ -64,14 +65,44 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 
 ## Before the public launch
 
-- [ ] Legal review done (owner), then set `robots` to allow and remove `noindex` in `src/app/[lang]/layout.tsx`.
-- [ ] Domain chosen: set `NEXT_PUBLIC_SITE_URL` at build time (placeholder `https://grassfield.invalid`).
-- [ ] Hosting chosen (static: GitHub Pages, Cloudflare Pages, Netlify…), with security headers (CSP, HSTS).
+- [ ] Legal review done (owner), then set `robots` to allow, remove `noindex` in `src/app/[lang]/layout.tsx` and the
+  `X-Robots-Tag` line in `public/_headers`.
+- [ ] Domain chosen: add it to the Pages project (Custom domains) and set the `SITE_URL` repository variable (CI
+  builds with it as `NEXT_PUBLIC_SITE_URL`; placeholder `https://grassfield.invalid`).
+- [x] Hosting: Cloudflare Pages, with security headers (CSP, HSTS). See Deployment for the one-time setup.
 - [ ] Fresh, dedicated captures: run `node scripts/shots.mjs` on the final set (see Captures).
 - [ ] Fill `publish` in `src/lib/release.ts` with the published repository's setup and install commands.
 - [ ] Licence of this repository's code (owner).
 - [ ] Fill `publisher` in `src/lib/site.ts` (name, status, address, e-mail, host): /legal/ and the footer's Contact
   then show them.
+
+## Deployment
+
+Cloudflare Pages, static files only, no Functions (`wrangler.jsonc`: project `grassfield-website`, output `out/`). CI
+deploys once the checks pass: a push to `main` goes to production, a pull request to a preview at
+`<branch>.grassfield-website.pages.dev` (linked from the pull request's deployment).
+
+- **Headers**: `public/_headers`: HSTS, `frame-ancestors 'none'`, nosniff, referrer and permissions policies, COOP,
+  `X-Robots-Tag: noindex` until the launch; a year's immutable cache for `/_next/static/` and `/shots/`, whose names
+  carry a hash. The Content Security Policy is a `<meta>` that `scripts/csp.mjs` writes into each page at the end of
+  `npm run build`: scripts from this origin plus the page's own inline scripts by hash, nothing from other origins.
+  A new inline script needs nothing; a new origin (fonts, analytics, a video host) needs a line in its `policy()`.
+- **Setup, once** (owner):
+  1. Create the project: `npx wrangler@4.149.0 login`, then
+     `npx wrangler@4.149.0 pages project create grassfield-website --production-branch=main`. If the name is taken
+     on `pages.dev`, Cloudflare adds a suffix: use the subdomain it prints. Create it before any deploy: Wrangler
+     turns a deploy run by an AI agent to a project that does not exist yet into a Workers project.
+  2. GitHub repository settings: the secret `CLOUDFLARE_API_TOKEN` (a custom API token, permission Account ›
+     Cloudflare Pages › Edit) and the variable `CLOUDFLARE_ACCOUNT_ID`. The deploy job stays off until this variable
+     exists.
+  3. The variable `SITE_URL` (`https://grassfield-website.pages.dev` for now, the domain later): canonical URLs,
+     sitemap, Open Graph.
+  4. Private until the launch: `noindex` keeps the site out of search engines, not out of reach. To keep it to the
+     team, Cloudflare Zero Trust › Access: a self-hosted application on `grassfield-website.pages.dev` and
+     `*.grassfield-website.pages.dev` with a policy for the team.
+- **By hand**: `npm run build && npm run deploy` (production from `main`; `npm run deploy -- --branch=<name>` for a
+  preview). `npx wrangler@4.149.0 pages dev` serves `out/` the way Pages does, headers included, on
+  http://localhost:8788.
 
 ## Captures
 
