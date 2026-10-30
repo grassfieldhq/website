@@ -509,6 +509,29 @@ const fr = {
     lang: "EN",
     langLabel: "Read this page in English",
   },
+  scenes: {
+    security: {
+      label: "Animation : le bureau se verrouille, l'horloge apparaît, puis une demande d'autorisation s'ouvre.",
+      steps: ["Vous vous éloignez.", "L'écran se verrouille : c'est le compositeur qui le tient.", "Une action d'administration ? Elle demande votre mot de passe."],
+      polkitTitle: "Réglages Grassfield souhaite modifier les réglages réseau.",
+      polkitBody: "Saisissez votre mot de passe pour autoriser cette action.",
+      polkitUser: "grassfield",
+      cancel: "Annuler",
+      allow: "Autoriser",
+    },
+    apps: {
+      label: "Animation : les quatre apps Grassfield s'ouvrent l'une après l'autre.",
+      steps: ["Fichiers : vos documents, bien rangés.", "Réglages : tout le système au même endroit.", "Visionneuse : ouvrir, c'est voir.", "Grassfield Store : trouver une app sans chercher."],
+      storeLine: "Les logiciels d'Arch et d'Omarchy, présentés simplement.",
+    },
+    install: {
+      label: "Animation : l'installation des paquets, le redémarrage, puis la connexion qui mène à Grassfield.",
+      steps: ["1. Les paquets s'installent, signés et vérifiés.", "2. Un redémarrage.", "3. La connexion mène à Grassfield."],
+      terminal: ["$ sudo pacman -S grassfield-desktop grassfield-compositor grassfield-icons", "vérification des signatures des paquets…", "installation de grassfield-desktop…", "terminé."],
+      login: "Saisir le mot de passe",
+      restart: "Redémarrage…",
+    },
+  },
   dates: { locale: "fr-FR" },
 };
 

@@ -509,6 +509,29 @@ const en: Dict = {
     lang: "FR",
     langLabel: "Lire cette page en français",
   },
+  scenes: {
+    security: {
+      label: "Animation: the desktop locks, the clock appears, then a permission request opens.",
+      steps: ["You step away.", "The screen locks: the compositor holds it.", "An administrative action? It asks for your password."],
+      polkitTitle: "Grassfield Settings wants to change the network settings.",
+      polkitBody: "Enter your password to allow this action.",
+      polkitUser: "grassfield",
+      cancel: "Cancel",
+      allow: "Allow",
+    },
+    apps: {
+      label: "Animation: the four Grassfield apps open one after the other.",
+      steps: ["Files: your documents, neatly kept.", "Settings: your whole system in one place.", "Preview: to open is to see.", "Grassfield Store: find an app without searching."],
+      storeLine: "Arch's and Omarchy's software, presented simply.",
+    },
+    install: {
+      label: "Animation: the packages install, a restart, then logging in leads to Grassfield.",
+      steps: ["1. The packages install, signed and verified.", "2. One restart.", "3. Logging in leads to Grassfield."],
+      terminal: ["$ sudo pacman -S grassfield-desktop grassfield-compositor grassfield-icons", "checking package signatures…", "installing grassfield-desktop…", "done."],
+      login: "Enter Password",
+      restart: "Restarting…",
+    },
+  },
   dates: { locale: "en-GB" },
 };
 

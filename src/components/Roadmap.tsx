@@ -2,6 +2,7 @@ import type { Dict } from "@/i18n";
 import { release } from "@/lib/release";
 import { Dot } from "./Dot";
 import { Mask } from "./Mask";
+import { RoadSun } from "./RoadSun";
 import s from "./Roadmap.module.css";
 
 // Grassfield OS is the product; the desktop is its first step. Step 2 follows the master plan's M6 (ISO from
@@ -24,6 +25,7 @@ export function Roadmap({ t }: { t: Dict["roadmap"] }) {
             <strong>{t.leadStrong}</strong>
           </p>
         </div>
+        <RoadSun>
         <ol className={s.road}>
           {t.steps.map((st, i) => (
             <li key={st.name} className={`${s.step} reveal`} data-now={i === 0 || undefined}>
@@ -50,6 +52,7 @@ export function Roadmap({ t }: { t: Dict["roadmap"] }) {
             </li>
           ))}
         </ol>
+        </RoadSun>
         <p className={s.note}>{t.note}</p>
       </div>
     </section>

@@ -1,0 +1,144 @@
+/* phases of --e: 0.1–0.4 the desktop blurs and dims and the lock rises; 0.6–0.85 the sheet comes up */
+.desk {
+  position: absolute;
+  inset: 0;
+  filter: blur(calc(clamp(0, (var(--e) - 0.1) / 0.3, 1) * 28px)) brightness(calc(1 - clamp(0, (var(--e) - 0.1) / 0.3, 1) * 0.45));
+  scale: calc(1 + clamp(0, (var(--e) - 0.1) / 0.3, 1) * 0.06);
+  will-change: filter;
+}
+.desk img,
+.desk picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.lock {
+  position: absolute;
+  inset: 0;
+  color: #f5f5f7;
+  opacity: clamp(0, (var(--e) - 0.25) / 0.2, 1);
+  translate: 0 calc((1 - clamp(0, (var(--e) - 0.25) / 0.2, 1)) * -3vh);
+}
+.date,
+.time {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+.date {
+  top: calc(var(--u) * 72);
+  font-size: calc(var(--u) * 26);
+  font-weight: 600;
+  text-transform: capitalize;
+  color: rgb(245 245 247 / 0.88);
+}
+.time {
+  top: calc(var(--u) * 108);
+  font-size: calc(var(--u) * 172);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+.user {
+  position: absolute;
+  bottom: calc(var(--u) * 110);
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--u) * 10);
+  font-size: calc(var(--u) * 17);
+  /* the user fades while the sheet takes the stage */
+  opacity: calc(1 - clamp(0, (var(--e) - 0.6) / 0.15, 1));
+}
+.av {
+  width: calc(var(--u) * 64);
+  height: calc(var(--u) * 64);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.22);
+  font-size: calc(var(--u) * 28);
+  font-weight: 600;
+}
+
+/* the polkit sheet: the session's dialog style, drawn */
+.sheet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--u) * 440);
+  padding: calc(var(--u) * 30) calc(var(--u) * 30) calc(var(--u) * 24);
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--u) * 10);
+  text-align: center;
+  border-radius: calc(var(--u) * 24);
+  background: rgb(29 31 36 / 0.86);
+  -webkit-backdrop-filter: blur(calc(var(--u) * 30)) saturate(160%);
+  backdrop-filter: blur(calc(var(--u) * 30)) saturate(160%);
+  box-shadow:
+    0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.16) inset,
+    0 calc(var(--u) * 30) calc(var(--u) * 80) rgb(0 0 0 / 0.55);
+  color: #f5f5f7;
+  font-size: calc(var(--u) * 14);
+  --k: clamp(0, (var(--e) - 0.62) / 0.23, 1);
+  opacity: var(--k);
+  translate: -50% calc(-50% + (1 - var(--k)) * 6vh);
+  scale: calc(0.94 + var(--k) * 0.06);
+}
+.sheetIcon {
+  width: calc(var(--u) * 56);
+  height: calc(var(--u) * 56);
+  display: grid;
+  place-items: center;
+  border-radius: calc(var(--u) * 14);
+  background: linear-gradient(160deg, #4fb36b, #26763f);
+  color: #06240f;
+  margin-bottom: calc(var(--u) * 6);
+}
+.sheetIcon i {
+  width: 50%;
+  height: 50%;
+}
+.sheet b {
+  font-size: calc(var(--u) * 15);
+  font-weight: 650;
+  text-wrap: balance;
+}
+.sheet p {
+  color: #dcdce4;
+  font-size: calc(var(--u) * 13);
+}
+.field {
+  width: 100%;
+  height: calc(var(--u) * 34);
+  margin-top: calc(var(--u) * 10);
+  display: flex;
+  align-items: center;
+  padding: 0 calc(var(--u) * 12);
+  border-radius: calc(var(--u) * 8);
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: 0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.2) inset;
+}
+.dots {
+  letter-spacing: calc(var(--u) * 2);
+  font-size: calc(var(--u) * 13);
+}
+.buttons {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--u) * 10);
+  margin-top: calc(var(--u) * 8);
+}
+.buttons span {
+  padding: calc(var(--u) * 8) 0;
+  border-radius: calc(var(--u) * 9);
+  background: rgb(255 255 255 / 0.12);
+  font-weight: 550;
+}
+.buttons span[data-primary] {
+  background: #4fb36b;
+  color: #06240f;
+}

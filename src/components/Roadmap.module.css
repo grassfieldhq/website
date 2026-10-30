@@ -7,6 +7,10 @@
   gap: 20px;
   position: relative;
 }
+.roadWrap {
+  --e: 1;
+  position: relative;
+}
 .road::before {
   content: "";
   position: absolute;
@@ -14,7 +18,19 @@
   right: 28px;
   top: 14px;
   height: 2px;
-  background: linear-gradient(90deg, var(--sun) 0%, var(--accent) 45%, var(--line) 55%, var(--line) 100%);
+  background: linear-gradient(90deg, var(--sun) 0%, var(--accent) calc(var(--e) * 42%), var(--line) calc(var(--e) * 42% + 10%), var(--line) 100%);
+}
+/* the sun on its way from step 1 towards step 2: it stops at the release candidate, well before step 2 */
+.travel {
+  position: absolute;
+  top: 10px;
+  left: calc(30px + (100% - 60px) * var(--e) * 0.42);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--sun-core) 0%, var(--sun) 60%, #c98a2e 100%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--sun) 70%, transparent);
+  opacity: clamp(0, var(--e) * 4, 1);
 }
 .step {
   position: relative;
@@ -119,7 +135,11 @@
     bottom: 40px;
     width: 2px;
     height: auto;
-    background: linear-gradient(180deg, var(--sun) 0%, var(--accent) 45%, var(--line) 55%);
+    background: linear-gradient(180deg, var(--sun) 0%, var(--accent) calc(var(--e) * 42%), var(--line) calc(var(--e) * 42% + 10%));
+  }
+  .travel {
+    left: 25px;
+    top: calc(14px + (100% - 54px) * var(--e) * 0.42);
   }
   .step {
     padding-top: 0;

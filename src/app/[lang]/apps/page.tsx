@@ -5,6 +5,7 @@ import { pageMeta } from "@/lib/meta";
 import { PageShell } from "@/components/PageShell";
 import { PageHero } from "@/components/PageHero";
 import { AppsDetail } from "@/components/AppsDetail";
+import { AppsScene } from "@/components/AppsScene";
 import { Gallery } from "@/components/Gallery";
 import { Lightbox } from "@/components/Lightbox";
 import { pageFeatures } from "@/lib/shots";
@@ -23,6 +24,9 @@ export default async function AppsPage({ params }: PageProps<"/[lang]/apps">) {
   return (
     <PageShell t={t} lang={lang} path="apps/">
       <PageHero {...t.pages.apps} time={0.36} />
+      <section className="chapter stage" aria-label={t.scenes.apps.label} style={{ paddingBlock: 0 }}>
+        <AppsScene t={t.scenes.apps} names={t.appsDetail.map((a) => a.name)} lang={lang} />
+      </section>
       <AppsDetail apps={t.appsDetail} captureNote={t.overview.captureNote} lang={lang} shots={t.shots} />
       <Gallery lang={lang} t={t.shots} features={pageFeatures.appsMore} />
       <Lightbox t={{ close: t.shots.close, prev: t.shots.prev, next: t.shots.next, of: t.shots.of }} />

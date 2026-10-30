@@ -490,3 +490,55 @@ test("the sky follows the visitor's clock: night at 23:00, day at 12:00", async 
   await page.goto("/fr/");
   expect(await page.evaluate(() => document.documentElement.style.getPropertyValue("--night"))).toBe("0.00");
 });
+
+// Scenes: scrolling through a Stage's track drives --e from 0 to 1 and the captions step along.
+async function scrubStage(page: Page, path: string, nth = 0) {
+  await page.goto(path);
+  await hydrated(page);
+  const stage = page.locator("[data-step]").nth(nth);
+  const box = await stage.evaluate((el) => {
+    const t = el.parentElement as HTMLElement;
+    return { top: t.getBoundingClientRect().top + window.scrollY, h: t.offsetHeight };
+  });
+  await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), box.top);
+  await expect(stage).toHaveAttribute("data-step", "0");
+  await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), box.top + box.h);
+  return stage;
+}
+
+test("the security scene locks the desktop and ends on the permission sheet", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const stage = await scrubStage(page, "/fr/security/");
+  await expect(stage).toHaveAttribute("data-step", "2");
+  await expect(stage.getByText("Autoriser", { exact: true })).toBeVisible();
+  const e = await stage.evaluate((el) => parseFloat(getComputedStyle(el).getPropertyValue("--e")));
+  expect(e).toBe(1);
+});
+
+test("the apps scene opens four windows, the last one the Store", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const stage = await scrubStage(page, "/en/apps/");
+  await expect(stage).toHaveAttribute("data-step", "3");
+  const opacities = await stage.locator("[class*=win]").evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity));
+  expect(opacities).toEqual(["1", "1", "1", "1"]);
+  await expect(stage.locator("b", { hasText: "Grassfield Store" }).last()).toBeVisible();
+});
+
+test("the install scene ends on the Grassfield desktop", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const stage = await scrubStage(page, "/fr/download/");
+  await expect(stage).toHaveAttribute("data-step", "2");
+  const desk = stage.locator("picture").last();
+  await expect(desk).toBeVisible();
+  expect(await desk.evaluate((el) => getComputedStyle(el.parentElement!).opacity)).toBe("1");
+});
+
+test("the roadmap's sun travels towards step 2 and stops before it", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/fr/os/");
+  await hydrated(page);
+  const road = page.locator("[data-road]");
+  await road.scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, 400));
+  await expect.poll(() => road.evaluate((el) => parseFloat(getComputedStyle(el).getPropertyValue("--e")))).toBeGreaterThan(0.5);
+});

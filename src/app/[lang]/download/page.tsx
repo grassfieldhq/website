@@ -7,6 +7,7 @@ import { Command } from "@/components/Command";
 import { Mask } from "@/components/Mask";
 import { Numbers } from "@/components/Numbers";
 import { Reversible } from "@/components/Reversible";
+import { InstallScene } from "@/components/InstallScene";
 import s from "@/components/Download.module.css";
 
 const pkgIcons: Record<string, string> = {
@@ -131,6 +132,9 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           <h2 className="h-2" id="install-title">
             {t.installTitle}
           </h2>
+          <div className="stage" style={{ borderRadius: "var(--r-tile)", margin: "28px 0 8px", padding: "4px 0" }}>
+            <InstallScene t={all.scenes.install} lang={lang} />
+          </div>
           <ol className={s.steps}>
             {t.installSteps.map((st, i) => (
               <li key={st.title}>

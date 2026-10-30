@@ -1,0 +1,57 @@
+.track {
+  position: relative;
+  height: var(--h, 260vh);
+}
+.sticky {
+  --e: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(14px, 3vh, 28px);
+  padding-top: calc(var(--bar-h) + 8px);
+  padding-bottom: calc(var(--dock-space) - 40px);
+}
+.display {
+  width: min(100%, 1180px, (100svh - 230px) * 1.6);
+}
+.screen {
+  background: #0f2a3f;
+}
+.steps {
+  display: grid;
+  text-align: center;
+  font-size: clamp(18px, 2.2vw, 28px);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  padding-inline: 16px;
+}
+.steps p {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s var(--ease-out);
+}
+.sticky[data-step="0"] .steps p[data-i="0"],
+.sticky[data-step="1"] .steps p[data-i="1"],
+.sticky[data-step="2"] .steps p[data-i="2"],
+.sticky[data-step="3"] .steps p[data-i="3"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    height: auto;
+  }
+  .sticky {
+    position: static;
+    height: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

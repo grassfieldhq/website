@@ -1,0 +1,100 @@
+/* phases of --e: 0–0.33 the terminal types and the bar fills; 0.33–0.6 the restart; 0.6–0.8 the login;
+   0.8–1 the desktop */
+.term {
+  position: absolute;
+  inset: 0;
+  padding: calc(var(--u) * 60) calc(var(--u) * 80);
+  background: #15171a;
+  color: #d7dad6;
+  font: 500 calc(var(--u) * 19) / 1.7 var(--mono);
+  opacity: calc(1 - clamp(0, (var(--e) - 0.33) / 0.08, 1));
+}
+.term p {
+  white-space: pre-wrap;
+  opacity: clamp(0, (var(--e) * 4 - var(--i) * 0.08) / 0.06, 1);
+}
+.term p:first-child {
+  color: #fff;
+}
+.progress {
+  margin-top: calc(var(--u) * 24);
+  height: calc(var(--u) * 10);
+  width: 60%;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 0.12);
+  overflow: hidden;
+}
+.progress i {
+  display: block;
+  height: 100%;
+  width: calc(clamp(0, var(--e) / 0.3, 1) * 100%);
+  background: #4fb36b;
+}
+.restart {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: calc(var(--u) * 20);
+  background: #000;
+  color: #f5f5f7;
+  font-size: calc(var(--u) * 18);
+  --k: clamp(0, (var(--e) - 0.33) / 0.08, 1) * (1 - clamp(0, (var(--e) - 0.58) / 0.06, 1));
+  opacity: calc(var(--k));
+}
+.restart i {
+  width: calc(var(--u) * 90);
+  height: calc(var(--u) * 90);
+  color: #9be3ae;
+}
+.login {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: calc(var(--u) * 10);
+  background: linear-gradient(180deg, #0f2a3f, #1f4f2c);
+  color: #f5f5f7;
+  font-size: calc(var(--u) * 17);
+  --k: clamp(0, (var(--e) - 0.58) / 0.08, 1) * (1 - clamp(0, (var(--e) - 0.82) / 0.08, 1));
+  opacity: calc(var(--k));
+}
+.av {
+  width: calc(var(--u) * 72);
+  height: calc(var(--u) * 72);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.2);
+  font-size: calc(var(--u) * 30);
+  font-weight: 600;
+}
+.name {
+  font-weight: 600;
+}
+.pw {
+  width: calc(var(--u) * 220);
+  height: calc(var(--u) * 34);
+  display: flex;
+  align-items: center;
+  padding: 0 calc(var(--u) * 14);
+  border-radius: 99px;
+  background: rgb(255 255 255 / 0.14);
+  box-shadow: 0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.3) inset;
+  color: rgb(245 245 247 / 0.65);
+  font-size: calc(var(--u) * 14);
+}
+.desk {
+  position: absolute;
+  inset: 0;
+  opacity: clamp(0, (var(--e) - 0.82) / 0.12, 1);
+}
+.desk picture,
+.desk img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
