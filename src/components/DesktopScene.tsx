@@ -43,14 +43,14 @@ export function DesktopScene({ t, locale }: { t: Dict["scene"]; locale: string }
             <i />
             <i />
           </div>
-          <h6>{t.favourites}</h6>
+          <span className={s.group}>{t.favourites}</span>
           {t.sidebar.slice(0, 3).map((label, i) => (
             <span key={label} data-on={i === 1 || undefined}>
               <Mask name={sideIcons[i]!} />
               {label}
             </span>
           ))}
-          <h6>{t.locations}</h6>
+          <span className={s.group}>{t.locations}</span>
           {t.sidebar.slice(3).map((label, i) => (
             <span key={label}>
               <Mask name={sideIcons[i + 3]!} />

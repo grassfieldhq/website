@@ -76,7 +76,8 @@
 .side .lights {
   margin: 0 0 calc(var(--u) * 26) calc(var(--u) * 9);
 }
-.side h6 {
+.side .group {
+  display: block;
   margin: calc(var(--u) * 10) 0 calc(var(--u) * 4) calc(var(--u) * 10);
   font-size: calc(var(--u) * 11);
   font-weight: 650;

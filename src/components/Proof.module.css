@@ -65,25 +65,38 @@
 .lights i:last-child {
   background: var(--gf-zoom);
 }
+/* the light is drawn 14 units wide, but the button itself is at least 24 px: a real target */
 .yellow {
   position: relative;
+  width: max(24px, calc(var(--u) * 14));
+  height: max(24px, calc(var(--u) * 14));
+  margin: calc((calc(var(--u) * 14) - max(24px, calc(var(--u) * 14))) / 2);
   padding: 0;
   border: 0;
-  background: var(--gf-min);
+  border-radius: 50%;
+  background: none;
+  box-shadow: none;
   cursor: pointer;
 }
-/* a generous hit area around the 14-unit light, and a pulse that invites the click */
 .yellow::before {
   content: "";
   position: absolute;
-  inset: -12px;
+  inset: 50%;
+  width: calc(var(--u) * 14);
+  height: calc(var(--u) * 14);
+  translate: -50% -50%;
   border-radius: 50%;
+  background: var(--gf-min);
+  box-shadow: 0 0 0 calc(var(--u) * 0.7) rgb(0 0 0 / 0.18) inset;
 }
 @media (prefers-reduced-motion: no-preference) {
   .yellow::after {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: 50%;
+    width: calc(var(--u) * 14);
+    height: calc(var(--u) * 14);
+    translate: -50% -50%;
     border-radius: 50%;
     box-shadow: 0 0 0 0 rgb(217 169 59 / 0.7);
     animation: invite 2s ease-out infinite;
@@ -104,7 +117,8 @@
   gap: calc(var(--u) * 18);
   font-size: calc(var(--u) * 24);
 }
-.body h4 {
+.body .h {
+  display: block;
   font-size: calc(var(--u) * 34);
   font-weight: 700;
   letter-spacing: -0.02em;

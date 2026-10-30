@@ -16,13 +16,14 @@ export function PageShell({ t, lang, path, pageName, children }: { t: Dict; lang
         {t.nav.skip}
       </a>
       <MenuBar t={t} lang={lang} path={path} pageName={name} />
-      <main id="main">{children}</main>
-      <Footer t={t.footer} nav={t.nav} lang={lang} path={path} privacy={t.privacy.statement} />
+      {/* the Dock comes right after the menu bar in the document: a keyboard reaches the navigation in a few tabs */}
       <DockNav
         t={{ dock: t.shell.dockLabel, home: t.shell.home, desktop: t.nav.desktop, apps: t.nav.apps, security: t.nav.security, os: t.nav.os, tour: t.nav.tour, download: t.nav.download, faq: t.nav.faq }}
         lang={lang}
         path={path}
       />
+      <main id="main">{children}</main>
+      <Footer t={t.footer} nav={t.nav} lang={lang} path={path} privacy={t.privacy.statement} />
       <CommandSearch t={t.shell} index={searchIndex(lang, t)} />
     </>
   );

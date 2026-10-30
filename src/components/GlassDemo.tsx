@@ -30,7 +30,7 @@ export function GlassDemo({ t }: { t: Dict["glass"] }) {
       <div className="mini reveal" style={{ ["--ar" as string]: "4 / 3", borderRadius: "var(--r-tile)" }} role="img" aria-label={`${t.panelTitle}: ${t.transparency} ${`${transparency}${t.percentSuffix}`}, ${t.accents[accent]}, ${look === "dark" ? t.dark : t.light}`}>
         <Wallpaper ratio={4 / 3} />
         <div className={s.panel} data-look={look} style={{ "--t": transparency / 100, "--ac": fill, "--ac-ink": ink } as CSSProperties}>
-          <h4>{t.panelTitle}</h4>
+          <b className={s.h}>{t.panelTitle}</b>
           <div className={s.row}>
             <span>{t.reduceMotion}</span>
             <span className={s.toggle} />

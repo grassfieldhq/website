@@ -225,12 +225,18 @@
 .cols a,
 .cols span {
   display: block;
-  padding: 3px 0;
+  padding: 5px 0;
+  min-height: 24px;
 }
 .cols a:hover,
 .legal a:hover {
   color: var(--fg);
   text-decoration: underline;
+}
+.legal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 .legal {
   display: flex;

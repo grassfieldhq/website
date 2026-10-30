@@ -102,7 +102,7 @@ export function CommandSearch({ t, index }: { t: Dict["shell"]; index: Hit[] }) 
         <div className={s.searchResults} id={listId} role="listbox">
           {groups.map(({ g, items }) => (
             <div key={g} role="group" aria-label={t.groups[g]}>
-              <h6>{t.groups[g]}</h6>
+              <div className={s.groupLabel}>{t.groups[g]}</div>
               {items.map(({ h, i }) => (
                 <a
                   key={h.href + h.title}

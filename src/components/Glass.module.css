@@ -42,7 +42,8 @@
   --prim: rgb(255 255 255 / 0.6);
   --pfill: rgb(0 0 0 / 0.07);
 }
-.panel h4 {
+.panel .h {
+  display: block;
   font-size: calc(var(--u) * 44);
   font-weight: 700;
   letter-spacing: -0.02em;

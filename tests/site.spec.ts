@@ -542,3 +542,24 @@ test("the roadmap's sun travels towards step 2 and stops before it", async ({ pa
   await page.evaluate(() => window.scrollBy(0, 400));
   await expect.poll(() => road.evaluate((el) => parseFloat(getComputedStyle(el).getPropertyValue("--e")))).toBeGreaterThan(0.5);
 });
+
+test("keyboard: the Dock is a few tabs away, headings never skip a level, every target is 24 px", async ({ page }) => {
+  await page.goto("/fr/desktop/");
+  let tabs = 0;
+  for (; tabs < 12; tabs++) {
+    await page.keyboard.press("Tab");
+    if (await page.evaluate(() => !!document.activeElement?.closest('nav[aria-label="Dock"]'))) break;
+  }
+  expect(tabs).toBeLessThan(12);
+  const levels = await page.$$eval("h1,h2,h3,h4,h5,h6", (hs) => hs.map((h) => Number(h.tagName[1])));
+  for (let i = 1; i < levels.length; i++) expect(levels[i]! - levels[i - 1]!).toBeLessThanOrEqual(1);
+  const small = await page.$$eval("a,button", (els) =>
+    els
+      .filter((e) => {
+        const r = e.getBoundingClientRect();
+        return r.width > 0 && (r.width < 24 || r.height < 24);
+      })
+      .map((e) => `${e.getAttribute("aria-label") ?? e.textContent?.trim()} ${Math.round(e.getBoundingClientRect().width)}x${Math.round(e.getBoundingClientRect().height)}`),
+  );
+  expect(small).toEqual([]);
+});

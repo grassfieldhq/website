@@ -25,7 +25,7 @@ export function MinimiseDemo({ t }: { t: Dict["proof"] }) {
             <b>{t.demoTitle}</b>
           </div>
           <div className={s.body}>
-            <h4>{t.demoBody[0]}</h4>
+            <b className={s.h}>{t.demoBody[0]}</b>
             {t.demoBody.slice(1).map((line) => (
               <p key={line}>
                 <span className={s.box} aria-hidden="true" />
