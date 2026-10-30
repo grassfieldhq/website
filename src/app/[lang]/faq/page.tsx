@@ -19,7 +19,7 @@ export default async function FaqPage({ params }: PageProps<"/[lang]/faq">) {
   const t = getDict(lang);
   return (
     <PageShell t={t} lang={lang} path="faq/">
-      <PageHero {...t.pages.faq} />
+      <PageHero {...t.pages.faq} time={0.8} />
       <Faq t={t.faq} head={false} />
     </PageShell>
   );

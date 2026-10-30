@@ -15,7 +15,7 @@ export function ParallaxHero({ copy, display }: { copy: ReactNode; display: Reac
   return (
     <div className={s.track} ref={track}>
       <div className={s.sticky} ref={target}>
-        <Landscape />
+        <Landscape shared />
         <div className={s.copy}>{copy}</div>
         <div className={s.rise}>{display}</div>
       </div>

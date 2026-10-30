@@ -34,7 +34,7 @@ export default async function DesktopPage({ params }: PageProps<"/[lang]/desktop
   const locale = t.dates.locale;
   return (
     <PageShell t={t} lang={lang} path="desktop/">
-      <PageHero {...t.pages.desktop} />
+      <PageHero {...t.pages.desktop} time={0.18} />
       <Overview t={t.overview} scene={t.scene} locale={locale} lang={lang} />
       <Proof t={t.proof} />
       <Everyday t={t.everyday} scene={t.scene} locale={locale} lang={lang} />

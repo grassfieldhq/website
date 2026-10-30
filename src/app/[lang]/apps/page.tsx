@@ -22,7 +22,7 @@ export default async function AppsPage({ params }: PageProps<"/[lang]/apps">) {
   const t = getDict(lang);
   return (
     <PageShell t={t} lang={lang} path="apps/">
-      <PageHero {...t.pages.apps} />
+      <PageHero {...t.pages.apps} time={0.36} />
       <AppsDetail apps={t.appsDetail} captureNote={t.overview.captureNote} lang={lang} shots={t.shots} />
       <Gallery lang={lang} t={t.shots} features={pageFeatures.appsMore} />
       <Lightbox t={{ close: t.shots.close, prev: t.shots.prev, next: t.shots.next, of: t.shots.of }} />

@@ -21,7 +21,7 @@ export default async function OsPage({ params }: PageProps<"/[lang]/os">) {
   const t = getDict(lang);
   return (
     <PageShell t={t} lang={lang} path="os/">
-      <PageHero {...t.pages.os} />
+      <PageHero {...t.pages.os} time={0.7} />
       <Roadmap t={t.roadmap} />
       <Omarchy t={t.omarchy} />
       <Install t={t.install} lang={lang} />

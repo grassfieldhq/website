@@ -3,6 +3,7 @@
 
 /* ---- menu bar ---- */
 .menubar {
+  view-transition-name: menubar;
   position: fixed;
   inset: 0 0 auto;
   z-index: 60;
@@ -107,6 +108,7 @@
 
 /* ---- Dock ---- */
 .dock {
+  view-transition-name: dock;
   position: fixed;
   left: 50%;
   bottom: max(10px, env(safe-area-inset-bottom, 0px));

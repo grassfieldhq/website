@@ -110,6 +110,29 @@
   background: var(--bg-2);
 }
 
+/* Moving between pages is a view transition: the page crossfades, the landscape of the hero carries over
+   (view-transition-name: land), the menu bar and the Dock stay put. Browsers without it load the page as usual. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-old(land),
+::view-transition-new(land) {
+  animation-duration: 0.55s;
+  animation-timing-function: var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 *,
 *::before,
 *::after {

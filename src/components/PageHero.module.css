@@ -21,13 +21,18 @@
   justify-items: center;
   gap: 18px;
 }
+/* the sun passes behind the title on some pages: a soft shadow keeps every line readable over it */
 .eyebrow {
-  color: #e8c98b;
+  color: #ffe6b3;
+  text-shadow: 0 1px 12px rgb(10 30 40 / 0.6);
+}
+.lead {
+  text-shadow: 0 1px 14px rgb(10 30 40 / 0.5);
 }
 .copy h1 {
   color: #fff;
   text-shadow: 0 2px 40px rgb(0 0 0 / 0.25);
 }
 .lead {
-  color: rgb(245 245 247 / 0.82);
+  color: rgb(245 245 247 / 0.88);
 }

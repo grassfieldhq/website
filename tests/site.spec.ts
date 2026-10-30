@@ -467,3 +467,26 @@ test.describe("without JavaScript", () => {
     }
   });
 });
+
+test("pages are a day: the sun sits later on each page, and a view transition carries the field over", async ({ page }) => {
+  const times: number[] = [];
+  for (const path of ["desktop/", "apps/", "security/", "os/", "faq/"]) {
+    await page.goto(`/fr/${path}`);
+    const land = page.locator("header [data-land]").first();
+    times.push(parseFloat(await land.evaluate((el) => getComputedStyle(el).getPropertyValue("--t"))));
+    await expect(land).toHaveCSS("view-transition-name", "land");
+  }
+  expect(times).toEqual([...times].sort((a, b) => a - b));
+  expect(times[0]).toBeLessThan(times[times.length - 1]!);
+  const hasRule = await page.evaluate(() => [...document.styleSheets].some((sh) => [...sh.cssRules].some((r) => r.constructor.name === "CSSViewTransitionRule")));
+  expect(hasRule).toBe(true);
+});
+
+test("the sky follows the visitor's clock: night at 23:00, day at 12:00", async ({ page }) => {
+  await page.clock.setFixedTime(new Date(2026, 9, 30, 23, 0, 0));
+  await page.goto("/fr/");
+  expect(await page.evaluate(() => document.documentElement.style.getPropertyValue("--night"))).toBe("1.00");
+  await page.clock.setFixedTime(new Date(2026, 9, 30, 12, 0, 0));
+  await page.goto("/fr/");
+  expect(await page.evaluate(() => document.documentElement.style.getPropertyValue("--night"))).toBe("0.00");
+});

@@ -25,7 +25,7 @@ export default async function TourPage({ params }: PageProps<"/[lang]/tour">) {
   const groups = byFeature(lang, Object.keys(t.shots.features));
   return (
     <PageShell t={t} lang={lang} path="tour/">
-      <PageHero {...t.pages.tour} />
+      <PageHero {...t.pages.tour} time={0.45} />
       <div className={`wrap ${s.body}`}>
         {groups.length ? (
           <>

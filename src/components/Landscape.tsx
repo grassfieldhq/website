@@ -7,6 +7,8 @@ const palettes = {
   dawn: {
     sky: ["#0F2A3F", "#2F6F7E", "#E8C98B"],
     skyEarly: ["#081624", "#1B4352", "#C99560"],
+    skyNoon: ["#1E5A80", "#4F9BB0", "#CFE3D8"],
+    skyDusk: ["#14122A", "#5B3A5E", "#F0A35E"],
     sun: "#FFF1C2",
     hills: ["#3E7D5A", "#2E6B3F", "#1F4F2C", "#16391F"],
   },
@@ -38,14 +40,40 @@ function hillPath(b: number, a: number, ph: number) {
   return `M0 1400 L0 ${y(Math.sin(ph))} C${w * 0.18} ${y(2)} ${w * 0.34} ${y(-1)} ${w * 0.5} ${y(Math.sin(ph + 2))} C${w * 0.68} ${y(1.8)} ${w * 0.84} ${y(-0.8)} ${w} ${y(Math.sin(ph + 4))} L${w} 1400 Z`;
 }
 
-export function Landscape({ variant = "dawn", className = "", p }: { variant?: "dawn" | "dusk"; className?: string; p?: number }) {
+const clamp = (v: number) => Math.min(1, Math.max(0, v));
+
+/**
+ * `time` is the hour of the site's day, 0 at dawn (the home page), 0.5 at noon, 1 at dusk: each page's hero sits a
+ * little later than the one before. `p` is the scroll progress a parent drives (the home hero). `shared` names the
+ * landscape for the view transition between pages, so the field carries over instead of fading.
+ */
+export function Landscape({ variant = "dawn", className = "", p, time = 0, shared = false }: { variant?: "dawn" | "dusk"; className?: string; p?: number; time?: number; shared?: boolean }) {
   const pal = palettes[variant];
   const sky = (c: string[]) => `linear-gradient(180deg, ${c[0]} 0%, ${c[1]} 55%, ${c[2]} 78%)`;
+  const t = variant === "dusk" ? 1 : clamp(time);
+  const noon = clamp(1 - Math.abs(t - 0.5) * 2.2);
+  const dusk = clamp((t - 0.6) / 0.4);
+  const vars = {
+    "--t": t,
+    "--sun-x": `${20 + 56 * t}%`,
+    "--sun-y": `${64 - Math.sin(t * Math.PI) * 42}%`,
+    "--hill-light": (1 + 0.16 * Math.sin(t * Math.PI) - 0.3 * clamp((t - 0.7) / 0.3)).toFixed(3),
+    "--warm": (dusk * 0.35).toFixed(3),
+    ...(p === undefined ? {} : { "--p": p }),
+    ...(shared ? { viewTransitionName: "land" } : {}),
+  } as CSSProperties;
   return (
-    <div className={`${s.land} ${className}`} data-variant={variant} aria-hidden="true" style={p === undefined ? undefined : ({ "--p": p } as CSSProperties)}>
+    <div className={`${s.land} ${className}`} data-variant={variant} data-land aria-hidden="true" style={vars}>
       <div className={s.sky} style={{ background: sky(pal.skyEarly) }} />
       <div className={`${s.sky} ${s.skyDay}`} style={{ background: sky(pal.sky) }} />
-      <div className={s.sun} style={{ ["--sun" as string]: pal.sun } as CSSProperties} />
+      {variant === "dawn" && (
+        <>
+          <div className={s.sky} style={{ background: sky(palettes.dawn.skyNoon), opacity: noon }} />
+          <div className={s.sky} style={{ background: sky(palettes.dawn.skyDusk), opacity: dusk }} />
+        </>
+      )}
+      <div className={s.stars} />
+      <div className={s.sun} style={{ ["--sun" as string]: t > 0.75 ? "#FFD9A0" : t > 0.25 ? "#FFFBE6" : pal.sun } as CSSProperties} />
       {shapes.map((sh, i) => {
         const c = pal.hills[i]!;
         const id = `${variant}-hill-${i}`;
@@ -64,7 +92,9 @@ export function Landscape({ variant = "dawn", className = "", p }: { variant?: "
           </div>
         );
       })}
+      <div className={s.warm} />
       <div className={s.grain} />
+      <div className={s.night} />
     </div>
   );
 }

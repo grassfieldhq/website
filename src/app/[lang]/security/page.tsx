@@ -23,7 +23,7 @@ export default async function SecurityPage({ params }: PageProps<"/[lang]/securi
   const t = getDict(lang);
   return (
     <PageShell t={t} lang={lang} path="security/">
-      <PageHero {...t.pages.security} />
+      <PageHero {...t.pages.security} time={0.55} />
       <Security t={t.security} locale={t.dates.locale} lang={lang} />
       <SecurityMore t={t.securityMore} />
       <Gallery lang={lang} t={t.shots} features={pageFeatures.security} exclude={used(lang, ["lock"])} alt />
