@@ -51,7 +51,7 @@ async function hydrated(page: Page) {
 }
 
 const pages = [
-  { path: "", h1: { fr: "Grassfield", en: "Grassfield" } },
+  { path: "", h1: { fr: "Grassfield OS", en: "Grassfield OS" } },
   { path: "desktop/", h1: { fr: "Le bureau", en: "The desktop" } },
   { path: "apps/", h1: { fr: "Des apps qui se sentent chez elles", en: "Apps that feel at home" } },
   { path: "security/", h1: { fr: "Sûr, par conception", en: "Secure by design" } },
@@ -177,6 +177,8 @@ test("download page states the version, requirements and an uninstall command to
 });
 
 test("the Dock reaches every page and marks the current one", async ({ page }) => {
+  // eight full page loads, each with a view transition: about 2 s apiece on a busy machine, over the default 30 s
+  test.slow();
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/en/");
   const dock = page.getByRole("navigation", { name: "Dock" });
@@ -290,6 +292,23 @@ test("presents Grassfield OS with the desktop as its first step", async ({ page 
   await expect(road.getByText("Prévu")).toBeVisible();
 });
 
+test("puts Grassfield OS first: the home hero leads to the OS page, which shows the whole system and how it is built", async ({ page }) => {
+  await page.goto("/fr/");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Grassfield OS");
+  await page.locator("#top").getByRole("link", { name: "Découvrir Grassfield OS" }).click();
+  await expect(page).toHaveURL(/\/fr\/os\/$/);
+  const system = page.locator("#system");
+  await expect(system.getByRole("heading", { level: 3 })).toHaveText(["Le bureau", "Les apps", "Le système"]);
+  // every tile is named by its title, and each capture tile opens its capture in the tour
+  await expect(system.getByRole("link", { name: "Les vrais menus", exact: true })).toHaveAttribute("href", /\/fr\/tour\/#shot-/);
+  const targets = await system.locator('a[href*="/tour/#shot-"]').evaluateAll((as) => as.map((a) => a.getAttribute("href")!.split("#")[1]!));
+  expect(targets.length).toBeGreaterThan(10);
+  await expect(page.locator("#stack ol > li")).toHaveCount(4);
+  await expect(page.locator("#origin")).toContainText("Cameroun");
+  await page.goto("/fr/tour/");
+  for (const id of targets) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+});
+
 // ---------------------------------------------------------------- captures (scripts/shots.mjs → src/lib/shots.generated.ts)
 // These hold for any capture set, from none to the full one; checks that need a kind of capture skip without it.
 
@@ -395,7 +414,7 @@ test("the tour's index leads to each feature, and home's captures to their place
   await expect(page).toHaveURL(new RegExp(`${href}$`));
   await expect(page.locator(`${href} h2`)).toBeInViewport();
   await page.goto("/en/");
-  const targets = await page.locator('#tour a[href*="/tour/#shot-"]').evaluateAll((as) => as.map((a) => a.getAttribute("href")!.split("#")[1]!));
+  const targets = await page.locator('#system a[href*="/tour/#shot-"]').evaluateAll((as) => as.map((a) => a.getAttribute("href")!.split("#")[1]!));
   expect(targets.length).toBeGreaterThan(0);
   await page.goto("/en/tour/");
   for (const id of targets) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);

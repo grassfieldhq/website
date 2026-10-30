@@ -4,12 +4,12 @@ import { PageShell } from "@/components/PageShell";
 import { Hero } from "@/components/Hero";
 import { Statement } from "@/components/Statement";
 import { Teasers } from "@/components/Teasers";
-import { TourStrip } from "@/components/TourStrip";
+import { SystemMap } from "@/components/SystemMap";
 import { Roadmap } from "@/components/Roadmap";
 import { Faq } from "@/components/Faq";
 import { Install } from "@/components/Install";
 
-// Home: the showcase. Each subject has its own page; this one gives the vision and an index.
+// Home: the showcase of Grassfield OS. The whole system at a glance, then an index: each subject has its own page.
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -18,8 +18,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     <PageShell t={t} lang={lang} path="">
       <Hero t={t.hero} scene={t.scene} locale={t.dates.locale} lang={lang} />
       <Statement t={t.statement} />
+      <SystemMap t={t.system} lang={lang} summary />
       <Teasers t={t.teasers} more={t.more} lang={lang} />
-      <TourStrip t={t.tour.strip} shots={t.shots} lang={lang} />
       <Roadmap t={t.roadmap} />
       <Faq t={t.faq} limit={4} all={{ href: `/${lang}/faq/`, label: t.faqShort.all }} />
       <Install t={t.install} lang={lang} />

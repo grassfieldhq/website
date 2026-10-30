@@ -25,7 +25,8 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 
 ## Layout
 
-- Pages (`src/app/[lang]/`): home (showcase and index), `desktop/`, `apps/`, `security/`, `os/` (roadmap),
+- Pages (`src/app/[lang]/`): home (Grassfield OS at a glance, then an index), `desktop/`, `apps/`, `security/`,
+  `os/` (the flagship: the whole system, its layers, the roadmap, the name, today on Omarchy),
   `tour/` (every capture), `download/`, `faq/`, `legal/` (publisher and host from `publisher` in `src/lib/site.ts`,
   privacy, licences, marks); same paths in both languages. Each inner page opens on `PageHero` inside `PageShell`.
 - `src/i18n/fr.ts` is the source text; `en.ts` must match its shape (`Dict` type). Routes: `/fr/`, `/en/`; `/` picks the
@@ -137,7 +138,8 @@ It needs ImageMagick 7 (`magick`) and libavif (`avifenc`); `ffprobe` is optional
   optional zoom on a region, light/dark variants), `Clip` (muted, looped, `preload="none"`, a lazy poster under the
   video, native controls without JavaScript, autoplay only while half visible and never under reduced motion, a
   play/pause button), `Gallery` / `FeatureBlock` (screens, then close-ups at their own size, then clips), `Lightbox`
-  (gallery links open the full-size image; with JavaScript, a `<dialog>` with ← → and Escape), `TourStrip` (home).
+  (gallery links open the full-size image; with JavaScript, a `<dialog>` with ← → and Escape), `SystemMap` (the
+  system's surfaces as tiles: a summary on home, every tile grouped on `os/`; tiles in `src/lib/system.ts`).
 - **Where they show** (a missing capture is skipped; a chapter with a drawn render keeps it):
 
   | Place | Slot or features | Ids looked for (base id, then the feature) |
@@ -152,7 +154,7 @@ It needs ImageMagick 7 (`magick`) and libavif (`avifenc`); `ffprobe` is optional
   | Apps › each app, then gallery | features | Files `files`; Settings `settings` `update`; Preview `preview`; Store `store`; then `activity` `dialogs` |
   | Security › lock screen | `lock` | `lock`, then feature `lock` |
   | Security › gallery | features | `lock` `polkit` |
-  | Home › tour strip | 6 screens | first screen of `widgets` `desktop` `overview` `controlcenter` `files` `settings` `tiling` … |
+  | Home and OS › the system's tiles | `systemTiles` (`src/lib/system.ts`) | per tile, its bases in order (close-ups first); a tile without a match is left out, an icon tile always shows |
   | Tour | everything | by feature, in the order of `shots.features` in `src/i18n/fr.ts`; unknown features go under "And more" |
 
   Slots, their framing and the page features are in `src/lib/shots.ts`; feature names and descriptions in

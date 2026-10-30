@@ -1,0 +1,110 @@
+/* The layers of the system as strata: each layer a band whose tone goes from the field's green (the apps, on top)
+   to the earth (the foundations); the tones are the stops of the page's gradient, so they follow its theme. */
+.layers {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.layer {
+  --tone: #26763f;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.32fr) 1fr;
+  gap: 12px 40px;
+  padding: 28px 32px 28px 40px;
+  border-radius: 22px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--tone) 14%, transparent), transparent 55%),
+    var(--bg);
+  box-shadow: 0 0 0 1px var(--line) inset;
+  overflow: hidden;
+}
+/* the stratum's edge */
+.layer::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+  background: var(--tone);
+}
+.layer:nth-child(2) {
+  --tone: #2f6f7e;
+}
+.layer:nth-child(3) {
+  --tone: #6b6a3a;
+}
+.layer:nth-child(4) {
+  --tone: #8a6400;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .layer {
+    --tone: #4fb36b;
+  }
+  :root:not([data-theme="light"]) .layer:nth-child(2) {
+    --tone: #5ba9b8;
+  }
+  :root:not([data-theme="light"]) .layer:nth-child(3) {
+    --tone: #b9b06a;
+  }
+  :root:not([data-theme="light"]) .layer:nth-child(4) {
+    --tone: #e8c98b;
+  }
+}
+:root[data-theme="dark"] .layer {
+  --tone: #4fb36b;
+}
+:root[data-theme="dark"] .layer:nth-child(2) {
+  --tone: #5ba9b8;
+}
+:root[data-theme="dark"] .layer:nth-child(3) {
+  --tone: #b9b06a;
+}
+:root[data-theme="dark"] .layer:nth-child(4) {
+  --tone: #e8c98b;
+}
+
+.head {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+.tech {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-2);
+}
+.detail {
+  display: grid;
+  gap: 16px;
+}
+.detail p {
+  font-size: 17px;
+  color: var(--fg-2);
+  text-wrap: pretty;
+  max-width: 40em;
+}
+.items {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.items li {
+  font-size: 14px;
+  font-weight: 550;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg-2);
+  box-shadow: 0 0 0 1px var(--line) inset;
+}
+.note {
+  margin-top: 20px;
+}
+@media (max-width: 700px) {
+  .layer {
+    grid-template-columns: 1fr;
+    padding: 24px 22px 24px 30px;
+  }
+}
