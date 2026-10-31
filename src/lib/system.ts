@@ -41,7 +41,7 @@ export const systemTiles: SystemTile[] = [
   { id: "activity", group: "apps", feature: "activity", bases: ["detail-activity-table", "activity-cpu"], wide: true, focus: { x: 0.3, y: 0, zoom: 1 } },
   { id: "apps", group: "apps", feature: "apps", bases: ["detail-apps-grid"], wide: true, focus: { x: 0.5, y: 0.35, zoom: 1 } },
   { id: "store", group: "apps", feature: "store", bases: [], icon: { app: "Store" }, href: "apps/#store" },
-  { id: "lock", group: "system", feature: "lock", bases: ["detail-lock"], wide: true, home: "narrow", focus: { x: 0.5, y: 0.5, zoom: 1 } },
+  { id: "lock", group: "system", feature: "lock", bases: ["detail-lock"], wide: true, home: "narrow", focus: { x: 0.5, y: 0.4, zoom: 1 } },
   { id: "update", group: "system", feature: "update", bases: ["settings-software-update"], focus: { x: 0.55, y: 0.35, zoom: 1.9 } },
   { id: "dialogs", group: "system", feature: "dialogs", bases: ["detail-replace-sheet"], focus: { x: 0.4, y: 0.4, zoom: 1 } },
   { id: "polkit", group: "system", feature: "polkit", bases: [], icon: { symbolic: "shield" }, href: "security/#protections" },

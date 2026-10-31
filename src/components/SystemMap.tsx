@@ -11,19 +11,19 @@ import s from "./SystemMap.module.css";
 // the full version groups every tile as the desktop, the apps and the system.
 type T = Dict["system"];
 
-// The media box per layout: its width as [vw, px] and its shape (width / height; the box is 220 px tall up to 320 px).
-// A capture covers the box, so one wider than the box is drawn wider than it: `sizes` asks for that width (the
-// zoom is applied on top by Picture).
+// The media box per layout: its width as [vw, px] and its shape (width / height; the box is 220 px tall up to 320 px),
+// the narrowest shape the layout reaches. A capture covers the box, so one wider than the box is drawn wider than it:
+// `sizes` asks for that width (the zoom is applied on top by Picture).
 type Box = { max: number; vw: number; px: number; shape: number };
 const BOXES: Record<"one" | "wide", Box[]> = {
   one: [
     { max: 560, vw: 100, px: -72, shape: 1.4 },
-    { max: 1000, vw: 50, px: -72, shape: 1.45 },
+    { max: 1000, vw: 50, px: -72, shape: 1 },
     { max: 0, vw: 0, px: 320, shape: 1 },
   ],
   wide: [
     { max: 560, vw: 100, px: -72, shape: 1.4 },
-    { max: 1000, vw: 100, px: -104, shape: 3.1 },
+    { max: 1000, vw: 100, px: -104, shape: 2.2 },
     { max: 0, vw: 0, px: 700, shape: 2.2 },
   ],
 };
