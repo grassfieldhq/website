@@ -29,7 +29,7 @@ export const systemTiles: SystemTile[] = [
   { id: "overview", group: "desktop", feature: "overview", bases: ["overview"], wide: true, home: true, focus: { x: 0.5, y: 0.55, zoom: 1 } },
   { id: "controlcenter", group: "desktop", feature: "controlcenter", bases: ["detail-controlcenter"], home: true, focus: { x: 0.5, y: 0.3, zoom: 1 } },
   { id: "menus", group: "desktop", feature: "menubar", bases: ["detail-window-menu", "detail-system-menu"], home: true, focus: { x: 0.65, y: 0, zoom: 1 } },
-  { id: "search", group: "desktop", feature: "search", bases: ["detail-search"], wide: true, home: true, focus: { x: 0.5, y: 0.5, zoom: 1 } },
+  { id: "search", group: "desktop", feature: "search", bases: ["detail-search"], wide: true, home: true, focus: { x: 0.5, y: 0.3, zoom: 1 } },
   { id: "widgets", group: "desktop", feature: "widgets", bases: ["detail-widgets"], home: true, focus: { x: 0.5, y: 0.2, zoom: 1 } },
   { id: "dock", group: "desktop", feature: "dock", bases: ["detail-dock-stack"], focus: { x: 0.5, y: 0.35, zoom: 1 } },
   { id: "tiling", group: "desktop", feature: "tiling", bases: ["detail-tiling-popover"], home: true, focus: { x: 0.3, y: 0.2, zoom: 1 } },

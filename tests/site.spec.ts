@@ -177,7 +177,8 @@ test("download page states the version, requirements and an uninstall command to
 });
 
 test("the Dock reaches every page and marks the current one", async ({ page }) => {
-  // eight full page loads, each with a view transition: about 2 s apiece on a busy machine, over the default 30 s
+  // eight page loads, each with a view transition and its checks: 37 s (desktop) and 57 s (phone) measured on a
+  // loaded machine, over the default 30 s
   test.slow();
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/en/");
@@ -300,11 +301,14 @@ test("puts Grassfield OS first: the home hero leads to the OS page, which shows 
   const system = page.locator("#system");
   await expect(system.getByRole("heading", { level: 3 })).toHaveText(["Le bureau", "Les apps", "Le système"]);
   // every tile is named by its title, and each capture tile opens its capture in the tour
-  await expect(system.getByRole("link", { name: "Les vrais menus", exact: true })).toHaveAttribute("href", /\/fr\/tour\/#shot-/);
+  await expect(system.getByRole("link", { name: /^Les vrais menus Ceux de vos apps/ })).toHaveAttribute("href", /\/fr\/tour\/#shot-/);
   const targets = await system.locator('a[href*="/tour/#shot-"]').evaluateAll((as) => as.map((a) => a.getAttribute("href")!.split("#")[1]!));
   expect(targets.length).toBeGreaterThan(10);
   await expect(page.locator("#stack ol > li")).toHaveCount(4);
   await expect(page.locator("#origin")).toContainText("Cameroun");
+  // the Dock puts Grassfield OS right after Home (Home is hidden on a phone, so read every tile, shown or not)
+  const dock = await page.getByRole("navigation", { name: "Dock" }).locator("a").evaluateAll((as) => as.map((a) => a.getAttribute("aria-label")));
+  expect(dock.slice(0, 2)).toEqual(["Accueil", "Grassfield OS"]);
   await page.goto("/fr/tour/");
   for (const id of targets) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
 });
@@ -365,7 +369,7 @@ test("captures are never larger than their place needs, and the tour starts ligh
   await page.waitForTimeout(1000); // lazy images near the first screen start loading
   const first = sizes.reduce((a, b) => a + b, 0);
   expect(first, "image bytes before any scroll").toBeLessThan(1.5 * 1024 * 1024);
-  for (const path of ["/fr/tour/", "/fr/desktop/", "/fr/"]) {
+  for (const path of ["/fr/tour/", "/fr/desktop/", "/fr/", "/fr/os/"]) {
     await page.goto(path);
     await scrollThrough(page);
     await loadRendered(page);
@@ -378,7 +382,9 @@ test("captures are never larger than their place needs, and the tour starts ligh
           const ext = img.currentSrc.split(".").pop();
           const source = [...img.parentElement!.querySelectorAll("source")].find((s) => s.type === `image/${ext}`);
           const widths = (source?.srcset ?? "").split(",").map((c) => parseInt(c.trim().split(" ")[1] ?? "0", 10)).sort((a, b) => a - b);
-          const need = img.clientWidth * Number(img.dataset.zoom ?? 1) * devicePixelRatio * 1.25;
+          // an image that covers its box (object-fit: cover) is drawn as wide as the box's height asks when it is wider
+          const cover = getComputedStyle(img).objectFit === "cover" ? (img.clientHeight * img.naturalWidth) / img.naturalHeight : 0;
+          const need = Math.max(img.clientWidth, cover) * Number(img.dataset.zoom ?? 1) * devicePixelRatio * 1.25;
           const ideal = widths.find((w) => w >= need) ?? widths[widths.length - 1] ?? img.naturalWidth;
           return img.naturalWidth > ideal ? [`${img.currentSrc} (${img.naturalWidth}px for ${Math.round(need)}px)`] : [];
         }),

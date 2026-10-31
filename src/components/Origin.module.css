@@ -22,7 +22,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgb(8 22 36 / 0.55) 0%, rgb(8 22 36 / 0.2) 45%, transparent 70%);
+  background: linear-gradient(180deg, rgb(8 22 36 / 0.62) 0%, rgb(8 22 36 / 0.42) 50%, transparent 82%);
 }
 .inner {
   position: relative;

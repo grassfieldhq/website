@@ -145,7 +145,7 @@ It needs ImageMagick 7 (`magick`) and libavif (`avifenc`); `ffprobe` is optional
   | Place | Slot or features | Ids looked for (base id, then the feature) |
   |---|---|---|
   | Desktop › Overview | `overview` | `overview`, then feature `overview` |
-  | Desktop › Every day: Search, Control Center, Notifications tiles | `search`, `controlcenter`, `notifications` | `search`, `controlcenter`, `notifications`, then the same features (zoomed on the panel) |
+  | Desktop › Every day: Search, Quick Settings, Notifications tiles | `search`, `controlcenter`, `notifications` | `search`, `controlcenter`, `notifications`, then the same features (zoomed on the panel) |
   | Desktop › Every day: menus in the menu bar | `menus` | `menubar-app-menu`, `menubar-menu`, `app-menu`, `global-menu` (no feature fallback) |
   | Desktop › Every day: window layouts (tile appears with it) | `tiling` | `tiling`, then feature `tiling` |
   | Desktop › Glass: light and dark side by side | pair | `settings-appearance`, `files-settings`, `desktop`, then any scene in both appearances |

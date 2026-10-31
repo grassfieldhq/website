@@ -11,35 +11,60 @@ import s from "./SystemMap.module.css";
 // the full version groups every tile as the desktop, the apps and the system.
 type T = Dict["system"];
 
-// the media box is as tall on both widths; the image covers it, so it needs about the box's width (zoom aside)
-const SIZES = {
-  one: "(max-width: 560px) calc(100vw - 72px), (max-width: 1000px) calc(50vw - 72px), 340px",
-  wide: "(max-width: 560px) calc(100vw - 72px), (max-width: 1000px) calc(100vw - 104px), 720px",
+// The media box per layout: its width as [vw, px] and its shape (width / height; the box is 220 px tall up to 320 px).
+// A capture covers the box, so one wider than the box is drawn wider than it: `sizes` asks for that width (the
+// zoom is applied on top by Picture).
+type Box = { max: number; vw: number; px: number; shape: number };
+const BOXES: Record<"one" | "wide", Box[]> = {
+  one: [
+    { max: 560, vw: 100, px: -72, shape: 1.4 },
+    { max: 1000, vw: 50, px: -72, shape: 1.45 },
+    { max: 0, vw: 0, px: 320, shape: 1 },
+  ],
+  wide: [
+    { max: 560, vw: 100, px: -72, shape: 1.4 },
+    { max: 1000, vw: 100, px: -104, shape: 3.1 },
+    { max: 0, vw: 0, px: 700, shape: 2.2 },
+  ],
 };
+const len = (vw: number, px: number) => (vw ? `calc(${+vw.toFixed(1)}vw - ${-+px.toFixed(0)}px)` : `${Math.round(px)}px`);
+function sizesFor(ratio: number, wide: boolean, fill: boolean) {
+  return BOXES.one
+    .map((b, i) => {
+      const box = wide || (fill && b.max === 1000) ? BOXES.wide[i]! : b;
+      const f = Math.max(1, ratio / box.shape);
+      const l = len(box.vw * f, box.px * f);
+      return b.max ? `(max-width: ${b.max}px) ${l}` : l;
+    })
+    .join(", ");
+}
 
-function Tile({ tile, t, dark }: { tile: ResolvedTile; t: T; dark: boolean }) {
+/** Two columns between 561 and 1000 px: a group with an odd number of cells widens its last narrow tile there. */
+function fillers(list: ResolvedTile[]) {
+  const cells = list.reduce((n, tile) => n + (tile.wide ? 2 : 1), 0);
+  const last = cells % 2 ? list.findLast((tile) => !tile.wide) : undefined;
+  return new Set(last ? [last.id] : []);
+}
+
+function Tile({ tile, t, dark, fill }: { tile: ResolvedTile; t: T; dark: boolean; fill: boolean }) {
   const words = t.tiles[tile.id as keyof T["tiles"]];
   if (!words) return null;
-  const id = `tile-${tile.id}`;
+  // the link is named by its words (title, tag, line); the capture only illustrates them, so it stays out of the name
   return (
-    <li className={`${s.item} reveal`} data-wide={tile.wide || undefined}>
-      <a className={s.tile} href={tile.link} aria-labelledby={`${id}-t`} aria-describedby={`${id}-b`}>
+    <li className={`${s.item} reveal`} data-wide={tile.wide || undefined} data-fill={fill || undefined}>
+      <a className={s.tile} href={tile.link}>
         <span className={s.text}>
-          <b id={`${id}-t`}>{words.title}</b>
-          {tile.soon && <span className="tag">{t.soon}</span>}
-          <span className={s.body} id={`${id}-b`}>
-            {words.body}
-          </span>
+          <b>{words.title}</b> {tile.soon && <span className="tag">{t.soon}</span>} <span className={s.body}>{words.body}</span>
         </span>
-        <span className={s.media}>
+        <span className={s.media} aria-hidden="true">
           {tile.scene && tile.frame
             ? variants(tile.scene, dark ? "dark" : "auto").map(({ shot, v }) => (
                 <span key={shot.id} {...variantProps(v, s.frame)}>
-                  <Picture shot={shot} sizes={tile.wide ? SIZES.wide : SIZES.one} focus={tile.frame} />
+                  <Picture shot={shot} sizes={sizesFor(shot.width / shot.height, !!tile.wide, fill)} focus={tile.frame} />
                 </span>
               ))
             : tile.icon && (
-                <span className={s.icon} aria-hidden="true">
+                <span className={s.icon}>
                   {tile.icon.app ? <img src={appIcon(tile.icon.app)} alt="" width={112} height={112} /> : <Mask name={tile.icon.symbolic ?? "info"} />}
                 </span>
               )}
@@ -70,20 +95,21 @@ export function SystemMap({ t, lang, summary = false }: { t: T; lang: Locale; su
         </div>
         {summary ? (
           <ul className={s.grid}>
-            {tiles.map((tile) => (
-              <Tile key={tile.id} tile={tile} t={t} dark />
+            {tiles.map((tile, _, all) => (
+              <Tile key={tile.id} tile={tile} t={t} dark fill={fillers(all).has(tile.id)} />
             ))}
           </ul>
         ) : (
           tileGroups.map((g) => {
             const list = tiles.filter((tile) => tile.group === g);
             if (!list.length) return null;
+            const fill = fillers(list);
             return (
               <div className={s.group} key={g}>
                 <h3 className={`h-3 ${s.groupTitle}`}>{t.groups[g]}</h3>
                 <ul className={s.grid}>
                   {list.map((tile) => (
-                    <Tile key={tile.id} tile={tile} t={t} dark={false} />
+                    <Tile key={tile.id} tile={tile} t={t} dark={false} fill={fill.has(tile.id)} />
                   ))}
                 </ul>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useRef, type CSSProperties } from "react";
 import type { Locale } from "@/i18n";
 import { Mask } from "./Mask";
 import s from "./Shell.module.css";
@@ -28,43 +28,17 @@ export function DockNav({ t, lang, path }: { t: DockLabels; lang: Locale; path: 
     { path: "faq/", label: t.faq, icon: "info", tint: "linear-gradient(160deg, #f2d14b, #e0b000)", phone: false },
   ];
 
-  // The magnification is a function of the pointer over the Dock at rest, as in Grassfield's Dock: the tiles' centres
-  // and widths are measured while every tile is at scale 1. Measuring the growing tiles instead fed back into itself:
-  // the layout moved under a still pointer, the browser sent a pointer move for it, and the Dock trembled.
-  const rest = useRef<{ c: number; w: number }[] | null>(null);
-  const grown = useRef(false);
-  const leftAt = useRef(0);
-  useEffect(() => {
-    const forget = () => (rest.current = null);
-    addEventListener("resize", forget);
-    document.fonts?.ready.then(forget);
-    return () => removeEventListener("resize", forget);
-  }, []);
-
   const onMove = (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse" || matchMedia("(prefers-reduced-motion: reduce)").matches || matchMedia("(max-width: 700px)").matches) return;
-    const items = [...(ref.current?.querySelectorAll<HTMLElement>("[data-tile]") ?? [])];
-    const measure = () =>
-      items.map((it) => {
-        const b = it.getBoundingClientRect();
-        const scale = parseFloat(it.style.getPropertyValue("--s") || "1");
-        return { c: b.left + b.width / 2, w: b.width / scale };
-      });
-    // at rest: never grown since the last leave, and the shrink transition (0.14 s) is over
-    if (!rest.current && !grown.current && performance.now() - leftAt.current > 250) rest.current = measure();
-    const at = rest.current ?? measure();
-    grown.current = true;
-    items.forEach((it, i) => {
-      const dist = Math.abs(e.clientX - at[i]!.c) / at[i]!.w;
+    ref.current?.querySelectorAll<HTMLElement>("[data-tile]").forEach((it) => {
+      const b = it.getBoundingClientRect();
+      const scale = parseFloat(it.style.getPropertyValue("--s") || "1");
+      const dist = Math.abs(e.clientX - (b.left + b.width / 2)) / (b.width / scale);
       const v = dist >= RADIUS ? 1 : 1 + (MAX - 1) * ((Math.cos((Math.PI * dist) / RADIUS) + 1) / 2);
       it.style.setProperty("--s", v.toFixed(3));
     });
   };
-  const onLeave = () => {
-    ref.current?.querySelectorAll<HTMLElement>("[data-tile]").forEach((it) => it.style.setProperty("--s", "1"));
-    grown.current = false;
-    leftAt.current = performance.now();
-  };
+  const onLeave = () => ref.current?.querySelectorAll<HTMLElement>("[data-tile]").forEach((it) => it.style.setProperty("--s", "1"));
 
   return (
     <nav className={s.dock} ref={ref} aria-label={t.dock} onPointerMove={onMove} onPointerLeave={onLeave}>
