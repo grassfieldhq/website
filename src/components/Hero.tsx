@@ -20,10 +20,10 @@ export function Hero({ t, scene, locale, lang }: { t: Dict["hero"]; scene: Dict[
               {t.leadAfter}
             </p>
             <div className={`${s.cta} ${s.in} ${s.d3}`}>
-              <a className="btn btn-primary" href={`/${lang}/download/`}>
+              <a className="btn btn-primary" href={`/${lang}/os/`}>
                 {t.cta}
               </a>
-              <a className={`btn btn-link ${s.more}`} href={`/${lang}/os/`}>
+              <a className={`btn btn-link ${s.more}`} href={`/${lang}/download/`}>
                 {t.more}
               </a>
             </div>

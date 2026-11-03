@@ -1,0 +1,39 @@
+/* The name's chapter: a rounded panel over the field, always light text on the sky. */
+.origin {
+  --fg: #ffffff;
+  --fg-2: rgb(255 255 255 / 0.86);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  margin-inline: var(--panel-x);
+  border-radius: var(--panel-r);
+  min-height: clamp(520px, 70vh, 760px);
+  display: grid;
+  align-items: start;
+  color: var(--fg);
+  background: #0f2a3f;
+}
+.land {
+  z-index: -1;
+}
+/* keeps the words readable where the sky turns gold */
+.origin::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgb(8 22 36 / 0.62) 0%, rgb(8 22 36 / 0.42) 50%, transparent 82%);
+}
+.inner {
+  position: relative;
+  display: grid;
+  gap: 18px;
+}
+.eyebrow {
+  color: #e8c98b;
+}
+.lead {
+  color: var(--fg-2);
+  max-width: 30em;
+  text-shadow: 0 1px 24px rgb(0 0 0 / 0.35);
+}

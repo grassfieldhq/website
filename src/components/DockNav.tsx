@@ -19,10 +19,10 @@ export function DockNav({ t, lang, path }: { t: DockLabels; lang: Locale; path: 
   const home = `/${lang}/`;
   const tiles: Tile[] = [
     { path: "", label: t.home, icon: "grassfield-logo", tint: "linear-gradient(160deg, #3e7d5a, #16391f)", phone: false },
+    { path: "os/", label: t.os, short: "OS", icon: "gear", tint: "linear-gradient(160deg, #b48cf2, #7a3fc4)" },
     { path: "desktop/", label: t.desktop, icon: "display", tint: "linear-gradient(160deg, #5aa2ff, #1f5fcc)" },
     { path: "apps/", label: t.apps, icon: "apps", tint: "linear-gradient(160deg, #f5a04a, #964d08)" },
     { path: "security/", label: t.security, icon: "shield", tint: "linear-gradient(160deg, #a0a4ae, #5c616b)" },
-    { path: "os/", label: t.os, short: "OS", icon: "gear", tint: "linear-gradient(160deg, #b48cf2, #7a3fc4)" },
     { path: "tour/", label: t.tour, icon: "camera", tint: "linear-gradient(160deg, #f07ab0, #c2306f)" },
     { path: "download/", label: t.download, icon: "download", tint: "linear-gradient(160deg, #8bd34e, #3a7512)" },
     { path: "faq/", label: t.faq, icon: "info", tint: "linear-gradient(160deg, #f2d14b, #e0b000)", phone: false },
