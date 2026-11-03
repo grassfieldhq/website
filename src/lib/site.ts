@@ -1,5 +1,7 @@
-// The public origin is not decided yet (owner decision: domain). Set NEXT_PUBLIC_SITE_URL at build time.
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://grassfield.invalid").replace(/\/$/, "");
+// The public origin is not decided yet (owner decision: domain). NEXT_PUBLIC_SITE_URL sets it at build time; on Vercel,
+// without it, the project's production hostname (a system variable Vercel sets during the build).
+const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || (vercel ? `https://${vercel}` : "https://grassfield.invalid")).replace(/\/$/, "");
 
 export const icon = (name: string) => `/icons/symbolic/${name}.svg`;
 export const appIcon = (name: string) => `/icons/apps/org.grassfield.${name}.svg`;

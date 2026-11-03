@@ -17,7 +17,6 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 | `npm run lint` · `npm run typecheck` | ESLint (next/core-web-vitals + TS) · `tsc` |
 | `npm run build` | static export to `out/`, then a Content Security Policy in each page (`scripts/csp.mjs`) |
 | `node scripts/serve.mjs` | serve `out/` on http://localhost:4321 |
-| `npm run deploy` | upload `out/` to Cloudflare Pages (see Deployment) |
 | `npm test` | Playwright on the built site, desktop and phone, fr and en, every page: axe accessibility, overflow, images, language routing, the Overview scrub, the glass demo, the theme toggle (no flash), the FAQ and its structured data, the copy button; captures: alt text in the page's language, every file served, no oversized image for the screen, no layout shift, light/dark variants, the lightbox, clips (poster, reduced motion), the tour without JavaScript |
 | `npm run check` | all of the above, in order |
 | `node scripts/og.mjs` | re-render `public/og.png` from the built hero |
@@ -72,10 +71,10 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 ## Before the public launch
 
 - [ ] Legal review done (owner), then set `robots` to allow, remove `noindex` in `src/app/[lang]/layout.tsx` and the
-  `X-Robots-Tag` line in `public/_headers`.
-- [ ] Domain chosen: add it to the Pages project (Custom domains) and set the `SITE_URL` repository variable (CI
-  builds with it as `NEXT_PUBLIC_SITE_URL`; placeholder `https://grassfield.invalid`).
-- [x] Hosting: Cloudflare Pages, with security headers (CSP, HSTS). See Deployment for the one-time setup.
+  `X-Robots-Tag` header in `vercel.json`.
+- [ ] Domain chosen: add it to the Vercel project (Settings › Domains) and set `NEXT_PUBLIC_SITE_URL` to it in the
+  project's environment variables (until then, the project's production hostname).
+- [x] Hosting: Vercel, static files, with security headers (CSP, HSTS). See Deployment for the one-time setup.
 - [ ] Fresh, dedicated captures: run `node scripts/shots.mjs` on the final set (see Captures).
 - [ ] Fill `publish` in `src/lib/release.ts` with the published repository's setup and install commands.
 - [ ] Licence of this repository's code (owner).
@@ -84,35 +83,27 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 
 ## Deployment
 
-Cloudflare Pages, static files only, no Functions (`wrangler.jsonc`: project `grassfield-website`, output `out/`). CI
-deploys once the checks pass: a push to `main` goes to production, a pull request to a preview at
-`<branch>.grassfield-website.pages.dev` (linked from the pull request's deployment).
+Vercel, static files only (`vercel.json`: no framework runtime, `npm ci`, `npm run build`, output `out/`). Through the
+Git integration, a push to `main` goes to production and any other branch or pull request to a preview. Vercel builds
+on its own, without waiting for CI: CI's checks show on the pull request next to the Vercel preview.
 
-- **Headers**: `public/_headers`: HSTS, `frame-ancestors 'none'`, nosniff, referrer and permissions policies, COOP,
+- **Headers** (`vercel.json`): HSTS, `frame-ancestors 'none'`, nosniff, referrer and permissions policies, COOP,
   `X-Robots-Tag: noindex` until the launch; a year's immutable cache for `/_next/static/` and `/shots/`, whose names
-  carry a hash. The Content Security Policy is a `<meta>` that `scripts/csp.mjs` writes into each page at the end of
-  `npm run build`: scripts from this origin plus the page's own inline scripts by hash, nothing from other origins.
-  A new inline script needs nothing; a new origin (fonts, analytics, a video host) needs a line in its `policy()`.
+  carry a hash. `trailingSlash` sends `/fr/os` to `/fr/os/`, like the export's folders. The Content Security Policy
+  is a `<meta>` that `scripts/csp.mjs` writes into each page at the end of `npm run build`: scripts from this origin
+  plus the page's own inline scripts by hash, nothing from other origins. A new inline script needs nothing; a new
+  origin (fonts, analytics, a video host) needs a line in its `policy()`.
 - **Setup, once** (owner):
-  1. Create the project: `npx wrangler@4.149.0 login`, then
-     `npx wrangler@4.149.0 pages project create grassfield-website --production-branch=main`. If the name is taken
-     on `pages.dev`, Cloudflare adds a suffix: use the subdomain it prints. Create it before any deploy: Wrangler
-     turns a deploy run by an AI agent to a project that does not exist yet into a Workers project.
-  2. GitHub repository settings: the secret `CLOUDFLARE_API_TOKEN` (a custom API token, permission Account ›
-     Cloudflare Pages › Edit) and the variable `CLOUDFLARE_ACCOUNT_ID`. The deploy job stays off until this variable
-     exists.
-  3. The variable `SITE_URL` (`https://grassfield-website.pages.dev` for now, the domain later): canonical URLs,
-     sitemap, Open Graph.
+  1. Vercel › Add New › Project › import `grassfieldhq/website`. `vercel.json` sets the build; leave the project's
+     build settings as they are.
+  2. Settings › Build and Deployment › Node.js Version: 22.x, as `.nvmrc` and CI.
+  3. Canonical URLs, sitemap and Open Graph use the project's production hostname (`*.vercel.app`) by default; set
+     `NEXT_PUBLIC_SITE_URL` (Settings › Environment Variables, Production) once the domain is chosen.
   4. Private until the launch: `noindex` keeps the site out of search engines, not out of reach. To keep it to the
-     team, Cloudflare Zero Trust › Access: a self-hosted application on `grassfield-website.pages.dev` and
-     `*.grassfield-website.pages.dev` with a policy for the team.
-- **The "Workers Builds: website" check** (red on every commit since 2026-10-30): a Cloudflare *Workers* project named
-  `website` is connected to this repository in the dashboard. It runs a Workers build against this Pages configuration
-  (`pages_build_output_dir`) and fails; it is not the Pages project above and deploys nothing. Owner: in the Cloudflare
-  dashboard, Workers & Pages › `website` › Settings › Builds, disconnect the repository (or delete that project).
-- **By hand**: `npm run build && npm run deploy` (production from `main`; `npm run deploy -- --branch=<name>` for a
-  preview). `npx wrangler@4.149.0 pages dev` serves `out/` the way Pages does, headers included, on
-  http://localhost:8788.
+     team: Settings › Deployment Protection.
+- **The "Workers Builds: website" check**: a Cloudflare Workers project named `website`, left from an earlier hosting
+  plan, is connected to this repository. Owner: in the Cloudflare dashboard, Workers & Pages › `website` › Settings ›
+  Builds, disconnect the repository (or delete that project).
 
 ## Captures
 
