@@ -21,6 +21,8 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 | `npm test` | Playwright on the built site, desktop and phone, fr and en, every page: axe accessibility, overflow, images, language routing, the Overview scrub, the glass demo, the theme toggle (no flash), the FAQ and its structured data, the copy button; captures: alt text in the page's language, every file served, no oversized image for the screen, no layout shift, light/dark variants, the lightbox, clips (poster, reduced motion), the tour without JavaScript |
 | `npm run check` | all of the above, in order |
 | `node scripts/og.mjs` | re-render `public/og.png` from the built hero |
+| `node scripts/brand.mjs <grassfield-dir> [--check]` | bring the product's mark, icons, favicon and palette (`--gf-*`) into the site; `--check` exits 1 if the site drifted from the product |
+| `node scripts/contours.mjs` | redraw `public/contours.svg`, the contour map of the two reliefs |
 | `node scripts/shots.mjs <dir>` | turn a capture manifest into `public/shots/` and `src/lib/shots.generated.ts` (see Captures) |
 
 ## Layout
@@ -33,28 +35,31 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
   visitor's language in the browser.
 - `src/components/`: one component per chapter. Product renders (`DesktopScene`, `OverviewScrub`, the bento minis)
   are drawn in a virtual screen measured in `--u` (1/1440 of its width), so they scale like images and stay sharp.
-- Visual direction "Aube" (dawn): the hero is the Grassfield wallpaper split into layers (`Landscape`) that move
-  at their own pace on scroll (`ParallaxHero`, `useScrollProgress`); the page closes on the same field at dusk.
-  Signature: a headline's full stop becomes a small sun (`Dot`). Chapters are rounded panels; the nav is a floating
-  glass pill; the statement lights up word by word (`WordReveal`); a light film grain covers the page.
-- Product colours, radii, dock and window geometry come from `grassfield/ui/tokens/tokens.json`; the wallpaper is the
-  same procedure as `GrassfieldArtwork.qml`.
+- Visual direction "Hauts plateaux" (the highlands): paper and ink by day, "night on the plateau" in dark and in
+  `.stage` sections; headlines in Fraunces (OFL, optical size follows the size), the text in Inter (the Grassfield
+  session font), accent lines in Fraunces italic in the field's green (`.grad`). The ground is a contour map of the
+  two reliefs of the mark (`public/contours.svg`, drawn by `scripts/contours.mjs`, applied as a CSS mask so it takes
+  the theme's colour: `.contours`). The real captures stand on the plateau's ridge (`Ridge`, the wallpaper's hills
+  without their sky) as figures with captions. Signature: a headline's full stop is the sun in ochre (`Dot`). Sections
+  run full bleed between hairlines; numbers are set like a survey's table; the statement lights up word by word
+  (`WordReveal`); a light paper grain covers the page. No gradient text, no rounded panels, no app-like cards.
+- Product colours, radii, dock and window geometry come from `grassfield/ui/tokens/tokens.json` and the mark and icons
+  from `grassfield/branding` (`scripts/brand.mjs` copies them and checks for drift); the wallpaper is the same
+  procedure as `GrassfieldArtwork.qml`.
 - `src/lib/release.ts`: the Download page's facts (version, packages, uninstall command). Fill `publish` (date,
   repository setup and install commands) when the `[grassfield]` repository is published; the page then shows them
   with copy buttons instead of "not released yet".
-- Long pages carry a table of contents (`SectionNav`, pinned under the menu bar, the chapter on screen
+- Long pages carry a table of contents (`SectionNav`, a strip pinned under the header, the chapter on screen
   highlighted; `sections` per page in the dictionaries). The footer is the site map: pages, the tour's chapters,
   the install anchors, about this site.
-- The shell (`PageShell`): the site is navigated like Grassfield. A fixed menu bar (`MenuBar`: logo, the page's
-  name, Download, search, language, appearance, the visitor's clock), a Dock as the main navigation (`DockNav`:
-  one tile per page, the Dock's magnification, a dot under the open page; a tab bar on phones) and Search
-  (`CommandSearch`, ⌘K / Ctrl+K or the loupe: every page, FAQ answer and captured scene, from
-  `src/lib/searchIndex.ts`).
-- Continuity: moving between pages is a cross-document view transition (`@view-transition`; the hero's landscape is
-  named `land` and carries over, the menu bar and the Dock stay put; off under reduced motion). The site is a day:
-  `Landscape` takes `time` (0 dawn … 1 dusk) and each `PageHero` sits later than the one before (desktop 0.18 →
-  faq 0.8); the home hero is the dawn, the install finale the dusk. The visitor's own clock sets `--night` on
-  `<html>` before first paint (`src/lib/theme.ts`): at night the sky dims and a few stars show.
+- The shell (`PageShell`): a classic site header (`Header`: the mark and the name, the pages, Search, language,
+  appearance, Download), the site's own navigation rather than the product's interface. Below 1080 px the pages fold
+  into a native `<details>` menu, which opens without JavaScript. Search (`CommandSearch`, ⌘K / Ctrl+K or the loupe)
+  reaches every page, FAQ answer and captured scene; its index is a static file per language
+  (`app/[lang]/search.json`, from `src/lib/searchIndex.ts`) fetched the first time Search opens, so the pages do not
+  carry it.
+- Continuity: moving between pages is a cross-document view transition (`@view-transition`, a crossfade; off under
+  reduced motion).
 - Scenes (`Stage`): a tall track pins a screen and `--e` (0..1, eased) drives the scene's CSS while one caption per
   step crossfades; reduced motion shows the final frame unpinned. Security: the desktop capture blurs into the lock
   screen, then a drawn polkit sheet. Apps: four windows open in cascade (Files, Settings, Preview captures; the
@@ -101,6 +106,10 @@ deploys once the checks pass: a push to `main` goes to production, a pull reques
   4. Private until the launch: `noindex` keeps the site out of search engines, not out of reach. To keep it to the
      team, Cloudflare Zero Trust › Access: a self-hosted application on `grassfield-website.pages.dev` and
      `*.grassfield-website.pages.dev` with a policy for the team.
+- **The "Workers Builds: website" check** (red on every commit since 2026-10-30): a Cloudflare *Workers* project named
+  `website` is connected to this repository in the dashboard. It runs a Workers build against this Pages configuration
+  (`pages_build_output_dir`) and fails; it is not the Pages project above and deploys nothing. Owner: in the Cloudflare
+  dashboard, Workers & Pages › `website` › Settings › Builds, disconnect the repository (or delete that project).
 - **By hand**: `npm run build && npm run deploy` (production from `main`; `npm run deploy -- --branch=<name>` for a
   preview). `npx wrangler@4.149.0 pages dev` serves `out/` the way Pages does, headers included, on
   http://localhost:8788.

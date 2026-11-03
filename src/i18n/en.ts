@@ -23,9 +23,7 @@ const en: Dict = {
     download: "Download",
     faq: "FAQ",
     legal: "Legal",
-    cta: "Install",
     menu: "Menu",
-    close: "Close menu",
     switchLang: "Français",
     switchLangLabel: "Lire cette page en français",
   },
@@ -60,6 +58,7 @@ const en: Dict = {
     leadAfter: " Its first step, the desktop, is in testing on Omarchy 4.",
     cta: "Discover Grassfield OS",
     more: "Step 1 is coming soon",
+    figure: "The Grassfield desktop, captured on the development instance.",
   },
   statement: {
     parts: [
@@ -69,10 +68,12 @@ const en: Dict = {
       { em: false, text: " and the same motion on every surface. Nothing is left to chance." },
     ],
     stats: [
-      { value: "9", label: "accent colours, applied to the shell and the apps alike." },
-      { value: "2", label: "languages from day one: English and French, end to end." },
-      { value: "MIT", label: "Open source code. Symbols, cursors and wallpaper are drawn by Grassfield." },
+      { value: "0.4%", label: "Hyprland CPU with six windows open in Overview." },
+      { value: "4.5:1", label: "minimum text contrast on glass, up to 60% transparency." },
+      { value: "3,883", label: "interface strings translated into French, none left out." },
     ],
+    note: "Measured, not promised: CPU measured in the development instance, contrast checked by Grassfield's tests, strings counted in its repository on 3 November 2026.",
+    more: "All the numbers",
   },
   overview: {
     eyebrow: "Overview",
@@ -359,10 +360,10 @@ const en: Dict = {
     items: [
       { value: "0.4%", label: "Hyprland CPU with six windows open in Overview, down from 43% in the first version." },
       { value: "4.5:1", label: "minimum text contrast on glass, checked automatically up to 60% transparency." },
-      { value: "2,767", label: "interface strings translated into French, none left out." },
-      { value: "650", label: "automated test files, from the compositor plugin to the apps." },
+      { value: "3,883", label: "interface strings translated into French, none left out." },
+      { value: "687", label: "automated tests in the inventory, from the compositor plugin to the apps." },
     ],
-    note: "CPU: measured in the development instance. Strings and tests: counted in the Grassfield repository on 28 October 2026.",
+    note: "CPU: measured in the development instance. Strings: counted in the Grassfield repository; tests: its test inventory; on 3 November 2026.",
   },
   privacy: {
     statement: "This site uses no cookies, no ads and no analytics. Every resource it loads comes from the site itself.",
@@ -447,6 +448,7 @@ const en: Dict = {
     eyebrow: "The name",
     title: "From the land to ideas.",
     body: "Grassfield comes from the Grassfields, the highlands of western Cameroon. Their ridges, their energy and their horizons inspire us to build a space open to every possibility.",
+    legend: "The two reliefs of the Grassfield mark, read as a map.",
   },
   pages: {
     desktop: { title: "The desktop · Grassfield OS", description: "Overview, Search, Quick Settings, global menus and glass: the Grassfield desktop, the first step of Grassfield OS.", eyebrow: "Step 1 · The desktop", heading: "The desktop.", lead: "Everything you see and touch all day, designed as one: menu bar, Dock, windows, Search, notifications." },
@@ -506,7 +508,7 @@ const en: Dict = {
       { icon: "shield", title: "Clear permissions", body: "Every administrative action goes through a built-in polkit agent: you see what is asked, and nothing runs without your password." },
       { icon: "checkmark", title: "Signed packages", body: "pacman refuses any Grassfield package whose signature doesn't match. The repository comes after Arch's and Omarchy's and never replaces them." },
       { icon: "download", title: "Opt-in sources", body: "In Grassfield Store, the AUR stays off until you turn it on. Omarchy's recipes run in its terminal, in front of you." },
-      { icon: "lock", title: "A real keychain", body: "GNOME Keyring keeps apps' secrets: Chromium stores its passwords there instead of writing them in plain text." },
+      { icon: "lock", title: "A real keyring", body: "GNOME Keyring keeps apps' secrets: Chromium stores its passwords there instead of writing them in plain text." },
     ],
   },
   shots: {
@@ -554,14 +556,14 @@ const en: Dict = {
     top: "Back to the index",
   },
   shell: {
-    menubarLabel: "Menu bar",
-    dockLabel: "Dock",
     search: "Search",
     searchOpen: "Search the site (⌘K)",
     searchPlaceholder: "Page, question, capture…",
     searchHint: "Arrows to choose, Enter to open, Escape to close",
     groups: { pages: "Pages", faq: "Questions", tour: "Guided tour" },
     noResults: "No results for",
+    searchLoading: "Loading search…",
+    searchUnavailable: "Search is not available right now. Try again in a moment.",
     home: "Home",
     lang: "FR",
     langLabel: "Lire cette page en français",
@@ -620,7 +622,7 @@ const en: Dict = {
       items: [
         "Grassfield Desktop's code is published under the MIT licence.",
         "Artwork made by Grassfield (symbols, cursors, wallpaper) is under CC-BY-SA-4.0. The Grassfield logo is excluded: all rights reserved.",
-        "The Inter typeface is used under the SIL Open Font License 1.1.",
+        "The Inter and Fraunces fonts are used under the SIL Open Font License 1.1.",
         "Screenshots show Grassfield's development instance, with demonstration data.",
         "The licence of this site's own code will be stated before it goes live.",
       ],

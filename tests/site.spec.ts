@@ -1,6 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { shotData } from "../src/lib/shots.generated";
+import fr from "../src/i18n/fr";
+import en from "../src/i18n/en";
 
 const langs = ["fr", "en"] as const;
 
@@ -80,6 +82,9 @@ for (const lang of langs) {
     });
 
     test("has no serious accessibility violations", async ({ page }) => {
+      // axe reads every node of the page: 4 to 5 s alone, past the default 30 s on a loaded machine (seen 23 times
+      // in one local run while another build ran)
+      test.slow();
       await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto(`/${lang}/${path}`);
       const { violations } = await new AxeBuilder({ page: page as unknown as ConstructorParameters<typeof AxeBuilder>[0]["page"] }).analyze();
@@ -138,12 +143,13 @@ test("theme toggle cycles system, light, dark and survives a reload without a fl
   await toggle.click();
   await expect(html).toHaveAttribute("data-theme", "dark");
   const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(await bg()).toBe("rgb(0, 0, 0)");
+  const night = "rgb(21, 19, 15)"; // "night on the plateau", --bg in dark
+  expect(await bg()).toBe(night);
   // applied by the inline script before any React code runs
   await page.route("**/_next/static/chunks/**/*.js", (r) => r.abort());
   await page.reload();
   await expect(html).toHaveAttribute("data-theme", "dark");
-  expect(await bg()).toBe("rgb(0, 0, 0)");
+  expect(await bg()).toBe(night);
 });
 
 test("FAQ answers open and are described for search engines", async ({ page }) => {
@@ -176,27 +182,46 @@ test("download page states the version, requirements and an uninstall command to
   );
 });
 
-test("the Dock reaches every page and marks the current one", async ({ page }) => {
-  // eight page loads, each with a view transition and its checks: 37 s (desktop) and 57 s (phone) measured on a
-  // loaded machine, over the default 30 s
+test("the header reaches every page and marks the current one", async ({ page }) => {
+  // eight page loads, each with a view transition and its checks: over the default 30 s on a loaded machine
   test.slow();
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/en/");
-  const dock = page.getByRole("navigation", { name: "Dock" });
-  for (const [name, path] of [["Desktop", "desktop/"], ["Apps", "apps/"], ["Security", "security/"], ["Grassfield OS", "os/"], ["Tour", "tour/"], ["Download", "download/"], ["FAQ", "faq/"], ["Home", ""]]) {
-    await dock.getByRole("link", { name, exact: true }).click();
+  const header = page.getByRole("banner");
+  const nav = header.getByRole("navigation", { name: "Main navigation" });
+  for (const [name, path] of [["Desktop", "desktop/"], ["Apps", "apps/"], ["Security", "security/"], ["Grassfield OS", "os/"], ["Tour", "tour/"], ["FAQ", "faq/"]]) {
+    await nav.getByRole("link", { name, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/en/${path}$`));
-    await expect(dock.getByRole("link", { name, exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name, exact: true })).toHaveAttribute("aria-current", "page");
   }
+  await header.getByRole("link", { name: "Download", exact: true }).click();
+  await expect(page).toHaveURL(/\/en\/download\/$/);
+  await expect(header.getByRole("link", { name: "Download", exact: true })).toHaveAttribute("aria-current", "page");
+  await header.getByRole("link", { name: "Grassfield, home" }).click();
+  await expect(page).toHaveURL(/\/en\/$/);
+  await expect(header.getByRole("link", { name: "Grassfield, home" })).toHaveAttribute("aria-current", "page");
 });
 
-test("the menu bar names the page and keeps the language link on the same page", async ({ page }) => {
+test("on a phone the pages fold into a menu that opens without JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto("/fr/apps/");
+  const header = page.getByRole("banner");
+  await expect(header.getByRole("navigation", { name: "Navigation principale" })).toHaveCount(0); // inline one hidden, menu closed
+  await header.getByRole("button", { name: "Menu" }).or(header.locator("summary")).first().click();
+  const sheet = header.getByRole("navigation", { name: "Navigation principale" });
+  for (const name of ["Grassfield OS", "Bureau", "Apps", "Sécurité", "Visite", "Questions", "Télécharger"]) await expect(sheet.getByRole("link", { name, exact: true })).toBeVisible();
+  await expect(sheet.getByRole("link", { name: "Apps", exact: true })).toHaveAttribute("aria-current", "page");
+  await context.close();
+});
+
+test("the header's language link keeps the same page", async ({ page }) => {
   await page.goto("/fr/security/");
-  const bar = page.getByRole("banner");
-  await expect(bar.locator("b")).toHaveText("Sécurité");
-  await bar.getByRole("link", { name: "EN" }).click();
+  await page.getByRole("banner").getByRole("link", { name: /^EN, Read this page in English$/ }).click();
   await expect(page).toHaveURL(/\/en\/security\/$/);
-  await expect(page.getByRole("banner").locator("b")).toHaveText("Security");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Secure by design");
+  await page.getByRole("banner").getByRole("link", { name: /^FR, Lire cette page en français$/ }).click();
+  await expect(page).toHaveURL(/\/fr\/security\/$/);
 });
 
 test("⌘K search reaches a page, a FAQ answer and a captured scene", async ({ page }) => {
@@ -215,6 +240,7 @@ test("⌘K search reaches a page, a FAQ answer and a captured scene", async ({ p
 
   await page.getByRole("button", { name: /Rechercher sur le site/ }).click();
   await page.getByRole("combobox").fill("désinstaller");
+  await expect(page.getByRole("option").first()).toBeVisible(); // the index of this page load has arrived
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/fr\/faq\/#faq-\d+$/);
   await expect(page.locator(":target")).toHaveCount(1);
@@ -226,6 +252,29 @@ test("⌘K search reaches a page, a FAQ answer and a captured scene", async ({ p
   await expect(option).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toBeHidden();
+});
+
+test("Search: Enter typed before the index arrives still opens the best match, and a missing index says so", async ({ page }) => {
+  await page.goto("/fr/");
+  await hydrated(page);
+  let release!: () => void;
+  const held = new Promise<void>((r) => (release = r));
+  await page.route("**/fr/search.json", async (route) => {
+    await held;
+    await route.continue();
+  });
+  await page.keyboard.press("Control+k");
+  await expect(page.getByRole("status")).toHaveText("Chargement de la recherche…");
+  await page.getByRole("combobox").fill("sécu");
+  await page.keyboard.press("Enter");
+  release();
+  await expect(page).toHaveURL(/\/fr\/security\/$/);
+  await page.unroute("**/fr/search.json");
+  await page.route("**/fr/search.json", (route) => route.fulfill({ status: 503, body: "" }));
+  await page.reload();
+  await hydrated(page);
+  await page.keyboard.press("Control+k");
+  await expect(page.getByRole("dialog").getByRole("status")).toContainText("pas disponible");
 });
 
 test("home is an index: four teasers and a short FAQ that links to the full one", async ({ page }) => {
@@ -306,9 +355,9 @@ test("puts Grassfield OS first: the home hero leads to the OS page, which shows 
   expect(targets.length).toBeGreaterThan(10);
   await expect(page.locator("#stack ol > li")).toHaveCount(4);
   await expect(page.locator("#origin")).toContainText("Cameroun");
-  // the Dock puts Grassfield OS right after Home (Home is hidden on a phone, so read every tile, shown or not)
-  const dock = await page.getByRole("navigation", { name: "Dock" }).locator("a").evaluateAll((as) => as.map((a) => a.getAttribute("aria-label")));
-  expect(dock.slice(0, 2)).toEqual(["Accueil", "Grassfield OS"]);
+  // the header lists Grassfield OS first (read every link, shown or not: on a phone they fold into the menu)
+  const order = await page.getByRole("banner").locator("nav").first().locator("a").evaluateAll((as) => as.map((a) => a.textContent));
+  expect(order[0]).toBe("Grassfield OS");
   await page.goto("/fr/tour/");
   for (const id of targets) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
 });
@@ -326,6 +375,7 @@ const hasPair = (lang: string) => {
 
 for (const lang of langs) {
   test(`${lang}: every capture has an alt in the page's language, and every file it names is served`, async ({ page, request }) => {
+    test.slow(); // every capture page, each image requested: over 30 s on a loaded machine
     const alts = [...new Set(shotData.filter((d) => d.lang === lang).map((d) => d.alt))];
     const urls = new Set<string>();
     for (const path of capturePages) {
@@ -514,27 +564,22 @@ test.describe("without JavaScript", () => {
   });
 });
 
-test("pages are a day: the sun sits later on each page, and a view transition carries the field over", async ({ page }) => {
-  const times: number[] = [];
-  for (const path of ["desktop/", "apps/", "security/", "os/", "faq/"]) {
+test("the plateau: every page opens on the contour map, home's first figure is the real desktop, pages crossfade", async ({ page }) => {
+  for (const path of ["", "desktop/", "apps/", "security/", "os/", "tour/", "faq/", "legal/"]) {
     await page.goto(`/fr/${path}`);
-    const land = page.locator("header [data-land]").first();
-    times.push(parseFloat(await land.evaluate((el) => getComputedStyle(el).getPropertyValue("--t"))));
-    await expect(land).toHaveCSS("view-transition-name", "land");
+    const map = page.locator("main header .contours").first();
+    await expect(map).toHaveCount(1);
+    expect(await map.evaluate((el) => getComputedStyle(el).maskImage || getComputedStyle(el).webkitMaskImage)).toContain("contours.svg");
   }
-  expect(times).toEqual([...times].sort((a, b) => a - b));
-  expect(times[0]).toBeLessThan(times[times.length - 1]!);
+  await page.goto("/fr/");
+  const figure = page.locator("#top figure");
+  await expect(figure.locator("img").filter({ visible: true })).toHaveAttribute("src", /\/shots\/desktop-(dark|light)-/);
+  await expect(figure.locator("figcaption")).toContainText("capturé sur l'instance de développement");
   const hasRule = await page.evaluate(() => [...document.styleSheets].some((sh) => [...sh.cssRules].some((r) => r.constructor.name === "CSSViewTransitionRule")));
   expect(hasRule).toBe(true);
-});
-
-test("the sky follows the visitor's clock: night at 23:00, day at 12:00", async ({ page }) => {
-  await page.clock.setFixedTime(new Date(2026, 9, 30, 23, 0, 0));
-  await page.goto("/fr/");
-  expect(await page.evaluate(() => document.documentElement.style.getPropertyValue("--night"))).toBe("1.00");
-  await page.clock.setFixedTime(new Date(2026, 9, 30, 12, 0, 0));
-  await page.goto("/fr/");
-  expect(await page.evaluate(() => document.documentElement.style.getPropertyValue("--night"))).toBe("0.00");
+  const map = await page.request.get("/contours.svg");
+  expect(map.ok()).toBe(true);
+  expect((await map.body()).length).toBeLessThan(40 * 1024);
 });
 
 // Scenes: scrolling through a Stage's track drives --e from 0 to 1 and the captions step along.
@@ -589,14 +634,15 @@ test("the roadmap's sun travels towards step 2 and stops before it", async ({ pa
   await expect.poll(() => road.evaluate((el) => parseFloat(getComputedStyle(el).getPropertyValue("--e")))).toBeGreaterThan(0.5);
 });
 
-test("keyboard: the Dock is a few tabs away, headings never skip a level, every target is 24 px", async ({ page }) => {
+test("keyboard: the navigation is a few tabs away, headings never skip a level, every target is 24 px", async ({ page }) => {
   await page.goto("/fr/desktop/");
   let tabs = 0;
-  for (; tabs < 12; tabs++) {
+  for (; tabs < 8; tabs++) {
     await page.keyboard.press("Tab");
-    if (await page.evaluate(() => !!document.activeElement?.closest('nav[aria-label="Dock"]'))) break;
+    // the pages' links, or on a phone the menu that holds them
+    if (await page.evaluate(() => !!document.activeElement?.closest('header nav[aria-label="Navigation principale"], header details summary'))) break;
   }
-  expect(tabs).toBeLessThan(12);
+  expect(tabs).toBeLessThan(8);
   const levels = await page.$$eval("h1,h2,h3,h4,h5,h6", (hs) => hs.map((h) => Number(h.tagName[1])));
   for (let i = 1; i < levels.length; i++) expect(levels[i]! - levels[i - 1]!).toBeLessThanOrEqual(1);
   const small = await page.$$eval("a,button", (els) =>
@@ -610,7 +656,7 @@ test("keyboard: the Dock is a few tabs away, headings never skip a level, every 
   expect(small).toEqual([]);
 });
 
-test("long pages carry a table of contents that follows the scroll, and the Dock names every page", async ({ page }) => {
+test("long pages carry a table of contents that follows the scroll, and the header names every page", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/fr/desktop/");
   const toc = page.getByRole("navigation", { name: "Sommaire de la page" });
@@ -619,7 +665,16 @@ test("long pages carry a table of contents that follows the scroll, and the Dock
   await page.locator("#glass").scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, 200));
   await expect(toc.getByRole("link", { name: "Verre" })).toHaveAttribute("aria-current", "true");
-  const labels = await page.getByRole("navigation", { name: "Dock" }).locator("a").evaluateAll((as) => as.map((a) => { const l = a.querySelector("span:nth-child(2)") as HTMLElement; return getComputedStyle(l).display !== "none" && getComputedStyle(l).opacity === "1"; }));
-  expect(labels.every(Boolean)).toBe(true);
+  await expect(page.getByRole("banner").getByRole("navigation", { name: "Navigation principale" }).getByRole("link")).toHaveText(["Grassfield OS", "Bureau", "Apps", "Sécurité", "Visite", "Questions"]);
   await expect(page.locator("footer").getByRole("link", { name: "Mentions légales et confidentialité" })).toBeVisible();
+});
+
+// The names Grassfield no longer shows (docs/legal/visual-review.md section 3.1, the owner's renames of 2026-10-18 and
+// 2026-10-27, tests/ci/ui_names.py in the Grassfield repository) stay out of the site's words and its captures' text.
+test("no banned product name in the site's text or its captures' titles, captions and alt text", () => {
+  const banned = ["Finder", "Spotlight", "Mission Control", "Launchpad", "Stage Manager", "Quick Look", "Siri", "iCloud", "macOS", "Mac OS", "Apple", "Liquid Glass", "Tahoe", "Golden Gate", "AirDrop", "AirPlay", "Exposé", "Time Machine", "Handoff", "Sidecar", "FaceTime", "Safari", "Keychain", "Retina", "Touch ID", "Aqua", "Cupertino", "Sequoia", "Sonoma", "SF Pro", "SF Symbols", "San Francisco", "Night Shift", "True Tone", "Notification Center", "Dashboard", "Continuity", "Ventura", "Monterey", "Big Sur", "Catalina", "Mojave", "Split View", "Control Center", "Hot Corners?", "Spaces", "Centre de contrôle", "Centre de notifications", "Coins actifs"];
+  const pattern = new RegExp(`(?<![\\p{L}\\p{N}])(?:${banned.join("|")})(?![\\p{L}\\p{N}])`, "iu");
+  const words = (v: unknown): string[] => (typeof v === "string" ? [v] : Array.isArray(v) ? v.flatMap(words) : v && typeof v === "object" ? Object.values(v).flatMap(words) : []);
+  const texts = [...words(fr), ...words(en), ...shotData.flatMap((d) => [d.title, d.caption, d.alt])];
+  expect(texts.filter((t) => pattern.test(t) || /(?<!\w)Mac(?!\w)/.test(t))).toEqual([]);
 });

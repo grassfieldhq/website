@@ -24,7 +24,7 @@ export default async function SecurityPage({ params }: PageProps<"/[lang]/securi
   const t = getDict(lang);
   return (
     <PageShell t={t} lang={lang} path="security/" sections={t.sections.security}>
-      <PageHero {...t.pages.security} time={0.55} />
+      <PageHero {...t.pages.security} />
       <section className="chapter stage" id="scene" aria-label={t.scenes.security.label} style={{ paddingBlock: 0 }}>
         <SecurityScene t={t.scenes.security} locale={t.dates.locale} lang={lang} />
       </section>

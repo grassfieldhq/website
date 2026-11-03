@@ -42,18 +42,13 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  border-radius: var(--r-tile);
+  border-radius: var(--r);
   background: var(--bg-2);
   box-shadow: 0 0 0 1px var(--line) inset;
-  transition:
-    transform 0.35s var(--ease-out),
-    box-shadow 0.35s var(--ease-out);
+  transition: box-shadow 0.3s var(--ease-out);
 }
 .tile:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 0 0 1px var(--line) inset,
-    0 24px 50px -28px rgb(0 0 0 / 0.55);
+  box-shadow: 0 0 0 1px var(--accent) inset;
 }
 .text {
   display: grid;
@@ -61,13 +56,14 @@
   padding: 26px 28px 22px;
 }
 .text b {
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: -0.022em;
-  line-height: 1.15;
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 440;
+  letter-spacing: -0.012em;
+  line-height: 1.12;
 }
 .text b::after {
-  content: " ›" / "";
+  content: " →" / "";
   color: var(--accent);
   transition: margin 0.2s var(--ease-out);
 }

@@ -48,8 +48,8 @@
   box-shadow: 0 0 0 2px var(--line) inset;
 }
 .step[data-now] .node {
-  background: radial-gradient(circle at 40% 35%, var(--sun-core) 0%, var(--sun) 55%, #c98a2e 100%);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--sun) 22%, transparent), 0 0 28px color-mix(in srgb, var(--sun) 60%, transparent);
+  background: radial-gradient(circle at 40% 35%, var(--sun-core) 0%, var(--sun) 58%, #b47720 100%);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--sun) 20%, transparent);
 }
 .card {
   display: grid;
@@ -62,7 +62,7 @@
 }
 .step[data-now] .card {
   background: var(--bg-2);
-  box-shadow: 0 0 0 2px var(--accent), 0 24px 60px -28px color-mix(in srgb, var(--accent) 60%, transparent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
 }
 .step:not([data-now]) .card {
   background: transparent;
@@ -80,14 +80,17 @@
   color: var(--fg-2);
 }
 .status {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--bg-3);
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--fg-2);
 }
 .step[data-now] .status {
-  background: var(--accent-soft);
-  color: var(--accent-strong);
+  color: var(--accent);
 }
 .body {
   color: var(--fg-2);

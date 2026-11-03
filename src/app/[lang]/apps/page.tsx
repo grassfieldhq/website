@@ -23,7 +23,7 @@ export default async function AppsPage({ params }: PageProps<"/[lang]/apps">) {
   const t = getDict(lang);
   return (
     <PageShell t={t} lang={lang} path="apps/" sections={t.sections.apps}>
-      <PageHero {...t.pages.apps} time={0.36} />
+      <PageHero {...t.pages.apps} />
       <section className="chapter stage" id="scene" aria-label={t.scenes.apps.label} style={{ paddingBlock: 0 }}>
         <AppsScene t={t.scenes.apps} names={t.appsDetail.map((a) => a.name)} lang={lang} />
       </section>

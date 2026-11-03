@@ -23,7 +23,7 @@ export default async function LegalPage({ params }: PageProps<"/[lang]/legal">) 
   const l = t.legal;
   return (
     <PageShell t={t} lang={lang} path="legal/">
-      <PageHero eyebrow={l.eyebrow} heading={l.heading} lead={l.lead} time={0.9} />
+      <PageHero eyebrow={l.eyebrow} heading={l.heading} lead={l.lead} />
       <div className={`wrap ${s.legal}`}>
         <section aria-labelledby="pub">
           <h2 id="pub" className="h-3">

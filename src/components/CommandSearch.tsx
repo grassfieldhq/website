@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import type { Dict } from "@/i18n";
+import type { Dict, Locale } from "@/i18n";
 import { search, type Hit } from "@/lib/searchIndex";
 import { Mask } from "./Mask";
 import s from "./Shell.module.css";
 
 const OPEN = "gf-search-open";
 
-/** The loupe in the menu bar: it asks the search to open. */
+/** The loupe in the header: it asks the search to open. */
 export function SearchButton({ label }: { label: string }) {
   return (
     <button type="button" className={s.barButton} aria-label={label} onClick={() => window.dispatchEvent(new Event(OPEN))}>
@@ -17,15 +17,37 @@ export function SearchButton({ label }: { label: string }) {
   );
 }
 
+// The index is a static file per language (app/[lang]/search.json): fetched once, the first time Search opens.
+// null means it could not be read (offline, a failed response): the next opening tries again.
+let loading: Promise<Hit[] | null> | null = null;
+const loadIndex = (lang: Locale) =>
+  (loading ??= fetch(`/${lang}/search.json`)
+    .then((r) => {
+      if (!r.ok) throw new Error(String(r.status));
+      return r.json() as Promise<Hit[]>;
+    })
+    .catch(() => {
+      loading = null;
+      return null;
+    }));
+
 // Grassfield's Search, for the site: ⌘K (or Ctrl+K, or the loupe) opens it over the page; a few letters reach any
 // page, FAQ answer or captured scene. A native <dialog>, so focus stays inside and Escape closes it.
-export function CommandSearch({ t, index }: { t: Dict["shell"]; index: Hit[] }) {
+export function CommandSearch({ t, lang }: { t: Dict["shell"]; lang: Locale }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
+  const [index, setIndex] = useState<Hit[] | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
   const listId = useId();
-  const hits = search(index, q);
+  const hits = index ? search(index, q) : [];
+  const load = () =>
+    loadIndex(lang).then((idx) => {
+      setIndex(idx);
+      setStatus(idx ? "ready" : "failed");
+      return idx;
+    });
 
   useEffect(() => {
     const open = () => {
@@ -35,6 +57,10 @@ export function CommandSearch({ t, index }: { t: Dict["shell"]; index: Hit[] }) 
       setActive(0);
       d.showModal();
       input.current?.focus();
+      if (!index) {
+        setStatus("loading");
+        void load();
+      }
     };
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -49,7 +75,7 @@ export function CommandSearch({ t, index }: { t: Dict["shell"]; index: Hit[] }) 
       window.removeEventListener(OPEN, open);
       window.removeEventListener("keydown", onKey);
     };
-  }, []);
+  });
 
   const go = (hit: Hit) => {
     dialog.current?.close();
@@ -65,6 +91,14 @@ export function CommandSearch({ t, index }: { t: Dict["shell"]; index: Hit[] }) 
     } else if (e.key === "Enter") {
       const hit = hits[active];
       if (hit) go(hit);
+      // typed before the index arrived: wait for it, then open the best match for what was typed
+      else if (!index) {
+        const typed = q;
+        void load().then((idx) => {
+          const first = idx && search(idx, typed)[0];
+          if (first) go(first);
+        });
+      }
     } else if (e.key === "Escape") {
       // a search input clears itself on Escape before the dialog sees the key: close the dialog ourselves
       e.preventDefault();
@@ -130,8 +164,8 @@ export function CommandSearch({ t, index }: { t: Dict["shell"]; index: Hit[] }) 
             </div>
           ))}
           {!hits.length && (
-            <p className={s.empty}>
-              {t.noResults} « {q} »
+            <p className={s.empty} role="status">
+              {status === "loading" ? t.searchLoading : status === "failed" ? t.searchUnavailable : q ? `${t.noResults} « ${q} »` : ""}
             </p>
           )}
         </div>

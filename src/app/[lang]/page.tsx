@@ -17,7 +17,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   return (
     <PageShell t={t} lang={lang} path="">
       <Hero t={t.hero} scene={t.scene} locale={t.dates.locale} lang={lang} />
-      <Statement t={t.statement} />
+      <Statement t={t.statement} lang={lang} />
       <SystemMap t={t.system} lang={lang} summary />
       <Teasers t={t.teasers} more={t.more} lang={lang} />
       <Roadmap t={t.roadmap} />

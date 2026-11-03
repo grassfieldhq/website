@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import "../globals.css";
-import { inter } from "@/lib/fonts";
+import { fraunces, frauncesItalic, inter } from "@/lib/fonts";
 import { getDict, isLocale, locales } from "@/i18n";
 import { siteUrl } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
@@ -52,7 +52,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   return (
-    <html lang={lang} className={inter.variable} suppressHydrationWarning>
+    <html lang={lang} className={`${inter.variable} ${fraunces.variable} ${frauncesItalic.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
