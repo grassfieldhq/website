@@ -1,7 +1,9 @@
-import type { Dict } from "@/i18n";
+import type { Dict, Locale } from "@/i18n";
 import { WordReveal } from "./WordReveal";
 
-export function Statement({ t }: { t: Dict["statement"] }) {
+// The statement, then three numbers measured in the Grassfield repository (where they come from in the note, all of
+// them on the Download page).
+export function Statement({ t, lang }: { t: Dict["statement"]; lang: Locale }) {
   return (
     <section className="chapter glow" id="desktop" aria-label={t.parts[0]?.text}>
       <div className="wrap">
@@ -14,6 +16,12 @@ export function Statement({ t }: { t: Dict["statement"] }) {
             </div>
           ))}
         </div>
+        <p className="stats-note">
+          {t.note}{" "}
+          <a className="btn-link" href={`/${lang}/download/#numbers`}>
+            {t.more}
+          </a>
+        </p>
       </div>
     </section>
   );

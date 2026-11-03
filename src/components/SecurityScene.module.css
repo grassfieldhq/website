@@ -16,7 +16,7 @@
 .lock {
   position: absolute;
   inset: 0;
-  color: #f5f5f7;
+  color: var(--gf-text);
   opacity: clamp(0, (var(--e) - 0.25) / 0.2, 1);
   translate: 0 calc((1 - clamp(0, (var(--e) - 0.25) / 0.2, 1)) * -3vh);
 }
@@ -74,13 +74,13 @@
   gap: calc(var(--u) * 10);
   text-align: center;
   border-radius: calc(var(--u) * 24);
-  background: rgb(29 31 36 / 0.86);
+  background: rgb(var(--gf-tint-rgb) / 0.86);
   -webkit-backdrop-filter: blur(calc(var(--u) * 30)) saturate(160%);
   backdrop-filter: blur(calc(var(--u) * 30)) saturate(160%);
   box-shadow:
     0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.16) inset,
     0 calc(var(--u) * 30) calc(var(--u) * 80) rgb(0 0 0 / 0.55);
-  color: #f5f5f7;
+  color: var(--gf-text);
   font-size: calc(var(--u) * 14);
   --k: clamp(0, (var(--e) - 0.62) / 0.23, 1);
   opacity: var(--k);
@@ -107,7 +107,7 @@
   text-wrap: balance;
 }
 .sheet p {
-  color: #dcdce4;
+  color: var(--gf-text-2);
   font-size: calc(var(--u) * 13);
 }
 .field {

@@ -22,9 +22,7 @@ const fr = {
     download: "Télécharger",
     faq: "Questions",
     legal: "Mentions légales",
-    cta: "Installer",
     menu: "Menu",
-    close: "Fermer le menu",
     switchLang: "English",
     switchLangLabel: "Read this page in English",
   },
@@ -60,6 +58,7 @@ const fr = {
     leadAfter: " Sa première étape, le bureau, est en test sur Omarchy 4.",
     cta: "Découvrir Grassfield OS",
     more: "L'étape 1 arrive bientôt",
+    figure: "Le bureau Grassfield, capturé sur l'instance de développement.",
   },
   statement: {
     parts: [
@@ -69,10 +68,12 @@ const fr = {
       { em: false, text: " et les mêmes animations sur chaque surface. Rien n'est laissé au hasard." },
     ],
     stats: [
-      { value: "9", label: "couleurs d'accentuation, appliquées au shell comme aux apps." },
-      { value: "2", label: "langues dès le départ : français et anglais, de bout en bout." },
-      { value: "MIT", label: "Code source libre. Symboles, curseurs et fond d'écran sont dessinés par Grassfield." },
+      { value: "0,4\u202f%", label: "de processeur pour Hyprland avec six fenêtres ouvertes dans la Vue d'ensemble." },
+      { value: "4,5:1", label: "de contraste minimum pour le texte sur le verre, jusqu'à 60\u202f% de transparence." },
+      { value: "3\u202f883", label: "textes d'interface traduits en français, aucun oublié." },
     ],
+    note: "Mesuré, pas promis : processeur mesuré dans l'instance de développement, contraste vérifié par les tests de Grassfield, textes comptés dans son dépôt le 3 novembre 2026.",
+    more: "Tous les chiffres",
   },
   overview: {
     eyebrow: "Vue d'ensemble",
@@ -88,7 +89,7 @@ const fr = {
     leadAfter: ", et le bureau suivant est déjà là, en haut de l'écran.",
     captureNote: "Capture réelle, instance Grassfield de développement.",
     stats: [
-      { value: "0,4 %", label: "de processeur pour le compositeur, avec six fenêtres ouvertes dans la Vue d'ensemble." },
+      { value: "0,4\u202f%", label: "de processeur pour le compositeur, avec six fenêtres ouvertes dans la Vue d'ensemble." },
       { value: "En direct", label: "Les fenêtres réelles sont transformées par le compositeur, pas figées en miniatures." },
       { value: "Optionnel", label: "Sans le plugin du compositeur, le bureau reste utilisable : il bascule sur des miniatures." },
     ],
@@ -357,12 +358,12 @@ const fr = {
     eyebrow: "En chiffres",
     title: "Mesuré, pas promis.",
     items: [
-      { value: "0,4 %", label: "de processeur pour Hyprland avec six fenêtres ouvertes dans la Vue d'ensemble, contre 43 % pour la première version." },
+      { value: "0,4\u202f%", label: "de processeur pour Hyprland avec six fenêtres ouvertes dans la Vue d'ensemble, contre 43 % pour la première version." },
       { value: "4,5:1", label: "de contraste minimum pour le texte sur le verre, vérifié automatiquement jusqu'à 60 % de transparence." },
-      { value: "2 767", label: "textes d'interface traduits en français, aucun oublié." },
-      { value: "650", label: "fichiers de tests automatisés, du plugin du compositeur jusqu'aux apps." },
+      { value: "3\u202f883", label: "textes d'interface traduits en français, aucun oublié." },
+      { value: "687", label: "tests automatisés inventoriés, du plugin du compositeur jusqu'aux apps." },
     ],
-    note: "Processeur : mesuré dans l'instance de développement. Textes et tests : comptés dans le dépôt Grassfield le 28 octobre 2026.",
+    note: "Processeur : mesuré dans l'instance de développement. Textes : comptés dans le dépôt Grassfield ; tests : son inventaire de tests ; le 3 novembre 2026.",
   },
   privacy: {
     statement: "Ce site n'utilise ni cookie, ni publicité, ni mesure d'audience. Toutes ses ressources viennent de lui-même.",
@@ -447,6 +448,7 @@ const fr = {
     eyebrow: "Le nom",
     title: "De la terre aux idées.",
     body: "Grassfield vient des Grassfields, les hauts plateaux de l'Ouest du Cameroun. Leurs reliefs, leur énergie et leurs horizons inspirent notre envie de construire un espace ouvert à toutes les possibilités.",
+    legend: "Les deux reliefs de la marque Grassfield, lus comme une carte.",
   },
   pages: {
     desktop: { title: "Le bureau · Grassfield OS", description: "Vue d'ensemble, recherche, Réglages rapides, menus globaux et verre : le bureau Grassfield, première étape de Grassfield OS.", eyebrow: "Étape 1 · Le bureau", heading: "Le bureau.", lead: "Tout ce que vous voyez et touchez toute la journée, conçu d'un seul tenant : barre de menus, Dock, fenêtres, recherche, notifications." },
@@ -554,14 +556,14 @@ const fr = {
     top: "Revenir à l'index",
   },
   shell: {
-    menubarLabel: "Barre des menus",
-    dockLabel: "Dock",
     search: "Rechercher",
     searchOpen: "Rechercher sur le site (⌘K)",
     searchPlaceholder: "Page, question, capture…",
     searchHint: "Flèches pour choisir, Entrée pour ouvrir, Échap pour fermer",
     groups: { pages: "Pages", faq: "Questions", tour: "Visite guidée" },
     noResults: "Aucun résultat pour",
+    searchLoading: "Chargement de la recherche…",
+    searchUnavailable: "La recherche n'est pas disponible pour le moment. Réessayez dans un instant.",
     home: "Accueil",
     lang: "EN",
     langLabel: "Read this page in English",
@@ -620,7 +622,7 @@ const fr = {
       items: [
         "Le code de Grassfield Desktop est publié sous licence MIT.",
         "Les illustrations faites par Grassfield (symboles, curseurs, fond d'écran) sont sous licence CC-BY-SA-4.0. Le logo Grassfield est exclu : tous droits réservés.",
-        "La police Inter est utilisée sous licence SIL Open Font License 1.1.",
+        "Les polices Inter et Fraunces sont utilisées sous licence SIL Open Font License 1.1.",
         "Les captures d'écran montrent l'instance de développement de Grassfield, avec des données de démonstration.",
         "La licence du code de ce site sera précisée avant sa mise en ligne.",
       ],

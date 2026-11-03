@@ -10,9 +10,9 @@
   }
 }
 .panel {
-  --tint: 29 31 36;
-  --pfg: #f5f5f7;
-  --pfg2: #dcdce4;
+  --tint: var(--gf-tint-rgb);
+  --pfg: var(--gf-text);
+  --pfg2: var(--gf-text-2);
   --prim: rgb(255 255 255 / 0.18);
   --pfill: rgb(255 255 255 / 0.14);
   position: absolute;
@@ -36,9 +36,9 @@
     color 0.3s ease;
 }
 .panel[data-look="light"] {
-  --tint: 243 244 246;
-  --pfg: #1b1b1f;
-  --pfg2: #3a3a42;
+  --tint: var(--gf-light-tint-rgb);
+  --pfg: var(--gf-light-text);
+  --pfg2: var(--gf-light-text-2);
   --prim: rgb(255 255 255 / 0.6);
   --pfill: rgb(0 0 0 / 0.07);
 }

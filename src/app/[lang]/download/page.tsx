@@ -48,7 +48,7 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           </div>
           <section className={s.card} aria-labelledby="release-title">
             <div className={s.cardHead}>
-              <Mask name="grassfield-logo" className={s.cardLogo} />
+              <Mask name="grassfield-logo-full" className={s.cardLogo} />
               <div>
                 <h2 id="release-title">
                   {t.version} <span className="tnum">{release.version}</span>

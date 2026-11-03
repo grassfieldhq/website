@@ -1,39 +1,59 @@
-/* The name's chapter: a rounded panel over the field, always light text on the sky. */
+/* The name's chapter: the words, and the plate of the two reliefs (the mark as a contour map), over the ridge */
 .origin {
-  --fg: #ffffff;
-  --fg-2: rgb(255 255 255 / 0.86);
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  margin-inline: var(--panel-x);
-  border-radius: var(--panel-r);
-  min-height: clamp(520px, 70vh, 760px);
-  display: grid;
-  align-items: start;
-  color: var(--fg);
-  background: #0f2a3f;
-}
-.land {
-  z-index: -1;
-}
-/* keeps the words readable where the sky turns gold */
-.origin::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(180deg, rgb(8 22 36 / 0.62) 0%, rgb(8 22 36 / 0.42) 50%, transparent 82%);
+  padding-bottom: 0;
 }
 .inner {
-  position: relative;
   display: grid;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
 }
-.eyebrow {
-  color: #e8c98b;
+.inner :global(.chapter-head) {
+  margin-bottom: 0;
 }
-.lead {
-  color: var(--fg-2);
-  max-width: 30em;
-  text-shadow: 0 1px 24px rgb(0 0 0 / 0.35);
+.plate {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  background: var(--bg);
+}
+.map {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  opacity: 0.55;
+  -webkit-mask: url("/contours.svg") center / cover no-repeat;
+  mask: url("/contours.svg") center / cover no-repeat;
+}
+.mark {
+  position: absolute;
+  left: 20px;
+  top: 18px;
+  width: 34px;
+  height: 34px;
+  color: var(--ochre);
+}
+/* the legend sits on its own paper: no contour line runs under its words */
+.plate :global(.cap-note) {
+  position: absolute;
+  left: 20px;
+  bottom: 14px;
+  max-width: calc(100% - 40px);
+  margin: 0;
+  padding: 4px 10px 4px 0;
+  background-color: var(--bg);
+}
+.ridge {
+  display: block;
+  height: clamp(80px, 11vw, 160px);
+  margin-top: clamp(56px, 7vw, 96px);
+}
+@media (max-width: 860px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
 }

@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { useScrollProgress } from "@/lib/useScrollProgress";
 import s from "./Statement.module.css";
 
-// The statement lights up word by word as it crosses the screen; emphasised words take the dawn gradient.
+// The statement lights up word by word as it crosses the screen; emphasised words are set in italic.
 export function WordReveal({ parts }: { parts: { em: boolean; text: string }[] }) {
   const words = parts.flatMap((p) => p.text.split(/(?<=\s)/).filter(Boolean).map((w) => ({ w, em: p.em })));
   const { track, target } = useScrollProgress<HTMLDivElement, HTMLParagraphElement>((p) => ({ "--n": (p * 1.35 * words.length).toFixed(2) }), 1);

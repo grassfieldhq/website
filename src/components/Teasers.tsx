@@ -1,9 +1,8 @@
 import type { Dict, Locale } from "@/i18n";
 import { Dot } from "./Dot";
-import { Mask } from "./Mask";
 import s from "./Teasers.module.css";
 
-// Home: one card per page, as an index of the system.
+// Home's table of contents: one numbered row per page, between hairlines, as the contents of a survey.
 export function Teasers({ t, more, lang }: { t: Dict["teasers"]; more: string; lang: Locale }) {
   return (
     <section className="chapter" aria-labelledby="teasers-title">
@@ -18,20 +17,22 @@ export function Teasers({ t, more, lang }: { t: Dict["teasers"]; more: string; l
             </span>
           </h2>
         </div>
-        <ul className={s.grid}>
-          {t.items.map((it) => (
-            <li key={it.href} className="reveal">
-              <a href={`/${lang}/${it.href}`} className={s.card}>
-                <span className={s.icon}>
-                  <Mask name={it.icon} />
+        <ol className={s.list}>
+          {t.items.map((it, i) => (
+            <li key={it.href}>
+              <a href={`/${lang}/${it.href}`} className={s.row}>
+                <span className={s.n} aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <b>{it.title}</b>
-                <p>{it.body}</p>
-                <span className={s.more}>{more}</span>
+                <b className={s.title}>{it.title}</b>
+                <span className={s.body}>{it.body}</span>
+                <span className={s.more} aria-hidden="true">
+                  {more}
+                </span>
               </a>
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </section>
   );

@@ -1,259 +1,202 @@
-/* The site's shell: a Grassfield menu bar at the top, a Dock at the bottom, Search over the page.
-   Geometry from grassfield tokens.json: menubar.itemPadding 10, dock radius 24 / icon radius 11, search radius 26. */
+/* The site's shell, direction "Hauts plateaux": a paper header with a hairline, the pages as words, Search over the
+   page, a page's table of contents as a strip under the header. */
 
-/* ---- menu bar ---- */
-.menubar {
-  view-transition-name: menubar;
-  position: fixed;
-  inset: 0 0 auto;
+/* ---- header ---- */
+.header {
+  position: sticky;
+  top: 0;
   z-index: 60;
-  height: var(--bar-h);
-  padding: env(safe-area-inset-top, 0px) max(14px, env(safe-area-inset-right, 0px)) 0 max(14px, env(safe-area-inset-left, 0px));
-  box-sizing: content-box;
+  background: var(--header-bg);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.row {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  background: var(--nav);
-  -webkit-backdrop-filter: saturate(180%) blur(22px);
-  backdrop-filter: saturate(180%) blur(22px);
-  border-bottom: 1px solid var(--line);
-  white-space: nowrap;
+  gap: clamp(16px, 2.4vw, 36px);
+  min-height: var(--bar-h);
 }
-.logoLink {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 30px;
-  margin-left: -8px;
-  border-radius: 7px;
-  color: var(--fg);
-}
-.logoLink:hover {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-.logo {
-  width: 16px;
-  height: 16px;
-}
-.appName {
-  padding: 0 10px 0 4px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-.barItem {
+.brand {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 0 10px;
-  border-radius: 6px;
+  gap: 10px;
+  min-height: 44px;
   color: var(--fg);
-  transition: background-color 0.15s ease;
 }
-.barItem:hover {
-  background: var(--accent-soft);
+.mark {
+  width: 30px;
+  height: 30px;
+  color: var(--accent);
 }
-.status {
+.name {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 480;
+  letter-spacing: -0.02em;
+}
+.nav ul,
+.sheet ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav ul {
+  display: flex;
+  gap: 2px;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--fg-2);
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease;
+}
+.link:hover {
+  color: var(--fg);
+}
+.link[aria-current="page"] {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--ochre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.55em;
+}
+.tools {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
+.tool,
 .barButton,
 .theme {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 30px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--r);
   background: none;
   color: var(--fg);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
+.tool:hover,
 .barButton:hover,
 .theme:hover {
   background: var(--accent-soft);
 }
 .barButton i,
 .theme i {
-  width: 15px;
-  height: 15px;
+  width: 17px;
+  height: 17px;
 }
 .lang {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-.clock {
-  padding: 0 4px 0 8px;
-  font-variant-numeric: tabular-nums;
-}
-@media (max-width: 700px) {
-  .menubar {
-    font-size: 15px;
-  }
-  .barItem:not(.lang) {
-    display: none;
-  }
-  .clock {
-    display: none;
-  }
-  .barButton,
-  .theme {
-    width: 36px;
-    height: 34px;
-  }
-}
-
-/* ---- Dock ---- */
-.dock {
-  view-transition-name: dock;
-  position: fixed;
-  left: 50%;
-  bottom: max(10px, env(safe-area-inset-bottom, 0px));
-  translate: -50% 0;
-  z-index: 60;
-  padding: 8px 8px 7px;
-  border-radius: 24px;
-  background: var(--dock-bg);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
-  backdrop-filter: saturate(180%) blur(24px);
-  box-shadow:
-    0 0 0 1px var(--line),
-    0 1px 0 rgb(255 255 255 / 0.3) inset,
-    0 18px 50px -20px rgb(0 0 0 / 0.45);
-}
-.dockList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
-}
-.tile {
-  --s: 1;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-}
-.tile a {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  padding: 0 3px;
-  border-radius: 8px;
-}
-.tileIcon {
-  display: grid;
-  place-items: center;
-  width: calc(46px * var(--s));
-  height: calc(46px * var(--s));
-  transition:
-    width 0.14s ease-out,
-    height 0.14s ease-out;
-  border-radius: 23%;
-  background: var(--tint);
-  box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.22) inset,
-    0 4px 10px -4px rgb(0 0 0 / 0.5);
-  color: #fff;
-}
-.tileIcon i {
-  width: 50%;
-  height: 50%;
-  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.25));
-}
-/* the running dot: the open page */
-.tile[data-current] a::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -6px;
-  width: 4px;
-  height: 4px;
-  translate: -50% 0;
-  border-radius: 50%;
-  background: var(--fg);
-}
-/* the page's name under its tile: words, not only icons */
-.tileLabel {
-  font-size: 11px;
-  font-weight: 550;
-  line-height: 1;
-  color: var(--fg);
-  white-space: nowrap;
-}
-.tile[data-current] .tileLabel {
-  color: var(--fg);
+  font-size: 12.5px;
   font-weight: 650;
+  letter-spacing: 0.08em;
 }
-.tileShort {
+.cta {
+  min-height: 40px;
+  margin-left: 8px;
+  padding: 0 16px;
+  font-size: 15px;
+}
+.menu {
+  display: none;
+  position: relative;
+}
+.menu summary {
+  list-style: none;
+}
+.menu summary::-webkit-details-marker {
   display: none;
 }
-.dockSep {
-  align-self: center;
-  width: 1px;
-  height: 46px;
-  margin: 0 6px 0 4px;
-  background: var(--line);
+.burger,
+.burger::before,
+.burger::after {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: currentColor;
+  transition:
+    transform 0.2s var(--ease-out),
+    opacity 0.2s ease;
 }
-@media (max-width: 700px) {
-  /* a tab bar: opaque, full width, six tiles with their short names; Home is the logo in the menu bar and
-     Questions is one search away */
-  .dock {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    translate: none;
-    padding: 6px 2px calc(6px + env(safe-area-inset-bottom, 0px));
-    border-radius: 0;
-    background: var(--bg);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    box-shadow: 0 -1px 0 var(--line);
-  }
-  .dockList {
-    justify-content: space-around;
-    gap: 0;
-  }
-  .tile[data-phone="no"],
-  .dockSep,
-  .tileLabel {
+.burger {
+  position: relative;
+}
+.burger::before,
+.burger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.burger::before {
+  top: -6px;
+}
+.burger::after {
+  top: 6px;
+}
+.menu[open] .burger {
+  background: transparent;
+}
+.menu[open] .burger::before {
+  transform: translateY(6px) rotate(45deg);
+}
+.menu[open] .burger::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--bar-h);
+  max-height: calc(100dvh - var(--bar-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px max(20px, env(safe-area-inset-left, 0px)) 24px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.sheetLink {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 420;
+  color: var(--fg);
+}
+.sheetLink[aria-current="page"] {
+  color: var(--accent);
+}
+@media (max-width: 1080px) {
+  .nav {
     display: none;
   }
-  .tile a {
-    width: 60px;
-    height: 54px;
-    display: grid;
-    justify-items: center;
-    align-content: start;
-    gap: 4px;
-  }
-  .tileIcon {
-    width: 32px;
-    height: 32px;
-  }
-  .tileShort {
+  .menu {
     display: block;
-    max-width: 60px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 10.5px;
-    font-weight: 500;
-    color: var(--fg);
   }
-  .tile[data-current] .tileShort {
-    font-weight: 700;
-  }
-  .tile[data-current] a::after {
+}
+@media (max-width: 560px) {
+  .cta {
     display: none;
+  }
+  .name {
+    font-size: 21px;
+  }
+  .tools {
+    gap: 0;
   }
 }
 
@@ -272,36 +215,34 @@
   color: var(--fg);
 }
 .search::backdrop {
-  background: rgb(0 0 0 / 0.35);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: rgb(29 27 24 / 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 .searchPanel {
-  width: min(640px, calc(100vw - 32px));
-  margin: min(16vh, 140px) auto 0;
-  border-radius: 26px;
-  background: var(--nav);
-  -webkit-backdrop-filter: saturate(180%) blur(40px);
-  backdrop-filter: saturate(180%) blur(40px);
+  width: min(660px, calc(100vw - 32px));
+  margin: min(14vh, 128px) auto 0;
+  border-radius: 10px;
+  background: var(--bg);
   box-shadow:
     0 0 0 1px var(--line),
-    0 1px 0 rgb(255 255 255 / 0.3) inset,
-    0 40px 100px -30px rgb(0 0 0 / 0.6);
+    0 40px 100px -30px rgb(0 0 0 / 0.55);
   overflow: hidden;
-  animation: searchIn 0.22s var(--ease-out);
+  animation: searchIn 0.2s var(--ease-out);
 }
 @keyframes searchIn {
   from {
     opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+    transform: translateY(-6px);
   }
 }
 .searchField {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 18px;
-  font-size: 20px;
+  padding: 16px 20px;
+  font-family: var(--display);
+  font-size: 22px;
 }
 .searchField > i {
   width: 20px;
@@ -325,8 +266,8 @@
 }
 .searchField kbd {
   padding: 2px 7px;
-  border-radius: 6px;
-  background: var(--bg-3);
+  border-radius: 4px;
+  border: 1px solid var(--line-strong);
   font: 600 11px/1.6 var(--font);
   color: var(--fg-2);
 }
@@ -337,12 +278,12 @@
   border-top: 1px solid var(--line);
 }
 .groupLabel {
-  padding: 10px 12px 4px;
+  padding: 12px 12px 4px;
   font-size: 11px;
   font-weight: 650;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--fg-2);
+  color: var(--ochre-ink);
 }
 .hit {
   display: grid;
@@ -350,7 +291,7 @@
   gap: 12px;
   align-items: center;
   padding: 8px 10px;
-  border-radius: 12px;
+  border-radius: var(--r);
 }
 .hit[data-active] {
   background: var(--accent);
@@ -361,12 +302,12 @@
   place-items: center;
   width: 32px;
   height: 32px;
-  border-radius: 9px;
-  background: var(--bg-3);
-  color: var(--fg);
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  color: var(--accent);
 }
 .hit[data-active] .hitIcon {
-  background: rgb(255 255 255 / 0.22);
+  border-color: rgb(255 255 255 / 0.35);
   color: inherit;
 }
 .hitIcon i {
@@ -400,7 +341,7 @@
   color: var(--fg-2);
 }
 .searchHint {
-  padding: 8px 18px 12px;
+  padding: 10px 20px 12px;
   border-top: 1px solid var(--line);
   font-size: 12px;
   color: var(--fg-2);
@@ -414,33 +355,25 @@
   }
 }
 
-/* ---- a page's table of contents, under the menu bar ---- */
+/* ---- a page's table of contents: a strip under the header ---- */
 .subnav {
   position: sticky;
   top: var(--bar-h);
   z-index: 40;
-  display: flex;
-  justify-content: center;
-  padding: 8px var(--panel-x) 0;
-  pointer-events: none;
+  background: var(--header-bg);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 1px solid var(--line);
 }
 .subnav ul {
-  pointer-events: auto;
   list-style: none;
-  margin: 0;
-  padding: 4px;
+  margin: 0 auto;
+  max-width: calc(var(--wrap) + 64px);
+  padding: 0 max(32px, env(safe-area-inset-left, 0px));
   display: flex;
-  gap: 2px;
-  max-width: 100%;
+  gap: 4px;
   overflow-x: auto;
   scrollbar-width: none;
-  border-radius: 999px;
-  background: var(--nav);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  box-shadow:
-    0 0 0 1px var(--line),
-    0 8px 30px -14px rgb(0 0 0 / 0.35);
 }
 .subnav ul::-webkit-scrollbar {
   display: none;
@@ -448,21 +381,29 @@
 .subnav a {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
+  min-height: 44px;
   padding: 0 12px;
-  border-radius: 999px;
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 550;
   color: var(--fg-2);
   white-space: nowrap;
+  border-bottom: 2px solid transparent;
   transition:
     color 0.15s ease,
-    background-color 0.15s ease;
+    border-color 0.15s ease;
+}
+.subnav li:first-child a {
+  padding-left: 0;
 }
 .subnav a:hover {
   color: var(--fg);
 }
 .subnav a[aria-current="true"] {
-  background: var(--accent);
-  color: var(--accent-ink);
+  color: var(--fg);
+  border-bottom-color: var(--ochre);
+}
+@media (max-width: 700px) {
+  .subnav ul {
+    padding: 0 max(20px, env(safe-area-inset-left, 0px));
+  }
 }

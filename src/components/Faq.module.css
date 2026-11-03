@@ -23,9 +23,10 @@
   padding: 22px 0;
   cursor: pointer;
   list-style: none;
-  font-size: clamp(17px, 1.6vw, 20px);
-  font-weight: 600;
-  letter-spacing: -0.018em;
+  font-family: var(--display);
+  font-size: clamp(19px, 1.8vw, 23px);
+  font-weight: 440;
+  letter-spacing: -0.01em;
 }
 .item summary::-webkit-details-marker {
   display: none;
@@ -43,7 +44,7 @@
   left: 0;
   right: 0;
   top: 6px;
-  height: 2px;
+  height: 1.5px;
   border-radius: 1px;
   background: var(--fg-2);
   transition: transform 0.3s var(--ease-out);

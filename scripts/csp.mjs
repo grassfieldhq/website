@@ -17,7 +17,7 @@ function policy(hashes) {
     "default-src 'self'",
     `script-src 'self' ${hashes.join(" ")}`,
     "style-src 'self' 'unsafe-inline'", // React's style attributes
-    "img-src 'self' data:", // the film grain and the landscape are SVG data URIs in the CSS
+    "img-src 'self' data:", // the paper grain is an SVG data URI in the CSS; the contour map is /contours.svg
     "font-src 'self'",
     "media-src 'self'",
     "connect-src 'self'",

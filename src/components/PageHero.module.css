@@ -2,37 +2,39 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  margin: calc(-1 * var(--bar-h)) var(--panel-x) 0;
-  border-radius: 0 0 var(--panel-r) var(--panel-r);
-  min-height: clamp(460px, 68vh, 640px);
-  display: grid;
-  align-items: start;
-  color: #f5f5f7;
-  background: #0f2a3f;
+  border-bottom: 1px solid var(--line);
 }
-.land {
-  z-index: -1;
+.hero :global(.contours) {
+  left: 35%;
+  -webkit-mask-position: 60% 45%;
+  mask-position: 60% 45%;
+  -webkit-mask-image: url("/contours.svg"), linear-gradient(90deg, transparent, #000 40%);
+  mask-image: url("/contours.svg"), linear-gradient(90deg, transparent, #000 40%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-size: cover, 100% 100%;
+  mask-size: cover, 100% 100%;
 }
 .copy {
-  padding-top: clamp(150px, 22vh, 220px);
-  padding-bottom: 64px;
-  text-align: center;
   display: grid;
-  justify-items: center;
-  gap: 18px;
+  gap: 22px;
+  padding-top: clamp(64px, 9vw, 128px);
+  padding-bottom: clamp(52px, 7vw, 96px);
 }
-/* the sun passes behind the title on some pages: a soft shadow keeps every line readable over it */
 .eyebrow {
-  color: #ffe6b3;
-  text-shadow: 0 1px 12px rgb(10 30 40 / 0.6);
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-.lead {
-  text-shadow: 0 1px 14px rgb(10 30 40 / 0.5);
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
 }
-.copy h1 {
-  color: #fff;
-  text-shadow: 0 2px 40px rgb(0 0 0 / 0.25);
-}
-.lead {
-  color: rgb(245 245 247 / 0.88);
+.title {
+  font-size: clamp(46px, 7.4vw, 108px);
+  line-height: 0.98;
+  letter-spacing: -0.028em;
+  max-width: 14em;
 }

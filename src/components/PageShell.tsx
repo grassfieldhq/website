@@ -1,17 +1,14 @@
 import type { ReactNode } from "react";
 import type { Dict, Locale } from "@/i18n";
-import { searchIndex } from "@/lib/searchIndex";
 import { scenes } from "@/lib/shots";
 import { SectionNav } from "./SectionNav";
 import { CommandSearch } from "./CommandSearch";
-import { DockNav } from "./DockNav";
 import { Footer } from "./Footer";
-import { MenuBar } from "./MenuBar";
+import { Header } from "./Header";
 
-// Every page lives inside the shell: skip link, the menu bar, the content, the footer, the Dock and Search.
-// `path` is the page's path under /[lang]/ ("" for home); `pageName` is what the menu bar shows as the app's name.
-export function PageShell({ t, lang, path, pageName, sections, children }: { t: Dict; lang: Locale; path: string; pageName?: string; sections?: string[][]; children: ReactNode }) {
-  const name = pageName ?? pageNameFor(t, path);
+// Every page lives inside the shell: skip link, the header, the page's table of contents, the content, the footer
+// and Search. `path` is the page's path under /[lang]/ ("" for home).
+export function PageShell({ t, lang, path, sections, children }: { t: Dict; lang: Locale; path: string; sections?: string[][]; children: ReactNode }) {
   // the tour's chapters, for the footer's site map: the features the capture set actually has
   const have = new Set(scenes(lang).map((sc) => sc.feature));
   const features = t.shots.features as Record<string, { title: string }>;
@@ -21,32 +18,11 @@ export function PageShell({ t, lang, path, pageName, sections, children }: { t: 
       <a className="skip" href="#main">
         {t.nav.skip}
       </a>
-      <MenuBar t={t} lang={lang} path={path} pageName={name} />
-      {/* the Dock comes right after the menu bar in the document: a keyboard reaches the navigation in a few tabs */}
-      <DockNav
-        t={{ dock: t.shell.dockLabel, home: t.shell.home, desktop: t.nav.desktop, apps: t.nav.apps, security: t.nav.security, os: t.nav.os, tour: t.nav.tour, download: t.nav.download, faq: t.nav.faq }}
-        lang={lang}
-        path={path}
-      />
+      <Header t={t} lang={lang} path={path} />
       {sections && <SectionNav label={t.sections.label} items={sections} />}
       <main id="main">{children}</main>
       <Footer t={t.footer} nav={t.nav} lang={lang} path={path} privacy={t.privacy.statement} tour={tour} />
-      <CommandSearch t={t.shell} index={searchIndex(lang, t)} />
+      <CommandSearch t={t.shell} lang={lang} />
     </>
   );
-}
-
-function pageNameFor(t: Dict, path: string): string {
-  const names: Record<string, string> = {
-    "": "Grassfield",
-    "desktop/": t.nav.desktop,
-    "apps/": t.nav.apps,
-    "security/": t.nav.security,
-    "os/": t.nav.os,
-    "tour/": t.nav.tour,
-    "download/": t.nav.download,
-    "faq/": t.nav.faq,
-    "legal/": t.nav.legal,
-  };
-  return names[path] ?? "Grassfield";
 }

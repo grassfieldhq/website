@@ -9,7 +9,7 @@
   flex-direction: column;
   border-radius: calc(var(--u) * 16);
   overflow: hidden;
-  background: #292929;
+  background: var(--gf-window);
   box-shadow:
     0 0 0 calc(var(--u) * 1) rgb(255 255 255 / 0.12) inset,
     0 calc(var(--u) * 30) calc(var(--u) * 80) rgb(0 0 0 / 0.55),
@@ -75,7 +75,7 @@
   justify-items: center;
   gap: calc(var(--u) * 10);
   text-align: center;
-  color: #f5f5f7;
+  color: var(--gf-text);
   padding: calc(var(--u) * 30);
 }
 .store img {
@@ -88,5 +88,5 @@
 }
 .store p {
   font-size: calc(var(--u) * 14);
-  color: #dcdce4;
+  color: var(--gf-text-2);
 }
