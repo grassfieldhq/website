@@ -1,7 +1,7 @@
 # Grassfield website
 
 The presentation site of Grassfield OS, in French and English. Positioning: Grassfield OS is the product (an
-operating system based on Arch Linux, planned as M6 of the master plan); Grassfield Desktop, in testing on Omarchy 4, is
+operating system based on Arch Linux, planned as M6 of the master plan); Grassfield Desktop, in beta on Omarchy 4, is
 its first step. The roadmap chapter states what exists and what is planned, with no date. Next.js 16 (App Router), React 19, TypeScript,
 CSS Modules, exported as static files (`out/`): no server, any static host works.
 
@@ -45,9 +45,10 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 - Product colours, radii, dock and window geometry come from `grassfield/ui/tokens/tokens.json` and the mark and icons
   from `grassfield/branding` (`scripts/brand.mjs` copies them and checks for drift); the wallpaper is the same
   procedure as `GrassfieldArtwork.qml`.
-- `src/lib/release.ts`: the Download page's facts (version, packages, uninstall command). Fill `publish` (date,
-  repository setup and install commands) when the `[grassfield]` repository is published; the page then shows them
-  with copy buttons instead of "not released yet".
+- `src/lib/release.ts`: the Download page's facts: version and channel, the stack it was tested on, the install
+  script (`publish`: date, the download-check-run commands first, then the one-liner, its options and log), the
+  signing key, the packages and the uninstall command. The dictionaries quote its versions and host: a new release
+  is one edit there. The commands come from the grassfield repository (`docs/install.md`, ADR-0043).
 - Long pages carry a table of contents (`SectionNav`, a strip pinned under the header, the chapter on screen
   highlighted; `sections` per page in the dictionaries). The footer is the site map: pages, the tour's chapters,
   the install anchors, about this site.
@@ -76,7 +77,8 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
   project's environment variables (until then, the project's production hostname).
 - [x] Hosting: Vercel, static files, with security headers (CSP, HSTS). See Deployment for the one-time setup.
 - [ ] Fresh, dedicated captures: run `node scripts/shots.mjs` on the final set (see Captures).
-- [ ] Fill `publish` in `src/lib/release.ts` with the published repository's setup and install commands.
+- [x] Fill `publish` in `src/lib/release.ts`: the install script and its commands (1.0.0-rc3, beta channel,
+  published 2026-11-05).
 - [ ] Licence of this repository's code (owner).
 - [ ] Fill `publisher` in `src/lib/site.ts` (name, status, address, e-mail, host): /legal/ and the footer's Contact
   then show them.
