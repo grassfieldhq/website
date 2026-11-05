@@ -126,19 +126,14 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
                   {i === 0 && (
                     <>
                       <div className={s.form}>
-                        <p className={s.formHead}>
-                          <span>{t.checkedTitle}</span>
-                          <span className="tag">{t.recommended}</span>
-                        </p>
-                        <Command cmd={pub.checked} copy={t.copy} copied={t.copied} />
-                        <p>{t.checkedNote}</p>
-                      </div>
-                      <div className={s.form}>
-                        <p className={s.formHead}>
-                          <span>{t.oneLineTitle}</span>
-                        </p>
+                        <p className={s.formHead}>{t.oneLineTitle}</p>
                         <Command cmd={pub.oneLine} copy={t.copy} copied={t.copied} />
                         <p>{t.oneLineNote}</p>
+                      </div>
+                      <div className={s.form}>
+                        <p className={s.formHead}>{t.checkedTitle}</p>
+                        <Command cmd={pub.checked} copy={t.copy} copied={t.copied} />
+                        <p>{t.checkedNote}</p>
                       </div>
                     </>
                   )}

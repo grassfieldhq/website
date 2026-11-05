@@ -214,15 +214,8 @@
   margin-top: 20px;
 }
 .form .formHead {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
   font-weight: 600;
   color: var(--fg);
-}
-.form .formHead :global(.tag) {
-  align-self: center;
 }
 .form .cmd {
   margin-top: 0;

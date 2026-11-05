@@ -21,13 +21,14 @@ export const release = {
     date: "2026-11-05", // ISO date of this version on the beta channel (the first beta, 1.0.0-rc2: 2026-11-04)
     script,
     checksum: `${script}.sha256`,
-    // ADR-0043 IN3: both forms; download, check, run first (recommended), the one-liner second.
+    // ADR-0043 IN3 (owner decision): both forms, unranked, the one-liner first and the download-check-run form below it;
+    // the page says what each protects against.
+    oneLine: `curl -fsSL ${script} | bash`,
     checked: [
       `curl -fsSLO ${script}`,
       `curl -fsSLO ${script}.sha256`,
       "sha256sum -c grassfield-install.sh.sha256 && bash grassfield-install.sh",
     ],
-    oneLine: `curl -fsSL ${script} | bash`,
     // The script's --help, in its order of use; each one is described in the dictionaries (download.options).
     options: ["--dry-run", "--session grassfield|omarchy", "--without-login-themes", "--no-snapshot", "--yes", "--uninstall"],
     sessionCmd: "grassfield-login set grassfield",

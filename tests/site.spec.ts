@@ -164,8 +164,8 @@ test("FAQ answers open and are described for search engines", async ({ page }) =
   expect(data.mainEntity.length).toBe(await page.locator("#faq details").count());
 });
 
-// The published install (grassfield ADR-0043, docs/install.md): download-check-run first, the one-liner second, the
-// script's --uninstall as the way back. Written out here, not read from release.ts, so a slip there fails.
+// The published install (grassfield ADR-0043 IN3, docs/install.md): the one-liner first, the download-check-run form
+// below it, the script's --uninstall as the way back. Written out here, not read from release.ts, so a slip there fails.
 const script = "https://packages.grassfield.site/install/grassfield-install.sh";
 const installCommands = {
   checked: `curl -fsSLO ${script}\ncurl -fsSLO ${script}.sha256\nsha256sum -c grassfield-install.sh.sha256 && bash grassfield-install.sh`,
@@ -197,11 +197,11 @@ for (const [lang, copyLabel, copiedLabel, beta, date] of [
     await expect(page.locator("code", { hasText: "E492 1A38 2C34 9308 BAA5" })).toBeVisible();
     await expect(page.locator('a[href="https://packages.grassfield.site/grassfield-signing-key.asc"]')).toBeVisible();
 
-    // the recommended form first, then the one-liner, then the way back
+    // the one-liner first, then the download-check-run form, then the way back
     await hydrated(page);
     // both labels, so that a button stays in the list once it says it copied
     const copies = page.locator("main button", { hasText: new RegExp(`^(${copyLabel}|${copiedLabel})$`) });
-    for (const [i, expected] of [installCommands.checked, installCommands.oneLine, installCommands.uninstall].entries()) {
+    for (const [i, expected] of [installCommands.oneLine, installCommands.checked, installCommands.uninstall].entries()) {
       const copy = copies.nth(i);
       await expect(copy).toHaveText(copyLabel);
       await copy.click();
