@@ -283,7 +283,9 @@ const fr = {
     oneLineTitle: "En une ligne",
     oneLineNote: "Exécute ce que le serveur envoie à cet instant, par HTTPS, sans que vous puissiez le lire avant. Le script affiche quand même son plan et attend votre accord avant de modifier quoi que ce soit.",
     checkedTitle: "Ou vérifiez le fichier avant de le lancer",
-    checkedNote: "Télécharger d'abord vous permet de lire le script avant de le lancer, et la vérification arrête un fichier abîmé ou incomplet. La somme de contrôle vient du même serveur que le script : elle ne protège pas d'un serveur compromis.",
+    checkedNote: "Télécharger d'abord vous permet de lire le script avant de le lancer, et la vérification arrête un fichier abîmé ou incomplet. Le fichier .sha256 vient du même serveur que le script : à lui seul, il ne protège pas d'un serveur compromis.",
+    sha256Label: "SHA-256 de grassfield-install.sh, publiée sur ce site",
+    sha256Note: "Comparez-la avec ce qu'affiche `sha256sum grassfield-install.sh` : cette copie vient de ce site, pas du serveur de paquets, et la comparaison est donc une vérification indépendante de ce serveur.",
     orderTitle: "Ce que fait le script, dans l'ordre",
     order: [
       "Il vérifie la configuration requise.",

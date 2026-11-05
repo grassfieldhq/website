@@ -20,7 +20,11 @@ export const release = {
   publish: {
     date: "2026-11-05", // ISO date of this version on the beta channel (the first beta, 1.0.0-rc2: 2026-11-04)
     script,
-    checksum: `${script}.sha256`,
+    checksumUrl: `${script}.sha256`,
+    // ADR-0043 IN8: the script's SHA-256 is also published here, a copy independent of the package server. It MUST
+    // change with every new render of the script (`just render-install` in grassfield: the template, repository.conf
+    // and VERSION are its inputs); check it against the live .sha256 above before each release of this site.
+    sha256: "c395efb528b93bcc0ea2f6a43d1fed8bba7ae4d364ce62bc4e79263740964df2",
     // ADR-0043 IN3 (owner decision): both forms, unranked, the one-liner first and the download-check-run form below it;
     // the page says what each protects against.
     oneLine: `curl -fsSL ${script} | bash`,
@@ -54,6 +58,9 @@ export const release = {
     { name: "grassfield-keyring", role: "dependency" },
   ],
 } as const;
+
+/** A SHA-256 in eight groups of eight, easier to compare by eye, and it wraps on a phone. */
+export const groupedHash = (h: string) => h.match(/.{1,8}/g)!.join(" ");
 
 /** A fingerprint as gpg and pacman-key print it: ten groups of four, two halves. */
 export const groupedFingerprint = (f: string) =>

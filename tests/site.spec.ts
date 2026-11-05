@@ -195,6 +195,8 @@ for (const [lang, copyLabel, copiedLabel, beta, date] of [
       await expect(page.locator("#install-steps dt code", { hasText: option })).toHaveCount(1);
     }
     await expect(page.locator("code", { hasText: "E492 1A38 2C34 9308 BAA5" })).toBeVisible();
+    // ADR-0043 IN8: the script's SHA-256 on the site, next to the download-check-run form (the live .sha256 of 2026-11-05)
+    await expect(page.locator("#install-steps code", { hasText: "c395efb5 28b93bcc 0ea2f6a4 3d1fed8b ba7ae4d3 64ce62bc 4e792637 40964df2" })).toBeVisible();
     await expect(page.locator('a[href="https://packages.grassfield.site/grassfield-signing-key.asc"]')).toBeVisible();
 
     // the one-liner first, then the download-check-run form, then the way back

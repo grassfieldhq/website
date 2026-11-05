@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/i18n";
-import { groupedFingerprint, release } from "@/lib/release";
+import { groupedFingerprint, groupedHash, release } from "@/lib/release";
 import { PageShell } from "@/components/PageShell";
 import { Command } from "@/components/Command";
 import { Mask } from "@/components/Mask";
@@ -134,6 +134,11 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
                         <p className={s.formHead}>{t.checkedTitle}</p>
                         <Command cmd={pub.checked} copy={t.copy} copied={t.copied} />
                         <p>{t.checkedNote}</p>
+                        <p className={s.digest}>
+                          <span>{t.sha256Label}</span>
+                          <code>{groupedHash(pub.sha256)}</code>
+                        </p>
+                        <p>{rich(t.sha256Note)}</p>
                       </div>
                     </>
                   )}
@@ -198,7 +203,7 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
             <Mask name="shield" className={s.trioIcon} />
             <h3 className="h-3">{t.verifyTitle}</h3>
             <p>{t.verifyBody}</p>
-            <p className={s.fpr}>
+            <p className={s.digest}>
               <code>{groupedFingerprint(release.key.fingerprint)}</code>
               <span>{release.key.uid}</span>
             </p>

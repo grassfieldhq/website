@@ -276,8 +276,9 @@
   color: var(--fg);
   white-space: nowrap;
 }
-/* the signing key's fingerprint, grouped as gpg prints it */
-.rich .fpr {
+/* a digest grouped for the eye (the script's SHA-256, the key's fingerprint as gpg prints it): it wraps between
+   groups, so a phone never scrolls sideways */
+.rich .digest {
   display: grid;
   gap: 4px;
   padding: 12px 14px;
@@ -285,12 +286,12 @@
   background: var(--bg);
   box-shadow: 0 0 0 1px var(--line);
 }
-.rich .fpr code {
+.rich .digest code {
   font: 600 13px/1.6 var(--mono);
   color: var(--fg);
   white-space: pre-wrap;
 }
-.fpr span {
+.digest span {
   font-size: 12px;
   overflow-wrap: anywhere;
 }

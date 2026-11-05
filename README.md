@@ -46,9 +46,11 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
   from `grassfield/branding` (`scripts/brand.mjs` copies them and checks for drift); the wallpaper is the same
   procedure as `GrassfieldArtwork.qml`.
 - `src/lib/release.ts`: the Download page's facts: version and channel, the stack it was tested on, the install
-  script (`publish`: date, the one-liner first, then the download-check-run commands, its options and log), the
-  signing key, the packages and the uninstall command. The dictionaries quote its versions and host: a new release
-  is one edit there. The commands come from the grassfield repository (`docs/install.md`, ADR-0043).
+  script (`publish`: date, the one-liner first, then the download-check-run commands, the script's SHA-256, its
+  options and log), the signing key, the packages and the uninstall command. The SHA-256 changes with every
+  render of the script (`just render-install` in grassfield): compare it with the live `.sha256` before a release.
+  The dictionaries quote its versions and host: a new release is one edit there. The commands come from the
+  grassfield repository (`docs/install.md`, ADR-0043).
 - Long pages carry a table of contents (`SectionNav`, a strip pinned under the header, the chapter on screen
   highlighted; `sections` per page in the dictionaries). The footer is the site map: pages, the tour's chapters,
   the install anchors, about this site.

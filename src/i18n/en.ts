@@ -281,7 +281,9 @@ const en: Dict = {
     oneLineTitle: "In one line",
     oneLineNote: "Runs whatever the server sends at that moment, over HTTPS, without a chance to read it first. The script still shows its plan and waits for your go-ahead before it changes anything.",
     checkedTitle: "Or check the file before running it",
-    checkedNote: "Downloading first lets you read the script before you run it, and the check stops a damaged or incomplete file. The checksum comes from the same server as the script: it doesn't protect against a compromised server.",
+    checkedNote: "Downloading first lets you read the script before you run it, and the check stops a damaged or incomplete file. The .sha256 file comes from the same server as the script: on its own, it doesn't protect against a compromised server.",
+    sha256Label: "SHA-256 of grassfield-install.sh, published on this site",
+    sha256Note: "Compare it with what `sha256sum grassfield-install.sh` prints: this copy comes from this site, not from the package server, so the comparison is a check independent of that server.",
     orderTitle: "What the script does, in order",
     order: [
       "It checks the requirements.",
