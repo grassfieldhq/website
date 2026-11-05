@@ -164,22 +164,60 @@ test("FAQ answers open and are described for search engines", async ({ page }) =
   expect(data.mainEntity.length).toBe(await page.locator("#faq details").count());
 });
 
-test("download page states the version, requirements and an uninstall command to copy", async ({ page, context }) => {
-  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto("/fr/download/");
-  await expect(page.getByRole("heading", { level: 2, name: /Version 1\.0\.0-rc1/ })).toBeVisible();
-  await expect(page.getByText("x86_64").first()).toBeVisible();
-  for (const pkg of ["grassfield-desktop", "grassfield-compositor", "grassfield-icons", "grassfield-store"]) {
-    await expect(page.locator("code", { hasText: pkg }).first()).toBeVisible();
+// The published install (grassfield ADR-0043, docs/install.md): download-check-run first, the one-liner second, the
+// script's --uninstall as the way back. Written out here, not read from release.ts, so a slip there fails.
+const script = "https://packages.grassfield.site/install/grassfield-install.sh";
+const installCommands = {
+  checked: `curl -fsSLO ${script}\ncurl -fsSLO ${script}.sha256\nsha256sum -c grassfield-install.sh.sha256 && bash grassfield-install.sh`,
+  oneLine: `curl -fsSL ${script} | bash`,
+  uninstall: "bash grassfield-install.sh --uninstall",
+};
+
+for (const [lang, copyLabel, copiedLabel, beta, date] of [
+  ["fr", "Copier", "Copié", "Bêta", "5 novembre 2026"],
+  ["en", "Copy", "Copied", "Beta", "5 November 2026"],
+] as const) {
+  test(`${lang}: the download page gives the beta's install script, its requirements and the way back, to copy`, async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto(`/${lang}/download/`);
+    const card = page.locator("#release");
+    await expect(card.getByRole("heading", { level: 2, name: /Version 1\.0\.0-rc3/ })).toBeVisible();
+    await expect(card.locator(".tag")).toHaveText(beta);
+    await expect(card).toContainText(date);
+    await expect(card).toContainText("Omarchy 4.0.6+");
+    await expect(page.getByText("x86_64").first()).toBeVisible();
+    await expect(page.locator("#requirements li")).toHaveCount(7);
+    await expect(page.locator("#requirements")).toContainText("packages.grassfield.site");
+    for (const pkg of ["grassfield-desktop", "grassfield-compositor", "grassfield-store", "grassfield-login-themes", "grassfield-icons", "grassfield-wallpapers", "grassfield-keyring"]) {
+      await expect(page.locator("#packages code", { hasText: pkg }).first()).toBeVisible();
+    }
+    for (const option of ["--dry-run", "--session grassfield|omarchy", "--without-login-themes", "--no-snapshot", "--yes", "--uninstall"]) {
+      await expect(page.locator("#install-steps dt code", { hasText: option })).toHaveCount(1);
+    }
+    await expect(page.locator("code", { hasText: "E492 1A38 2C34 9308 BAA5" })).toBeVisible();
+    await expect(page.locator('a[href="https://packages.grassfield.site/grassfield-signing-key.asc"]')).toBeVisible();
+
+    // the recommended form first, then the one-liner, then the way back
+    await hydrated(page);
+    // both labels, so that a button stays in the list once it says it copied
+    const copies = page.locator("main button", { hasText: new RegExp(`^(${copyLabel}|${copiedLabel})$`) });
+    for (const [i, expected] of [installCommands.checked, installCommands.oneLine, installCommands.uninstall].entries()) {
+      const copy = copies.nth(i);
+      await expect(copy).toHaveText(copyLabel);
+      await copy.click();
+      await expect(copy).toHaveText(copiedLabel);
+      expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(expected);
+    }
+  });
+}
+
+test("no page says the release is still to come", async ({ page }) => {
+  for (const path of ["/fr/", "/en/", "/fr/os/", "/en/os/", "/fr/download/", "/en/download/", "/fr/faq/", "/en/faq/"]) {
+    await page.goto(path);
+    await expect(page.locator("main")).not.toContainText(/pas encore publi|arrive bientôt|bientôt disponible|not released yet|coming soon|in testing|en test\b/i);
   }
-  const copy = page.locator("main button", { hasText: /^Copi/ }).first();
-  await expect(copy).toHaveText("Copier");
-  await hydrated(page);
-  await copy.click();
-  await expect(copy).toHaveText("Copié");
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    "sudo pacman -Rns grassfield-desktop grassfield-compositor grassfield-icons",
-  );
+  await page.goto("/fr/");
+  await expect(page.locator("#install")).toContainText("Version 1.0.0-rc3 en bêta");
 });
 
 test("the header reaches every page and marks the current one", async ({ page }) => {
@@ -338,7 +376,7 @@ test("presents Grassfield OS with the desktop as its first step", async ({ page 
   const road = page.locator("#roadmap");
   await expect(road.getByRole("heading", { level: 3, name: "Grassfield Desktop" })).toBeVisible();
   await expect(road.getByRole("heading", { level: 3, name: "Grassfield OS" })).toBeVisible();
-  await expect(road.getByText("En test")).toBeVisible();
+  await expect(road.getByText("En bêta")).toBeVisible();
   await expect(road.getByText("Prévu")).toBeVisible();
 });
 

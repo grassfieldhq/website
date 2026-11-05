@@ -5,9 +5,9 @@ import { Picture, primary } from "./Shot";
 import { Stage } from "./Stage";
 import s from "./InstallScene.module.css";
 
-// Scrolling installs Grassfield: the packages go in (signed and verified), the machine restarts, the login leads
-// to the Grassfield desktop (a real capture). The terminal lines are illustrative: the exact commands are published
-// with the release.
+// Scrolling installs Grassfield: the install script checks the system and puts the signed packages in, the machine
+// restarts, the login leads to the Grassfield desktop (a real capture). The terminal lines are illustrative: the exact
+// commands are on the page, under the scene.
 export function InstallScene({ t, lang }: { t: Dict["scenes"]["install"]; lang: Locale }) {
   const desktop = scenes(lang).find((sc) => sc.kind === "screen" && sc.base === "desktop");
   return (
