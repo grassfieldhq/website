@@ -271,7 +271,8 @@
   color: var(--fg-2);
 }
 /* commands, options and settings named in running text */
-.rich :is(p, li, dd) > code {
+.rich :is(p, li, dd) > code,
+:is(p, li, dd).rich > code {
   font: 500 0.9em/1.4 var(--mono);
   color: var(--fg);
   white-space: nowrap;

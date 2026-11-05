@@ -171,6 +171,7 @@ const installCommands = {
   checked: `curl -fsSLO ${script}\ncurl -fsSLO ${script}.sha256\nsha256sum -c grassfield-install.sh.sha256 && bash grassfield-install.sh`,
   oneLine: `curl -fsSL ${script} | bash`,
   uninstall: "bash grassfield-install.sh --uninstall",
+  download: `curl -fsSLO ${script}`, // under the uninstall command: fetches the script without running it
 };
 
 for (const [lang, copyLabel, copiedLabel, beta, date] of [
@@ -181,7 +182,7 @@ for (const [lang, copyLabel, copiedLabel, beta, date] of [
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto(`/${lang}/download/`);
     const card = page.locator("#release");
-    await expect(card.getByRole("heading", { level: 2, name: /Version 1\.0\.0-rc3/ })).toBeVisible();
+    await expect(card.getByRole("heading", { level: 2, name: /Version 1\.0\.0-rc4/ })).toBeVisible();
     await expect(card.locator(".tag")).toHaveText(beta);
     await expect(card).toContainText(date);
     await expect(card).toContainText("Omarchy 4.0.6+");
@@ -203,7 +204,7 @@ for (const [lang, copyLabel, copiedLabel, beta, date] of [
     await hydrated(page);
     // both labels, so that a button stays in the list once it says it copied
     const copies = page.locator("main button", { hasText: new RegExp(`^(${copyLabel}|${copiedLabel})$`) });
-    for (const [i, expected] of [installCommands.oneLine, installCommands.checked, installCommands.uninstall].entries()) {
+    for (const [i, expected] of [installCommands.oneLine, installCommands.checked, installCommands.uninstall, installCommands.download].entries()) {
       const copy = copies.nth(i);
       await expect(copy).toHaveText(copyLabel);
       await copy.click();
@@ -219,7 +220,7 @@ test("no page says the release is still to come", async ({ page }) => {
     await expect(page.locator("main")).not.toContainText(/pas encore publi|arrive bientôt|bientôt disponible|not released yet|coming soon|in testing|en test\b/i);
   }
   await page.goto("/fr/");
-  await expect(page.locator("#install")).toContainText("Version 1.0.0-rc3 en bêta");
+  await expect(page.locator("#install")).toContainText("Version 1.0.0-rc4 en bêta");
 });
 
 test("the header reaches every page and marks the current one", async ({ page }) => {

@@ -6,15 +6,15 @@ const base = `https://${host}`;
 const script = `${base}/install/grassfield-install.sh`;
 
 export const release = {
-  version: "1.0.0-rc3",
-  pkgver: "1.0.0rc3",
+  version: "1.0.0-rc4",
+  pkgver: "1.0.0rc4",
   // The stable channel is empty while the release is a prerelease: the script refuses `--channel stable`.
   channel: "beta" as "stable" | "beta",
   arch: "x86_64",
   omarchyMin: "4.0.6",
   omarchyTested: "4.0.6",
   // What Omarchy 4.0.6 ships, the stack the release was tested on.
-  tested: { hyprland: "0.56.2", quickshell: "0.3.2", qt: "6.12" },
+  tested: { hyprland: "0.56.2", quickshell: "0.3.2.r7", qt: "6.12" },
   hyprland: "0.56",
   host,
   publish: {

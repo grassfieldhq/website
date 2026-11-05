@@ -222,6 +222,8 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
             <h3 className="h-3">{t.uninstallTitle}</h3>
             <p>{rich(t.uninstallBody)}</p>
             <Command cmd={release.uninstall} copy={t.copy} copied={t.copied} />
+            <p>{t.uninstallFetch}</p>
+            <Command cmd={pub.checked[0]} copy={t.copy} copied={t.copied} />
           </article>
         </section>
 
