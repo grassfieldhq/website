@@ -6,8 +6,8 @@ const base = `https://${host}`;
 const script = `${base}/install/grassfield-install.sh`;
 
 export const release = {
-  version: "1.0.0-rc4",
-  pkgver: "1.0.0rc4",
+  version: "1.0.0-rc5",
+  pkgver: "1.0.0rc5",
   // The stable channel is empty while the release is a prerelease: the script refuses `--channel stable`.
   channel: "beta" as "stable" | "beta",
   arch: "x86_64",

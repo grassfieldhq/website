@@ -1,7 +1,7 @@
 // Content Security Policy for the static export, run after `next build`. Each page may run only its own inline scripts
 // (the theme script, the root's language pick, Next's payload), allowed by hash, and script files from this origin.
 // The policy goes in a <meta> at the top of each page, so any static host and the tests' server apply it.
-// frame-ancestors is ignored in a <meta>: vercel.json sends it as a header.
+// frame-ancestors is ignored in a <meta>: public/_headers sends it as a header (Cloudflare static assets).
 import { createHash } from "node:crypto";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";

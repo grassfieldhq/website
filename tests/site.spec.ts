@@ -182,7 +182,7 @@ for (const [lang, copyLabel, copiedLabel, beta, date] of [
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto(`/${lang}/download/`);
     const card = page.locator("#release");
-    await expect(card.getByRole("heading", { level: 2, name: /Version 1\.0\.0-rc4/ })).toBeVisible();
+    await expect(card.getByRole("heading", { level: 2, name: /Version 1\.0\.0-rc5/ })).toBeVisible();
     await expect(card.locator(".tag")).toHaveText(beta);
     await expect(card).toContainText(date);
     await expect(card).toContainText("Omarchy 4.0.6+");
@@ -220,7 +220,7 @@ test("no page says the release is still to come", async ({ page }) => {
     await expect(page.locator("main")).not.toContainText(/pas encore publi|arrive bientôt|bientôt disponible|not released yet|coming soon|in testing|en test\b/i);
   }
   await page.goto("/fr/");
-  await expect(page.locator("#install")).toContainText("Version 1.0.0-rc4 en bêta");
+  await expect(page.locator("#install")).toContainText("Version 1.0.0-rc5 en bêta");
 });
 
 test("the header reaches every page and marks the current one", async ({ page }) => {

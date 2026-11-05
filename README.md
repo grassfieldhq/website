@@ -74,10 +74,10 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 ## Before the public launch
 
 - [ ] Legal review done (owner), then set `robots` to allow, remove `noindex` in `src/app/[lang]/layout.tsx` and the
-  `X-Robots-Tag` header in `vercel.json`.
-- [ ] Domain chosen: add it to the Vercel project (Settings › Domains) and set `NEXT_PUBLIC_SITE_URL` to it in the
-  project's environment variables (until then, the project's production hostname).
-- [x] Hosting: Vercel, static files, with security headers (CSP, HSTS). See Deployment for the one-time setup.
+  `X-Robots-Tag` header in `public/_headers`.
+- [x] Domain: grassfield.site (owner decision of 2026-11-03), the default of `siteUrl` in `src/lib/site.ts`.
+- [x] Hosting: Cloudflare (owner decision of 2026-11-05), static files, with security headers (CSP, HSTS). See
+  Deployment for the one-time setup.
 - [ ] Fresh, dedicated captures: run `node scripts/shots.mjs` on the final set (see Captures).
 - [x] Fill `publish` in `src/lib/release.ts`: the install script and its commands (1.0.0-rc3, beta channel,
   published 2026-11-05).
@@ -87,27 +87,26 @@ prompt §14). Crawlers are refused (`robots.txt`, `noindex`) until then.
 
 ## Deployment
 
-Vercel, static files only (`vercel.json`: no framework runtime, `npm ci`, `npm run build`, output `out/`). Through the
-Git integration, a push to `main` goes to production and any other branch or pull request to a preview. Vercel builds
-on its own, without waiting for CI: CI's checks show on the pull request next to the Vercel preview.
+Cloudflare, static files only: the Workers project `website` serves the export in `out/` as static assets, with no Worker
+code (`wrangler.jsonc`). Cloudflare's Git integration (Workers Builds) runs `npx wrangler deploy` on every push to
+`main`; wrangler first runs the build in `wrangler.jsonc` (`npm ci && npm run build`). So merging into `main` publishes.
+CI's checks run on the pull request beside the "Workers Builds: website" check.
 
-- **Headers** (`vercel.json`): HSTS, `frame-ancestors 'none'`, nosniff, referrer and permissions policies, COOP,
-  `X-Robots-Tag: noindex` until the launch; a year's immutable cache for `/_next/static/` and `/shots/`, whose names
-  carry a hash. `trailingSlash` sends `/fr/os` to `/fr/os/`, like the export's folders. The Content Security Policy
-  is a `<meta>` that `scripts/csp.mjs` writes into each page at the end of `npm run build`: scripts from this origin
-  plus the page's own inline scripts by hash, nothing from other origins. A new inline script needs nothing; a new
-  origin (fonts, analytics, a video host) needs a line in its `policy()`.
+- **Headers** (`public/_headers`, copied to `out/_headers`): HSTS, `frame-ancestors 'none'`, nosniff, referrer and
+  permissions policies, COOP, `X-Robots-Tag: noindex` until the launch; a year's immutable cache for `/_next/static/`
+  and `/shots/`, whose names carry a hash. `html_handling: auto-trailing-slash` sends `/fr/os` to `/fr/os/`, like the
+  export's folders; a missing page gets `404.html`. The Content Security Policy is a `<meta>` that `scripts/csp.mjs`
+  writes into each page at the end of `npm run build`: scripts from this origin plus the page's own inline scripts by
+  hash, nothing from other origins. A new inline script needs nothing; a new origin (fonts, analytics, a video host)
+  needs a line in its `policy()`.
+- **By hand**: `npx wrangler deploy` from a checkout, with `CLOUDFLARE_ACCOUNT_ID` set and a logged-in wrangler.
 - **Setup, once** (owner):
-  1. Vercel › Add New › Project › import `grassfieldhq/website`. `vercel.json` sets the build; leave the project's
-     build settings as they are.
-  2. Settings › Build and Deployment › Node.js Version: 22.x, as `.nvmrc` and CI.
-  3. Canonical URLs, sitemap and Open Graph use the project's production hostname (`*.vercel.app`) by default; set
-     `NEXT_PUBLIC_SITE_URL` (Settings › Environment Variables, Production) once the domain is chosen.
-  4. Private until the launch: `noindex` keeps the site out of search engines, not out of reach. To keep it to the
-     team: Settings › Deployment Protection.
-- **The "Workers Builds: website" check**: a Cloudflare Workers project named `website`, left from an earlier hosting
-  plan, is connected to this repository. Owner: in the Cloudflare dashboard, Workers & Pages › `website` › Settings ›
-  Builds, disconnect the repository (or delete that project).
+  1. Workers & Pages › `website` › Settings › Domains & Routes › Add › Custom domain: `grassfield.site`, then
+     `www.grassfield.site`. If the dashboard reports an existing DNS record for a name, remove that record (and the
+     redirect rule that sends `grassfield.site` to `www`), then add the domain again.
+  2. Workers & Pages › `website` › Settings › Builds: the repository `grassfieldhq/website`, branch `main`, deploy
+     command `npx wrangler deploy` (the default), build command empty (wrangler runs the build).
+  3. Private until the launch: `noindex` keeps the site out of search engines, not out of reach.
 
 ## Captures
 
