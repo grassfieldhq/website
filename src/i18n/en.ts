@@ -267,7 +267,7 @@ const en: Dict = {
       { k: "System", v: `Omarchy ${release.omarchyMin} or newer`, p: `On Arch Linux. Tested on Omarchy ${release.omarchyTested}, with Hyprland ${release.tested.hyprland}, Quickshell ${release.tested.quickshell} and Qt ${release.tested.qt}. Grassfield installs on top of Omarchy, not instead of it.` },
       { k: "Processor", v: "64-bit x86 (x86_64)", p: "Packages are built for x86_64 only." },
       { k: "Updates", v: "An up-to-date system", p: "Run Omarchy's update first: the script checks with checkupdates (pacman-contrib) that nothing is pending." },
-      { k: "Quickshell", v: "The one from Omarchy's repository", p: `Omarchy ${release.omarchyMin} puts its [omarchy] repository first. The script refuses Arch's build, from the [extra] repository: its session lock fails open.` },
+      { k: "Quickshell", v: "The one from Omarchy's repository", p: `Grassfield needs Quickshell as Omarchy builds it, from the [omarchy] repository that Omarchy ${release.omarchyMin} puts first. The script refuses any other build.` },
       { k: "Disk space", v: "4 GB free", p: "At least 4,096 MiB, for the package cache and /usr." },
       { k: "Network", v: `Access to ${release.host}`, p: `The packages, their lists and the signing key come from there; the script asks ${release.key.keyserver} for the key first.` },
       { k: "Administrator", v: "Your administrator password", p: "The script runs as your usual user and uses sudo only for the steps it lists in its plan." },
