@@ -257,7 +257,13 @@
   white-space: nowrap;
   font: 500 13px/1.6 var(--mono);
 }
-.cmd code span {
+.cmd:has(.line + .line) {
+  align-items: flex-start;
+}
+.cmd .line {
+  display: block;
+}
+.cmd code [aria-hidden] {
   color: var(--fg-2);
   user-select: none;
 }
