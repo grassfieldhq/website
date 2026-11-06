@@ -6,8 +6,8 @@ const base = `https://${host}`;
 const script = `${base}/install/grassfield-install.sh`;
 
 export const release = {
-  version: "1.0.0-rc5",
-  pkgver: "1.0.0rc5",
+  version: "1.0.0-rc6",
+  pkgver: "1.0.0rc6",
   // The stable channel is empty while the release is a prerelease: the script refuses `--channel stable`.
   channel: "beta" as "stable" | "beta",
   arch: "x86_64",
@@ -18,7 +18,7 @@ export const release = {
   hyprland: "0.56",
   host,
   publish: {
-    date: "2026-11-05", // ISO date of this version on the beta channel (the first beta, 1.0.0-rc2: 2026-11-04)
+    date: "2026-11-06", // ISO date of this version on the beta channel (the first beta, 1.0.0-rc2: 2026-11-04)
     script,
     checksumUrl: `${script}.sha256`,
     // ADR-0043 IN8: the script's SHA-256 is also published here, a copy independent of the package server. It MUST
