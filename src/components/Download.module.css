@@ -58,12 +58,10 @@
 .notice {
   font-size: 15px;
   color: var(--fg-2);
+  text-wrap: pretty;
 }
-.disabled {
+.cardCta {
   justify-self: start;
-  background: var(--bg-3);
-  color: var(--fg-2);
-  cursor: default;
 }
 
 .block {
@@ -181,7 +179,11 @@
   margin-top: 32px;
   display: grid;
   gap: 28px;
-  max-width: 760px;
+  /* wide enough for the install commands on one line; the text keeps its measure */
+  max-width: 880px;
+}
+.steps p {
+  max-width: 44em;
 }
 .steps li {
   display: grid;
@@ -205,23 +207,120 @@
   color: var(--accent-ink);
   font-weight: 700;
 }
-.soon {
-  margin-top: 28px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: var(--bg-2);
-  color: var(--fg-2);
-  font-size: 15px;
-  max-width: 760px;
+/* the two forms of the install command under step 1: a title, the command, what the form protects against */
+.form {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
 }
+.form .formHead {
+  font-weight: 600;
+  color: var(--fg);
+}
+.form .cmd {
+  margin-top: 0;
+}
+/* what the script does, and its options, side by side under the steps */
+.script {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 56px;
+  margin-top: clamp(40px, 5vw, 64px);
+}
+@media (max-width: 900px) {
+  .script {
+    grid-template-columns: 1fr;
+  }
+}
+.order {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding-left: 1.5em;
+  font-size: 15px;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.order li::marker {
+  color: var(--accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.options {
+  display: grid;
+  gap: 14px;
+  margin: 18px 0 0;
+}
+.options div {
+  display: grid;
+  gap: 2px;
+}
+.options dt code {
+  font: 600 14px/1.5 var(--mono);
+  color: var(--fg);
+}
+.options dd {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.aside {
+  margin-top: 18px;
+  font-size: 14px;
+  color: var(--fg-2);
+}
+/* commands, options and settings named in running text */
+.rich :is(p, li, dd) > code,
+:is(p, li, dd).rich > code {
+  font: 500 0.9em/1.4 var(--mono);
+  color: var(--fg);
+  white-space: nowrap;
+}
+/* a digest grouped for the eye (the script's SHA-256, the key's fingerprint as gpg prints it): it wraps between
+   groups, so a phone never scrolls sideways */
+.rich .digest {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.rich .digest code {
+  font: 600 13px/1.6 var(--mono);
+  color: var(--fg);
+  white-space: pre-wrap;
+}
+.digest span {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.keyLink {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-size: 15px;
+}
+/* the key's card runs down the left; updates and uninstalling stack on the right, wide enough for the command */
 .trio {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
+}
+.trio::before {
+  grid-column: 1 / -1;
+}
+.trio article:first-of-type {
+  grid-row: span 2;
 }
 @media (max-width: 900px) {
   .trio {
     grid-template-columns: 1fr;
+  }
+  .trio article:first-of-type {
+    grid-row: auto;
   }
 }
 .trio article {
@@ -257,7 +356,13 @@
   white-space: nowrap;
   font: 500 13px/1.6 var(--mono);
 }
-.cmd code span {
+.cmd:has(.line + .line) {
+  align-items: flex-start;
+}
+.cmd .line {
+  display: block;
+}
+.cmd code [aria-hidden] {
   color: var(--fg-2);
   user-select: none;
 }

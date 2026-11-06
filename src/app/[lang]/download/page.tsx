@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/i18n";
-import { release } from "@/lib/release";
+import { groupedFingerprint, groupedHash, release } from "@/lib/release";
 import { PageShell } from "@/components/PageShell";
 import { Command } from "@/components/Command";
 import { Mask } from "@/components/Mask";
@@ -13,9 +13,15 @@ import s from "@/components/Download.module.css";
 const pkgIcons: Record<string, string> = {
   "grassfield-desktop": "display",
   "grassfield-compositor": "apps",
-  "grassfield-icons": "folder",
   "grassfield-store": "download",
+  "grassfield-login-themes": "person",
+  "grassfield-icons": "folder",
+  "grassfield-wallpapers": "sun",
+  "grassfield-keyring": "shield",
 };
+
+// The dictionaries mark commands, options and pacman settings with backticks: they are set as code.
+const rich = (text: string) => text.split(/`([^`]+)`/).map((part, i) => (i % 2 ? <code key={i}>{part}</code> : part));
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/download">): Promise<Metadata> {
   const { lang } = await params;
@@ -35,7 +41,8 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
   const all = getDict(lang);
   const t = all.download;
   const pub = release.publish;
-  const fmtDate = (iso: string) => new Intl.DateTimeFormat(all.dates.locale, { dateStyle: "long" }).format(new Date(iso));
+  // an ISO date is midnight UTC: format it in UTC, whatever the build machine's zone
+  const fmtDate = (iso: string) => new Intl.DateTimeFormat(all.dates.locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(iso));
 
   return (
     <PageShell t={all} lang={lang} path="download/" sections={all.sections.download}>
@@ -58,30 +65,22 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
             </div>
             <dl className={s.facts}>
               <div>
-                <dt>{all.download.requirements[0]!.k}</dt>
-                <dd>Omarchy 4</dd>
+                <dt>{t.requirements[0]!.k}</dt>
+                <dd>Omarchy {release.omarchyMin}+</dd>
               </div>
               <div>
-                <dt>{all.download.requirements[1]!.k}</dt>
+                <dt>{t.requirements[1]!.k}</dt>
                 <dd>{release.arch}</dd>
               </div>
               <div>
-                <dt>{pub ? t.published : t.notPublished}</dt>
-                <dd>{pub ? fmtDate(pub.date) : "—"}</dd>
+                <dt>{t.published}</dt>
+                <dd>{fmtDate(pub.date)}</dd>
               </div>
             </dl>
-            {pub ? (
-              <a className="btn btn-primary" href="#install-steps">
-                {t.installTitle}
-              </a>
-            ) : (
-              <>
-                <p className={s.notice}>{t.notPublishedBody}</p>
-                <span className={`btn ${s.disabled}`} aria-disabled="true">
-                  {t.cta}
-                </span>
-              </>
-            )}
+            <p className={`${s.notice} ${s.rich}`}>{rich(t.betaNote)}</p>
+            <a className={`btn btn-primary ${s.cardCta}`} href="#install-steps">
+              {t.cta}
+            </a>
           </section>
         </header>
 
@@ -89,6 +88,9 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           <h2 className="h-2" id="req-title">
             {t.requirementsTitle}
           </h2>
+          <p className="copy" style={{ marginTop: 12 }}>
+            {t.requirementsLead}
+          </p>
           <ul className={s.reqs}>
             {t.requirements.map((r) => (
               <li key={r.k}>
@@ -100,29 +102,6 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
                   <b>{r.v}</b>
                   <p>{r.p}</p>
                 </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className={`wrap ${s.block}`} id="packages" aria-labelledby="pkg-title">
-          <h2 className="h-2" id="pkg-title">
-            {t.packagesTitle}
-          </h2>
-          <p className="copy" style={{ marginTop: 12 }}>
-            {t.packagesLead}
-          </p>
-          <ul className={s.pkgs}>
-            {release.packages.map((p) => (
-              <li key={p.name}>
-                <span className={s.pkgIcon}>
-                  <Mask name={pkgIcons[p.name]!} />
-                </span>
-                <div>
-                  <code>{p.name}</code>
-                  <p>{t.packages[p.name]}</p>
-                </div>
-                <span className={p.required ? s.req : s.opt}>{p.required ? t.required : t.optional}</span>
               </li>
             ))}
           </ul>
@@ -141,23 +120,97 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
                 <span className={s.n} aria-hidden="true">
                   {i + 1}
                 </span>
-                <div>
+                <div className={s.rich}>
                   <b>{st.title}</b>
-                  <p>{st.body}</p>
-                  {pub && i === 0 && pub.setup.map((c) => <Command key={c} cmd={c} copy={t.copy} copied={t.copied} />)}
-                  {pub && i === 1 && <Command cmd={pub.install} copy={t.copy} copied={t.copied} />}
+                  <p>{rich(st.body)}</p>
+                  {i === 0 && (
+                    <>
+                      <div className={s.form}>
+                        <p className={s.formHead}>{t.oneLineTitle}</p>
+                        <Command cmd={pub.oneLine} copy={t.copy} copied={t.copied} />
+                        <p>{t.oneLineNote}</p>
+                      </div>
+                      <div className={s.form}>
+                        <p className={s.formHead}>{t.checkedTitle}</p>
+                        <Command cmd={pub.checked} copy={t.copy} copied={t.copied} />
+                        <p>{t.checkedNote}</p>
+                        <p className={s.digest}>
+                          <span>{t.sha256Label}</span>
+                          <code>{groupedHash(pub.sha256)}</code>
+                        </p>
+                        <p>{rich(t.sha256Note)}</p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </li>
             ))}
           </ol>
-          {!pub && <p className={s.soon}>{t.commandsSoon}</p>}
+          <div className={`${s.script} ${s.rich}`}>
+            <div>
+              <h3 className="h-3">{t.orderTitle}</h3>
+              <ol className={s.order}>
+                {t.order.map((o) => (
+                  <li key={o}>{rich(o)}</li>
+                ))}
+              </ol>
+              <p className={s.aside}>
+                {t.log} <code>{pub.log}</code>.
+              </p>
+            </div>
+            <div>
+              <h3 className="h-3">{t.optionsTitle}</h3>
+              <dl className={s.options}>
+                {pub.options.map((o) => (
+                  <div key={o}>
+                    <dt>
+                      <code>{o}</code>
+                    </dt>
+                    <dd>{rich(t.options[o]!)}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className={s.aside}>{rich(t.channelNote)}</p>
+            </div>
+          </div>
         </section>
 
-        <section className={`wrap ${s.block} ${s.trio}`} aria-label={`${t.verifyTitle}, ${t.updatesTitle}, ${t.uninstallTitle}`}>
+        <section className={`wrap ${s.block}`} id="packages" aria-labelledby="pkg-title">
+          <h2 className="h-2" id="pkg-title">
+            {t.packagesTitle}
+          </h2>
+          <p className="copy" style={{ marginTop: 12 }}>
+            {t.packagesLead}
+          </p>
+          <ul className={`${s.pkgs} ${s.rich}`}>
+            {release.packages.map((p) => (
+              <li key={p.name}>
+                <span className={s.pkgIcon}>
+                  <Mask name={pkgIcons[p.name]!} />
+                </span>
+                <div>
+                  <code>{p.name}</code>
+                  <p>{rich(t.packages[p.name]!)}</p>
+                </div>
+                <span className={p.role === "installed" ? s.req : s.opt}>{t.roles[p.role]}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className={`wrap ${s.block} ${s.trio} ${s.rich}`} aria-label={`${t.verifyTitle}, ${t.updatesTitle}, ${t.uninstallTitle}`}>
           <article>
             <Mask name="shield" className={s.trioIcon} />
             <h3 className="h-3">{t.verifyTitle}</h3>
             <p>{t.verifyBody}</p>
+            <p className={s.digest}>
+              <code>{groupedFingerprint(release.key.fingerprint)}</code>
+              <span>{release.key.uid}</span>
+            </p>
+            <p>{rich(t.verifyAfter)}</p>
+            <a className={`btn-link ${s.keyLink}`} href={release.key.file}>
+              {t.keyFile}
+            </a>
           </article>
           <article>
             <Mask name="download" className={s.trioIcon} />
@@ -167,8 +220,10 @@ export default async function DownloadPage({ params }: PageProps<"/[lang]/downlo
           <article>
             <Mask name="trash" className={s.trioIcon} />
             <h3 className="h-3">{t.uninstallTitle}</h3>
-            <p>{t.uninstallBody}</p>
+            <p>{rich(t.uninstallBody)}</p>
             <Command cmd={release.uninstall} copy={t.copy} copied={t.copied} />
+            <p>{t.uninstallFetch}</p>
+            <Command cmd={pub.checked[0]} copy={t.copy} copied={t.copied} />
           </article>
         </section>
 

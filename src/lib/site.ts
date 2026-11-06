@@ -1,7 +1,6 @@
-// The public origin is not decided yet (owner decision: domain). NEXT_PUBLIC_SITE_URL sets it at build time; on Vercel,
-// without it, the project's production hostname (a system variable Vercel sets during the build).
-const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || (vercel ? `https://${vercel}` : "https://grassfield.invalid")).replace(/\/$/, "");
+// The public origin: grassfield.site (owner decision of 2026-11-03), served by Cloudflare (wrangler.jsonc).
+// NEXT_PUBLIC_SITE_URL overrides it at build time (a preview host, a test).
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://grassfield.site").replace(/\/$/, "");
 
 export const icon = (name: string) => `/icons/symbolic/${name}.svg`;
 export const appIcon = (name: string) => `/icons/apps/org.grassfield.${name}.svg`;
