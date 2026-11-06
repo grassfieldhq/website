@@ -1,13 +1,17 @@
 // What the Download page shows. Facts from the grassfield repository (VERSION, packaging/arch/PKGBUILD,
 // packaging/install/grassfield-install.sh.in, ADR-0033, ADR-0043, docs/install.md) and from the published repository
 // at packages.grassfield.site. The dictionaries quote some of them (versions, host): change them here.
+// The version and its date are not written here: published.json holds what the beta channel serves, kept up to date by
+// scripts/sync-release.mjs (.github/workflows/release-sync.yml, hourly).
+import published from "./published.json";
+
 const host = "packages.grassfield.site";
 const base = `https://${host}`;
 const script = `${base}/install/grassfield-install.sh`;
 
 export const release = {
-  version: "1.0.0-rc6",
-  pkgver: "1.0.0rc6",
+  version: published.version,
+  pkgver: published.pkgver,
   // The stable channel is empty while the release is a prerelease: the script refuses `--channel stable`.
   channel: "beta" as "stable" | "beta",
   arch: "x86_64",
@@ -18,7 +22,7 @@ export const release = {
   hyprland: "0.56",
   host,
   publish: {
-    date: "2026-11-06", // ISO date of this version on the beta channel (the first beta, 1.0.0-rc2: 2026-11-04)
+    date: published.date, // ISO date of this version on the beta channel (the first beta, 1.0.0-rc2: 2026-11-04)
     script,
     checksumUrl: `${script}.sha256`,
     // ADR-0043 IN8: the script's SHA-256 is also published here, a copy independent of the package server. It MUST

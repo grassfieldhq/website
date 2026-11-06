@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { shotData } from "../src/lib/shots.generated";
 import fr from "../src/i18n/fr";
 import en from "../src/i18n/en";
+import published from "../src/lib/published.json";
 
 const langs = ["fr", "en"] as const;
 
@@ -174,15 +175,20 @@ const installCommands = {
   download: `curl -fsSLO ${script}`, // under the uninstall command: fetches the script without running it
 };
 
+// The version and date the beta channel serves (src/lib/published.json, kept up to date by scripts/sync-release.mjs).
+const versionHeading = new RegExp(`Version ${published.version.replace(/\./g, "\\.")}`);
+const longDate = (locale: string) =>
+  new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(published.date));
+
 for (const [lang, copyLabel, copiedLabel, beta, date] of [
-  ["fr", "Copier", "Copié", "Bêta", "6 novembre 2026"],
-  ["en", "Copy", "Copied", "Beta", "6 November 2026"],
+  ["fr", "Copier", "Copié", "Bêta", longDate("fr-FR")],
+  ["en", "Copy", "Copied", "Beta", longDate("en-GB")],
 ] as const) {
   test(`${lang}: the download page gives the beta's install script, its requirements and the way back, to copy`, async ({ page, context }) => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto(`/${lang}/download/`);
     const card = page.locator("#release");
-    await expect(card.getByRole("heading", { level: 2, name: /Version 1\.0\.0-rc6/ })).toBeVisible();
+    await expect(card.getByRole("heading", { level: 2, name: versionHeading })).toBeVisible();
     await expect(card.locator(".tag")).toHaveText(beta);
     await expect(card).toContainText(date);
     await expect(card).toContainText("Omarchy 4.0.6+");
@@ -220,7 +226,7 @@ test("no page says the release is still to come", async ({ page }) => {
     await expect(page.locator("main")).not.toContainText(/pas encore publi|arrive bientôt|bientôt disponible|not released yet|coming soon|in testing|en test\b/i);
   }
   await page.goto("/fr/");
-  await expect(page.locator("#install")).toContainText("Version 1.0.0-rc6 en bêta");
+  await expect(page.locator("#install")).toContainText(`Version ${published.version} en bêta`);
 });
 
 test("the header reaches every page and marks the current one", async ({ page }) => {
