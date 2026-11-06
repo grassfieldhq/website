@@ -2,7 +2,7 @@ name: release sync
 
 # The Download page follows the beta channel by itself: scripts/sync-release.mjs reads the version and date the channel
 # serves (packages.grassfield.site), and when they changed this workflow checks the site with them and commits
-# src/lib/published.json to main; Cloudflare's Workers Builds deploys main as for any merge. The install script's SHA-256
+# src/lib/published.ts to main; Cloudflare's Workers Builds deploys main as for any merge. The install script's SHA-256
 # is never copied (ADR-0043 IN8): a mismatch fails this run, for a person to check and copy.
 
 on:
@@ -34,7 +34,7 @@ jobs:
       - name: Changed?
         id: diff
         run: |
-          if git diff --quiet -- src/lib/published.json; then echo "changed=0" >>"$GITHUB_OUTPUT"; else echo "changed=1" >>"$GITHUB_OUTPUT"; fi
+          if git diff --quiet -- src/lib/published.ts; then echo "changed=0" >>"$GITHUB_OUTPUT"; else echo "changed=1" >>"$GITHUB_OUTPUT"; fi
       # A commit pushed with GITHUB_TOKEN starts no other workflow, so CI's checks run here before the push.
       - if: steps.diff.outputs.changed == '1'
         run: npm ci
@@ -45,9 +45,9 @@ jobs:
       - name: Commit to main
         if: steps.diff.outputs.changed == '1'
         run: |
-          version=$(node -p 'require("./src/lib/published.json").version')
+          version=$(sed -n 's/^  version: "\(.*\)",$/\1/p' src/lib/published.ts)
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/lib/published.json
+          git add src/lib/published.ts
           git commit -m "chore(download): the beta channel serves ${version}"
           git push origin HEAD:main

@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { shotData } from "../src/lib/shots.generated";
 import fr from "../src/i18n/fr";
 import en from "../src/i18n/en";
-import published from "../src/lib/published.json";
+import { published } from "../src/lib/published";
 
 const langs = ["fr", "en"] as const;
 
@@ -175,7 +175,7 @@ const installCommands = {
   download: `curl -fsSLO ${script}`, // under the uninstall command: fetches the script without running it
 };
 
-// The version and date the beta channel serves (src/lib/published.json, kept up to date by scripts/sync-release.mjs).
+// The version and date the beta channel serves (src/lib/published.ts, kept up to date by scripts/sync-release.mjs).
 const versionHeading = new RegExp(`Version ${published.version.replace(/\./g, "\\.")}`);
 const longDate = (locale: string) =>
   new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(published.date));

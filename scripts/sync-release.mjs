@@ -1,4 +1,4 @@
-// Keeps src/lib/published.json (the version and date the Download page shows) equal to what the beta channel serves.
+// Keeps src/lib/published.ts (the version and date the Download page shows) equal to what the beta channel serves.
 // Source: the channel's grassfield-notes.json at packages.grassfield.site, written by grassfield-packages' publish run;
 // its newest release is the one the install script and Software Update install. Run by .github/workflows/release-sync.yml
 // (hourly and on demand) and by hand: `node scripts/sync-release.mjs`. Exit 0: up to date or updated (the workflow commits
@@ -12,7 +12,7 @@ import { readFile, writeFile } from "node:fs/promises";
 const base = "https://packages.grassfield.site";
 const notesUrl = `${base}/beta/x86_64/grassfield-notes.json`;
 const shaUrl = `${base}/install/grassfield-install.sh.sha256`;
-const dataPath = new URL("../src/lib/published.json", import.meta.url);
+const dataPath = new URL("../src/lib/published.ts", import.meta.url);
 const releasePath = new URL("../src/lib/release.ts", import.meta.url);
 
 // A pacman version of a Grassfield build: 1.0.0rc6-1, 1.0.0beta2-1, 1.0.0-1 (ADR-0033: the tag's hyphen is dropped).
@@ -50,11 +50,20 @@ const published = {
   date: newest.date,
 };
 
-const current = JSON.parse(await readFile(dataPath, "utf8"));
+// published.ts is this script's output: one `key: "value",` line per field.
+const field = (text, key) => new RegExp(`^  ${key}: "([^"]*)",$`, "m").exec(text)?.[1];
+const currentText = await readFile(dataPath, "utf8");
+const current = { version: field(currentText, "version"), pkgver: field(currentText, "pkgver"), date: field(currentText, "date") };
 if (current.version === published.version && current.pkgver === published.pkgver && current.date === published.date) {
   console.log(`sync-release: up to date (${published.version}, ${published.date})`);
 } else {
-  await writeFile(dataPath, `${JSON.stringify(published, null, 2)}\n`);
+  await writeFile(
+    dataPath,
+    "// Written by scripts/sync-release.mjs (.github/workflows/release-sync.yml): the version and date the beta channel serves\n" +
+      "// at packages.grassfield.site. Do not edit by hand.\n" +
+      "export const published = {\n" +
+      `  version: "${published.version}",\n  pkgver: "${published.pkgver}",\n  date: "${published.date}",\n};\n`,
+  );
   console.log(`sync-release: ${current.version} (${current.date}) -> ${published.version} (${published.date})`);
 }
 

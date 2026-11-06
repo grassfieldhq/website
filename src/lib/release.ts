@@ -1,9 +1,9 @@
 // What the Download page shows. Facts from the grassfield repository (VERSION, packaging/arch/PKGBUILD,
 // packaging/install/grassfield-install.sh.in, ADR-0033, ADR-0043, docs/install.md) and from the published repository
 // at packages.grassfield.site. The dictionaries quote some of them (versions, host): change them here.
-// The version and its date are not written here: published.json holds what the beta channel serves, kept up to date by
+// The version and its date are not written here: published.ts holds what the beta channel serves, kept up to date by
 // scripts/sync-release.mjs (.github/workflows/release-sync.yml, hourly).
-import published from "./published.json";
+import { published } from "./published";
 
 const host = "packages.grassfield.site";
 const base = `https://${host}`;
