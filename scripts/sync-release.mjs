@@ -41,7 +41,9 @@ try {
 const newest = Array.isArray(notes?.releases) ? notes.releases[0] : undefined;
 const m = typeof newest?.version === "string" ? pkgPattern.exec(newest.version) : null;
 if (!m) fail(`the newest release has no usable version: ${JSON.stringify(newest?.version)}`);
-if (typeof newest.date !== "string" || !datePattern.test(newest.date) || Number.isNaN(Date.parse(newest.date))) {
+// A real calendar day: Date rolls 2026-02-31 over to March 3, so the round trip must give the same text back.
+const realDay = (iso) => !Number.isNaN(Date.parse(iso)) && new Date(iso).toISOString().slice(0, 10) === iso;
+if (typeof newest.date !== "string" || !datePattern.test(newest.date) || !realDay(newest.date)) {
   fail(`the newest release has no usable date: ${JSON.stringify(newest.date)}`);
 }
 const published = {
