@@ -1,7 +1,7 @@
 // Written by scripts/sync-release.mjs (.github/workflows/release-sync.yml): the version and date the beta channel serves
 // at packages.grassfield.site. Do not edit by hand.
 export const published = {
-  version: "1.0.0-rc8",
-  pkgver: "1.0.0rc8",
-  date: "2026-11-13",
+  version: "1.0.0-rc9",
+  pkgver: "1.0.0rc9",
+  date: "2026-11-22",
 };
