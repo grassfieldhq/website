@@ -3,5 +3,5 @@
 export const published = {
   version: "1.0.0-rc9",
   pkgver: "1.0.0rc9",
-  date: "2026-11-22",
+  date: "2026-11-24",
 };
